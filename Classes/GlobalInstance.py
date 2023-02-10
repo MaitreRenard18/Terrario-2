@@ -1,4 +1,5 @@
 import pygame, os
+from Classes.Player import Player
 
 class GlobalInstance:
     def __init__(self):
@@ -7,7 +8,7 @@ class GlobalInstance:
 
         #TODO
         self.map = None
-        self.player = None
+        self.player = Player(self)
         self.garage = None
 
         self.run()
@@ -16,7 +17,7 @@ class GlobalInstance:
         """Initialise la fenêtre Pygame."""
 
         pygame.init()
-        self.screen = pygame.display.set_mode()
+        self.screen = pygame.display.set_mode((512, 512))
         pygame.display.set_caption("Terrario")
     
     def load_textures(self):
@@ -37,9 +38,11 @@ class GlobalInstance:
         self.clock = pygame.time.Clock()
         self.running = True
         while self.running:
-            #TODO
-
             self.clock.tick(60)
+            self.screen.fill(pygame.Color(0, 0, 0))
+            self.player.tick()
+
+            pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
