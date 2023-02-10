@@ -1,4 +1,4 @@
-import pygame, time
+import pygame
 
 class Player:
     def __init__(self, global_instance):
