@@ -3,4 +3,4 @@
 </p>
 
 # Présentation du projet
-Terrario 2 est la suite du mondialement connu Terrario.
+Terrario 2 est la suite du mondialement connu <a href="https://github.com/MaitreRenard18/Terrario">Terrario<a>.
