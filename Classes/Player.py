@@ -4,15 +4,18 @@ class Player:
     def __init__(self, global_instance):
         self.global_instance = global_instance
         
-        self.position = pygame.Vector2(0, 0)
-        self.original_position = pygame.Vector2(0, 0)
-        self.destination = pygame.Vector2(0, 0)
+        self.position = pygame.Vector2()
+        self.original_position = pygame.Vector2()
+        self.destination = pygame.Vector2()
         
     def tick(self):
-        self.global_instance.screen.blit(self.global_instance.textures["drill"], self.position * 16)
+        offset = self.get_camera_offset() // self.global_instance.tile_size - self.position
+        tile_position = self.position + offset
+        self.global_instance.screen.blit(self.global_instance.textures["drill"], tile_position * self.global_instance.tile_size)
+
 
         if self.position != self.destination:
-            self.position = self.position + ((self.destination - self.original_position) / 10)
+            self.position = self.position + ((self.destination - self.original_position) / 12)
             return
 
         self.original_position.x = self.position.x
@@ -38,3 +41,7 @@ class Player:
             self.destination.x -= 1
             self.original_position.x = self.position.x
             return
+
+    def get_camera_offset(self):
+        screensize = self.global_instance.screen.get_size()
+        return pygame.Vector2(screensize) // 2

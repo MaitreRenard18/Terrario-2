@@ -1,13 +1,15 @@
 import pygame, os
 from Classes.Player import Player
+from Classes.Map import Map
 
 class GlobalInstance:
     def __init__(self):
         self.init()
+
+        self.tile_size = 32
         self.load_textures()
 
-        #TODO
-        self.map = None
+        self.map = Map(self)
         self.player = Player(self)
         self.garage = None
 
@@ -17,7 +19,7 @@ class GlobalInstance:
         """Initialise la fenêtre Pygame."""
 
         pygame.init()
-        self.screen = pygame.display.set_mode((512, 512))
+        self.screen = pygame.display.set_mode()
         pygame.display.set_caption("Terrario")
     
     def load_textures(self):
@@ -29,6 +31,7 @@ class GlobalInstance:
                 file_name = file[:-4].lower()
                 path = f"Images\{file}"
                 texture = pygame.image.load(path)
+                texture = pygame.transform.scale(texture, (self.tile_size, self.tile_size))
 
                 self.textures[file_name] = texture
 
@@ -40,6 +43,7 @@ class GlobalInstance:
         while self.running:
             self.clock.tick(60)
             self.screen.fill(pygame.Color(0, 0, 0))
+            self.map.render()
             self.player.tick()
 
             pygame.display.flip()
