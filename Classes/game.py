@@ -3,6 +3,8 @@ from Classes.map import Map
 
 class Game:
     def __init__(self):
+        """Initialise la fenêtre Pygame et les différentes instances nécessaires au jeu."""
+
         pygame.init()
         self.screen = pygame.display.set_mode((512, 512))
         self.clock = pygame.time.Clock()
@@ -12,6 +14,8 @@ class Game:
         self.run()
 
     def run(self):
+        """Commence la boucle d'execution."""
+
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
