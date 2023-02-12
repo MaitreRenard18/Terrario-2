@@ -6,7 +6,7 @@ class Game:
         """Initialise la fenêtre Pygame et les différentes instances nécessaires au jeu."""
 
         pygame.init()
-        self.screen = pygame.display.set_mode((512, 512))
+        self.screen = pygame.display.set_mode()
         self.clock = pygame.time.Clock()
 
         self.map = Map()
