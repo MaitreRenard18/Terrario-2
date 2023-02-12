@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/MaitreRenard18/Terrario-2/blob/master/Images/Ui/Logo.png" alt="Terrario 2 Logo" width="50%">
+  <img src="https://github.com/MaitreRenard18/Terrario-2/blob/master/Images/UI/Logo.png" alt="Terrario 2 Logo" width="50%">
 </p>
 
 # Présentation du projet
