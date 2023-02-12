@@ -6,3 +6,6 @@ class Player(pygame.sprite.Sprite):
 
         self.image = pygame.image.load("Images/PLayer/Drill.png")
         self.rect = self.image.get_rect()
+
+    def update(self):
+        pass
