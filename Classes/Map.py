@@ -1,36 +1,49 @@
-import pygame, opensimplex
+import pygame
+from Classes.player import Player
 
 class Map:
-    def __init__(self, global_instance):
-        self.global_instance = global_instance
-        self.map = {0: {0: "diamond"}}
+    def __init__(self):
+        self.display_surface = pygame.display.get_surface()
 
-        self.cave_size = 0
-        self.scale = 0.1
+        self.tiles = {}
 
-    def generate_tile(self, x, y):
-        if not x in self.map:
-            self.map[x] = {}
-        
-        if y in self.map[x]:
-            return
+        self.sprite_group = CameraGroup()
 
-        if opensimplex.noise2(x * self.scale, y * self.scale) > self.cave_size:
-            self.map[x][y] = "stone"
-        else:
-            self.map[x][y] = "cave"
+        self.Setup()
 
-    def render(self):
-        screensize = self.global_instance.screen.get_size()
-        player_position = self.global_instance.player.position
-        camera_offset = self.global_instance.player.get_camera_offset()
-        tile_size = self.global_instance.tile_size
+    def Setup(self):
+        self.generate()
+        self.player = Player((0, 0), self.sprite_group)
 
-        for x in range(int(player_position.x - (screensize[0] // tile_size)),  int(player_position.x + (screensize[0] // tile_size))):
-            for y in range(int(player_position.y - (screensize[1] // tile_size)),  int(player_position.y + (screensize[1] // tile_size))):
-                self.generate_tile(x, y)
+    def update(self):
+        self.display_surface.fill("black")
+        self.sprite_group.custom_draw(self.player)
+        self.sprite_group.update()
 
-                offset = camera_offset // self.global_instance.tile_size - player_position
-                tile_position = pygame.Vector2(x, y) + offset
+    def generate(self):
+        for x in range(50):
+            self.tiles[x] = {}
+            for y in range(50):
+                tile = pygame.sprite.Sprite(self.sprite_group)
+                tile.image = pygame.transform.scale(pygame.image.load("Images/Tiles/Stone.png"), (32, 32))
+                tile.rect = tile.image.get_rect()
+                tile.rect.center = pygame.Vector2(x, y) * 32
 
-                self.global_instance.screen.blit(self.global_instance.textures[self.map[x][y]], tile_position * tile_size)
+                self.tiles[x][y] = tile
+
+class CameraGroup(pygame.sprite.Group):
+    def __init__(self):
+        super().__init__()
+
+        self.display_surface = pygame.display.get_surface()
+        self.offset = pygame.Vector2()
+
+    def custom_draw(self, player):
+        self.offset.x = player.rect.centerx - self.display_surface.get_width() / 2
+        self.offset.y = player.rect.centery - self.display_surface.get_height() / 2
+
+        for sprite in self.sprites():
+            offset_rect = sprite.rect.copy()
+            offset_rect.center -= self.offset
+
+            self.display_surface.blit(sprite.image, offset_rect)
