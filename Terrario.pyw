@@ -1,4 +1,4 @@
-from Classes.GlobalInstance import GlobalInstance
+from Classes.game import Game
 
 if __name__ == "__main__":
-    GlobalInstance()
+    Game()
