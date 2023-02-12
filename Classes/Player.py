@@ -6,9 +6,9 @@ class Player(pygame.sprite.Sprite):
 
         self.image = pygame.transform.scale(pygame.image.load("Images/PLayer/Drill.png"), (32, 32))
         self.rect = self.image.get_rect()
-        self.rect.center = self.position * 32
         
         self.position = pygame.Vector2(position)
+        self.rect.center = self.position * 32
 
     def update(self):
         keys = pygame.key.get_pressed()

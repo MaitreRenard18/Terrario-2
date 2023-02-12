@@ -1,4 +1,4 @@
-import pygame, random
+import pygame, opensimplex
 from Classes.player import Player
 
 class Map:
@@ -11,18 +11,19 @@ class Map:
         self.sky_color = pygame.Color(77, 165, 217)
 
         self.offset = pygame.Vector2()
-        self.render_distance = 16
+        self.render_distance = 32
 
-        for x in range(-100, 100):
+    def generate_tile(self, x, y):
+        if not x in self.tiles:
             self.tiles[x] = {}
-            for y in range(-100, 100):
-                sprite = pygame.sprite.Sprite()
-                tile = random.choice(["Stone", "Cave"])
-                sprite.image = pygame.transform.scale(pygame.image.load(f"Images/Tiles/{tile}.png"), (32, 32))
-                sprite.rect = sprite.image.get_rect()
-                sprite.rect.center = pygame.Vector2(x, y) * 32
 
-                self.tiles[x][y] = sprite
+        sprite = pygame.sprite.Sprite()
+        tile = "Stone" if opensimplex.noise2(x * 0.1, y * 0.1) < 0 else "Cave"
+        sprite.image = pygame.transform.scale(pygame.image.load(f"Images/Tiles/{tile}.png"), (32, 32))
+        sprite.rect = sprite.image.get_rect()
+        sprite.rect.center = pygame.Vector2(x, y) * 32
+
+        self.tiles[x][y] = sprite
 
     def render(self):
         self.display_surface.fill(self.sky_color)
@@ -32,6 +33,9 @@ class Map:
 
         for x in range(int(self.player.position.x) - self.render_distance, int(self.player.position.x) + self.render_distance + 1):
             for y in range(int(self.player.position.y) - self.render_distance, int(self.player.position.y) + self.render_distance + 1):
+                if not x in self.tiles or not y in self.tiles[x]:
+                    self.generate_tile(x, y)
+
                 sprite = self.tiles[x][y]
 
                 offset_rect = sprite.rect.copy()
