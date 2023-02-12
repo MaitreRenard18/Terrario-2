@@ -8,7 +8,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         
         self.position = pygame.Vector2(position)
-        self.rect.center = self.position * 32
+        self.rect.topleft = self.position * 32
 
     def update(self):
         keys = pygame.key.get_pressed()
@@ -24,4 +24,4 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_LEFT]:
             self.position.x -= 1
 
-        self.rect.center = self.position * 32
+        self.rect.topleft = self.position * 32

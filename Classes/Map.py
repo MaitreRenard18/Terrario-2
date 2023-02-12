@@ -1,5 +1,15 @@
-import pygame, opensimplex
+import pygame, opensimplex, os
 from Classes.player import Player
+
+textures = {}
+for file in os.listdir("{}\Images\Tiles".format(os.getcwd())):
+    if file.endswith(".png"):
+        file_name = file.replace(".png", "").lower()
+        
+        path = "{}\Images\Tiles\{}".format(os.getcwd(), file)
+        image = pygame.transform.scale(pygame.image.load(path), (32, 32))
+        
+        textures[file_name] = image
 
 class Map:
     def __init__(self):
@@ -17,13 +27,8 @@ class Map:
         if not x in self.tiles:
             self.tiles[x] = {}
 
-        sprite = pygame.sprite.Sprite()
-        tile = "Stone" if opensimplex.noise2(x * 0.1, y * 0.1) < 0 else "Cave"
-        sprite.image = pygame.transform.scale(pygame.image.load(f"Images/Tiles/{tile}.png"), (32, 32))
-        sprite.rect = sprite.image.get_rect()
-        sprite.rect.center = pygame.Vector2(x, y) * 32
-
-        self.tiles[x][y] = sprite
+        tile = "stone" if opensimplex.noise2(x * 0.1, y * 0.1) < 0 else "cave"
+        self.tiles[x][y] = tile
 
     def render(self):
         self.display_surface.fill(self.sky_color)
@@ -36,12 +41,9 @@ class Map:
                 if not x in self.tiles or not y in self.tiles[x]:
                     self.generate_tile(x, y)
 
-                sprite = self.tiles[x][y]
-
-                offset_rect = sprite.rect.copy()
-                offset_rect.center -= self.offset
-
-                self.display_surface.blit(sprite.image, offset_rect)
+                image = textures[self.tiles[x][y]]
+                offset_rect = pygame.Vector2(x * 32, y * 32) - self.offset
+                self.display_surface.blit(image, offset_rect)
 
         offset_rect = self.player.rect.copy()
         offset_rect.center -= self.offset
