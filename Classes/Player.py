@@ -1,12 +1,13 @@
 import pygame
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, position, group):
-        super().__init__(group)
+    def __init__(self, position):
+        super().__init__()
 
         self.image = pygame.transform.scale(pygame.image.load("Images/PLayer/Drill.png"), (32, 32))
         self.rect = self.image.get_rect()
-
+        self.rect.center = self.position * 32
+        
         self.position = pygame.Vector2(position)
 
     def update(self):
@@ -23,4 +24,4 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_LEFT]:
             self.position.x -= 1
 
-        self.rect.center = self.position * 16
+        self.rect.center = self.position * 32
