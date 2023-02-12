@@ -6,4 +6,4 @@
 Terrario 2 est la suite du mondialement connu <a href="https://github.com/MaitreRenard18/Terrario">Terrario<a>.
 
 # Prérequis
-Il faudra installer le module python Pygame et la police d'écriture fournie dans le dossier, pour que le jeu fonctionne correctement.
+Il faudra installer le module python Pygame et Opensimplex ainsi qu'installer la police d'écriture fournie dans le dossier, pour que le jeu fonctionne correctement.
