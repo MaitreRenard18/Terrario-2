@@ -22,5 +22,6 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
-            self.map.run()
+            self.map.update()
             pygame.display.update()
+            self.clock.tick(30)
