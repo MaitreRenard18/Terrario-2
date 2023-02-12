@@ -9,10 +9,10 @@ class Map:
 
         self.Setup()
 
-    def Setup(self):    
+    def Setup(self):
         self.player = Player((0, 0), self.sprite_group)
 
-    def run(self):
+    def update(self):
         self.display_surface.fill("black")
         self.sprite_group.draw(self.display_surface)
         self.sprite_group.update()
