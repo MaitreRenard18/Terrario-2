@@ -32,6 +32,9 @@ class Map:
         if not x in self.tiles:
             self.tiles[x] = {}
 
+        if y in self.tiles[x]:
+            return
+
         # Génération de la surface
         if y < 4:
             biome = "plains" if opensimplex.noise2(x * 0.0075, y * 0.0075) > 0 else "desert"
@@ -77,7 +80,7 @@ class Map:
 
         # Génération des grottes
         else:
-            biome = "plains" if opensimplex.noise2(x * 0.0075, y * 0.001) > 0 else "desert"
+            biome = "plains" if opensimplex.noise2(x * 0.0075, y * 0.0025) > 0 else "desert"
             tile_palette = {
                 "primary_block": "stone" if biome == "plains" else "sandstone",
                 "cave_block": "cave" if biome == "plains" else "sandstone_cave"
