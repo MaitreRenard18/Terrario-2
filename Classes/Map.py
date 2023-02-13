@@ -1,5 +1,6 @@
 import pygame, opensimplex, os
 from Classes.player import Player
+from Classes.tile import Tile
 
 textures = {}
 for file in os.listdir("{}\Images\Tiles".format(os.getcwd())):
@@ -28,7 +29,7 @@ class Map:
             self.tiles[x] = {}
 
         tile = "stone" if opensimplex.noise2(x * 0.1, y * 0.1) < 0 else "cave"
-        self.tiles[x][y] = tile
+        self.tiles[x][y] = Tile(tile)
 
     def render(self):
         self.display_surface.fill(self.sky_color)
@@ -41,7 +42,7 @@ class Map:
                 if not x in self.tiles or not y in self.tiles[x]:
                     self.generate_tile(x, y)
 
-                image = textures[self.tiles[x][y]]
+                image = textures[self.tiles[x][y].type]
                 offset_rect = pygame.Vector2(x * 32, y * 32) - self.offset
                 self.display_surface.blit(image, offset_rect)
 
