@@ -52,7 +52,7 @@ class Map:
                     else:
                         if random.randint(0, 2) == 0:
                             self.tiles[x][y-1].type = "tulip" if random.randint(0, 1) else "weed"
-                            
+
                 elif y > value: 
                     self.tiles[x][y] = Tile(tile_palette["primary_block"])
 
@@ -67,7 +67,7 @@ class Map:
                     else:
                         if random.randint(0, 2) == 0:
                             self.tiles[x][y-1].type = "tulip" if random.randint(0, 1) else "weed"
-
+                            
             else:
                 self.tiles[x][y] = Tile(tile_palette["primary_block"])
 
