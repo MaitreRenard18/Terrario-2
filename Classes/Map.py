@@ -26,6 +26,8 @@ class Map:
         self.offset = pygame.Vector2()
         self.render_distance = 32
 
+        opensimplex.random_seed()
+
     def generate_tile(self, x, y):
         if not x in self.tiles:
             self.tiles[x] = {}
@@ -47,10 +49,12 @@ class Map:
 
                     if biome == "desert":
                         if random.randint(0, 10) == 0:
+                            self.generate_tile(x, y-1)
                             generate_cactus(self, x, y - 1, random.randint(1, 4))
 
                     else:
                         if random.randint(0, 2) == 0:
+                            self.generate_tile(x, y-1)
                             self.tiles[x][y-1].type = "tulip" if random.randint(0, 1) else "weed"
 
                 elif y > value: 
@@ -73,7 +77,13 @@ class Map:
 
         # Génération des grottes
         else:
-            type = "stone" if opensimplex.noise2(x * self.scale, y * self.scale) < 0 else "cave"
+            biome = "plains" if opensimplex.noise2(x * 0.0075, y * 0.001) > 0 else "desert"
+            tile_palette = {
+                "primary_block": "stone" if biome == "plains" else "sandstone",
+                "cave_block": "cave" if biome == "plains" else "sandstone_cave"
+            }
+
+            type = tile_palette["primary_block"] if opensimplex.noise2(x * self.scale, y * self.scale) < 0 else tile_palette["cave_block"]
             self.tiles[x][y] = Tile(type)
 
     def render(self):
