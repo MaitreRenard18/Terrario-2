@@ -32,7 +32,7 @@ class Map:
 
         # Génération de la surface
         if y < 4:
-            biome = "plains" if opensimplex.noise2(x * 0.0075, 0) > 0 else "desert"
+            biome = "plains" if opensimplex.noise2(x * 0.0075, y * 0.0075) > 0 else "desert"
             tile_palette = {
                 "surface_block": "grass" if biome == "plains" else "sand",
                 "primary_block": "dirt" if biome == "plains" else "sand"
