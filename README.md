@@ -7,3 +7,6 @@ Terrario 2 est la suite du mondialement connu <a href="https://github.com/Maitre
 
 # Prérequis
 Il faudra installer le module python Pygame et Opensimplex ainsi qu'installer la police d'écriture fournie dans le dossier, pour que le jeu fonctionne correctement.
+
+# Comment jouer ?
+Pour lancer le jeu, executez tout simplement Terrario.pyw.
