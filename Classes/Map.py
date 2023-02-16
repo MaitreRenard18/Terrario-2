@@ -18,7 +18,7 @@ class Map:
         self.display_surface = pygame.display.get_surface()
 
         self.tiles = {}
-        self.player = Player((0, 0))
+        self.player = Player((0, 0), self)
 
         self.sky_color = pygame.Color(77, 165, 217)
         self.scale = 0.1
