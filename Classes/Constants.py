@@ -9,3 +9,5 @@ PLAINS_TILES = ["stone", "cave", "dirt", "grass"]
 DESERT_TILES = ["sandstone", "sandstone_cave", "sand"]
 
 SURFACE_TILES = ["air", "cactus", "cactus_top", "weed", "tulip"]
+
+GRAVITY = 0.2
