@@ -3,18 +3,18 @@
 </p>
 
 # Présentation du projet
-Terrario 2 est la suite du mondialement connu <a href="https://github.com/MaitreRenard18/Terrario">Terrario<a>.
+
+Terrario 2 est la suite du mondialement connu [Terrario](https://github.com/MaitreRenard18/Terrario).
 
 # Prérequis
-Il faudra installer le module python Pygame et Opensimplex ainsi qu'installer la police d'écriture fournie dans le dossier, pour que le jeu fonctionne correctement.
 
-
-<p>Ci dessous les commandes pour installer ces modules :</p>
-
-```
->>> pip install pygame
->>> pip install opensimplex
-```
+- Terrario 2 est écrit en Python, il faut donc l'installer [ici](https://www.python.org/downloads/release/python-3112)
+- Il faut également installer les module `pygame` et `opensimplex` en utilisant Pip
+  ```bash
+  $ pip install -r requirements.txt
+  ```
+- Enfin, il faut installer la police d'écriture fournie dans le dossier
 
 # Comment jouer ?
+
 Pour lancer le jeu, executez tout simplement Terrario.pyw.
