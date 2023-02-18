@@ -4,11 +4,17 @@ from Classes.Tile import Tile
 from Classes.Props import *
 
 textures = {}
-for file in os.listdir("{}\Images\Tiles".format(os.getcwd())):
+
+# os.path.join permet de supporter aussi bien les chemins de type Windows que
+# ceux de type GNU/Linux
+# os.path.abspath permet de renvoyer un chemin absolu
+tiles = os.path.abspath(os.path.join("Images", "Tiles"))
+
+for file in os.listdir(tiles):
     if file.endswith(".png"):
         file_name = file.replace(".png", "").lower()
 
-        path = "{}\Images\Tiles\{}".format(os.getcwd(), file)
+        path = os.path.join(tiles, file)
         image = pygame.transform.scale(pygame.image.load(path), (32, 32))
 
         textures[file_name] = image
@@ -112,4 +118,4 @@ class Map:
             self.player.climb()
 
         if self.player.falling:
-            self.display_surface.blit(pygame.transform.scale(pygame.image.load("Images/PLayer/Parachute.png"), (32, 32)), (offset_rect[0], offset_rect[1] - 32))
+            self.display_surface.blit(pygame.transform.scale(pygame.image.load("Images/Player/Parachute.png"), (32, 32)), (offset_rect[0], offset_rect[1] - 32))

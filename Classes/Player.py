@@ -5,7 +5,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, position, map):
         super().__init__()
 
-        self.image = pygame.transform.scale(pygame.image.load("Images/PLayer/Drill_right.png"), (32, 32))
+        self.image = pygame.transform.scale(pygame.image.load("Images/Player/Drill_right.png"), (32, 32))
         self.rect = self.image.get_rect()
 
         self.position = pygame.Vector2(position)
@@ -77,5 +77,5 @@ class Player(pygame.sprite.Sprite):
         self.going_up = False
 
     def facing(self, direction):
-        self.image = pygame.transform.scale(pygame.image.load(f"Images/PLayer/Drill_{direction}.png"), (32, 32))
+        self.image = pygame.transform.scale(pygame.image.load(f"Images/Player/Drill_{direction}.png"), (32, 32))
         self.moving = 0
