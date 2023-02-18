@@ -1,5 +1,5 @@
 import pygame
-from Classes.VARIABLES import *
+from Classes.Constants import *
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, position, map):
@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite):
 
         self.image = pygame.transform.scale(pygame.image.load("Images/PLayer/Drill_right.png"), (32, 32))
         self.rect = self.image.get_rect()
-        
+
         self.position = pygame.Vector2(position)
         self.rect.topleft = self.position * 32
 
@@ -49,7 +49,7 @@ class Player(pygame.sprite.Sprite):
                 self.position.x -= 1
                 self.facing("left")
                 return
-    
+
     def mine(self):
         current_tile = self.map.tiles[self.position.x][self.position.y]
         if current_tile.type in PLAINS_BLOCKS:
@@ -73,7 +73,7 @@ class Player(pygame.sprite.Sprite):
             tile_above.type = "scaffolding_stone"
         if tile_above.type in DESERT_TILES:
             tile_above.type = "scaffolding_sandstone"
-            
+
         self.going_up = False
 
     def facing(self, direction):

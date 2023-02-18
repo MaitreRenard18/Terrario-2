@@ -1,16 +1,16 @@
 import pygame, opensimplex, os, random
-from Classes.player import Player
-from Classes.tile import Tile
-from Classes.props import *
+from Classes.Player import Player
+from Classes.Tile import Tile
+from Classes.Props import *
 
 textures = {}
 for file in os.listdir("{}\Images\Tiles".format(os.getcwd())):
     if file.endswith(".png"):
         file_name = file.replace(".png", "").lower()
-        
+
         path = "{}\Images\Tiles\{}".format(os.getcwd(), file)
         image = pygame.transform.scale(pygame.image.load(path), (32, 32))
-        
+
         textures[file_name] = image
 
 class Map:
@@ -60,7 +60,7 @@ class Map:
                             self.generate_tile(x, y-1)
                             self.tiles[x][y-1].type = "tulip" if random.randint(0, 1) else "weed"
 
-                elif y > value: 
+                elif y > value:
                     self.tiles[x][y] = Tile(tile_palette["primary_block"])
 
             elif y == 0:
@@ -74,7 +74,7 @@ class Map:
                     else:
                         if random.randint(0, 2) == 0:
                             self.tiles[x][y-1].type = "tulip" if random.randint(0, 1) else "weed"
-                            
+
             else:
                 self.tiles[x][y] = Tile(tile_palette["primary_block"])
 
@@ -107,9 +107,9 @@ class Map:
         offset_rect = self.player.rect.copy()
         offset_rect.center -= self.offset
         self.display_surface.blit(self.player.image, offset_rect)
-        
+
         if self.player.going_up:
             self.player.climb()
-        
+
         if self.player.falling:
             self.display_surface.blit(pygame.transform.scale(pygame.image.load("Images/PLayer/Parachute.png"), (32, 32)), (offset_rect[0], offset_rect[1] - 32))

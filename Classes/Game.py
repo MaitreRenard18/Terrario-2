@@ -1,5 +1,5 @@
 import pygame, sys
-from Classes.map import Map
+from Classes.Map import Map
 
 class Game:
     def __init__(self):
