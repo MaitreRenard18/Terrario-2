@@ -103,7 +103,8 @@ class Map:
                             generate_cactus(self, x, y - 1, random.randint(1, 4))
                     else:
                         if random.randint(0, 2) == 0:
-                            self.tiles[x][y-1].type = "tulip" if random.randint(0, 1) else "weed"
+                            type = "tulip" if random.randint(0, 1) else "weed"
+                            self.tiles[x][y-1] = Tile(type, type, False)
                             
             else:
                 self.tiles[x][y] = Tile(tile_palette["primary_block"], tile_palette["primary_block"])
