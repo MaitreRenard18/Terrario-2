@@ -3,16 +3,6 @@ from Classes.player import Player
 from Classes.tile import Tile
 from Classes.props import *
 
-textures = {}
-for file in os.listdir("{}\Images\Tiles".format(os.getcwd())):
-    if file.endswith(".png"):
-        file_name = file.replace(".png", "").lower()
-        
-        path = "{}\Images\Tiles\{}".format(os.getcwd(), file)
-        image = pygame.transform.scale(pygame.image.load(path), (32, 32))
-        
-        textures[file_name] = image
-
 biomes = {
     float("-inf"): ["forest", "desert", "snow"],
     16: ["cave", "sand_cave", "snowy_cave"],
@@ -60,7 +50,6 @@ class Map:
         self.tiles = {}
         self.player = Player((0, 0), self)
 
-        self.sky_color = pygame.Color(77, 165, 217)
         self.scale = 0.1
 
         self.offset = pygame.Vector2()
@@ -86,9 +75,9 @@ class Map:
             if y < 0:
                 value = int(opensimplex.noise2(x * self.scale * 0.5, 0) * 10)
 
-                self.tiles[x][y] = Tile("air", False)
+                self.tiles[x][y] = Tile("air", "air", False)
                 if y == value:
-                    self.tiles[x][y] = Tile(tile_palette["surface_block"])
+                    self.tiles[x][y] = Tile(tile_palette["surface_block"], tile_palette["surface_block"])
 
                     if biome == "desert":
                         if random.randint(0, 10) == 0:
@@ -101,11 +90,12 @@ class Map:
                             self.tiles[x][y-1].type = "tulip" if random.randint(0, 1) else "weed"
 
                 elif y > value: 
-                    self.tiles[x][y] = Tile(tile_palette["primary_block"])
+                    self.tiles[x][y] = Tile(tile_palette["primary_block"], tile_palette["primary_block"])
 
             elif y == 0:
                 self.generate_tile(x, y-1)
-                self.tiles[x][y] = Tile(tile_palette["surface_block"] if self.tiles[x][y-1].type == "air" else tile_palette["primary_block"])
+                type = tile_palette["surface_block"] if self.tiles[x][y-1].type == "air" else tile_palette["primary_block"]
+                self.tiles[x][y] = Tile(type, type)
 
                 if self.tiles[x][y-1].type == "air":
                     if biome == "desert":
@@ -116,7 +106,7 @@ class Map:
                             self.tiles[x][y-1].type = "tulip" if random.randint(0, 1) else "weed"
                             
             else:
-                self.tiles[x][y] = Tile(tile_palette["primary_block"])
+                self.tiles[x][y] = Tile(tile_palette["primary_block"], tile_palette["primary_block"])
 
         # Génération des grottes
         else:
@@ -126,11 +116,13 @@ class Map:
                 "cave_block": "cave" if biome == "plains" else "sandstone_cave"
             }
 
-            type = tile_palette["primary_block"] if opensimplex.noise2(x * self.scale, y * self.scale) < 0 else tile_palette["cave_block"]
-            self.tiles[x][y] = Tile(type)
-
+            if opensimplex.noise2(x * self.scale, y * self.scale) < 0:
+                self.tiles[x][y] = Tile(tile_palette["primary_block"], tile_palette["primary_block"])
+            else:
+                self.tiles[x][y] = Tile(tile_palette["cave_block"], tile_palette["cave_block"], False)
+            
     def render(self):
-        self.display_surface.fill(self.sky_color)
+        self.display_surface.fill(pygame.Color(77, 165, 217))
 
         self.offset.x = self.player.rect.centerx - self.display_surface.get_width() / 2
         self.offset.y = self.player.rect.centery - self.display_surface.get_height() / 2
@@ -140,7 +132,7 @@ class Map:
                 if not x in self.tiles or not y in self.tiles[x]:
                     self.generate_tile(x, y)
 
-                image = textures[self.tiles[x][y].type]
+                image = self.tiles[x][y].texture
                 offset_rect = pygame.Vector2(x * 32, y * 32) - self.offset
                 self.display_surface.blit(image, offset_rect)
 
