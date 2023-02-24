@@ -15,14 +15,16 @@ class Game:
 
     def run(self):
         """Commence la boucle d'execution."""
-
+        
+        self.map.render()
+        self.map.player.update()
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
 
-            self.map.render()
             self.map.player.update()
+            self.map.render()
             pygame.display.update()
             self.clock.tick(30)

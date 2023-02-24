@@ -21,8 +21,6 @@ class Player(pygame.sprite.Sprite):
         if self.moving < 1:
             self.moving += 0.5
 
-        self.mine()
-        self.fall()
 
         self.rect.topleft = self.position * 32
 
@@ -49,6 +47,9 @@ class Player(pygame.sprite.Sprite):
                 self.facing("left")
                 return
     
+        self.mine()
+        self.fall()
+
     def mine(self):
         current_tile = self.map.tiles[self.position.x][self.position.y]
         if current_tile.type in PLAINS_BLOCKS:
