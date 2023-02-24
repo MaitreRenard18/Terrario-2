@@ -108,8 +108,5 @@ class Map:
         offset_rect.center -= self.offset
         self.display_surface.blit(self.player.image, offset_rect)
         
-        if self.player.going_up:
-            self.player.climb()
-        
         if self.player.falling:
             self.display_surface.blit(pygame.transform.scale(pygame.image.load("Images/PLayer/Parachute.png"), (32, 32)), (offset_rect[0], offset_rect[1] - 32))
