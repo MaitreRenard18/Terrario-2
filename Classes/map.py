@@ -35,7 +35,9 @@ tile_palette = {
     },
 
     "snow": {
-        #TODO
+        "background": "air",
+        "primary_tile": "dirt",
+        "top_tile": "snowy_grass"
     }
 }
 
