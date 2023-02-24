@@ -13,6 +13,7 @@ class Player(pygame.sprite.Sprite):
 
         self.moving = 1
         self.falling = False
+        self.going_up = False
 
         self.map = map
 
@@ -28,8 +29,8 @@ class Player(pygame.sprite.Sprite):
             keys = pygame.key.get_pressed()
             if keys[pygame.K_UP]:
                 self.position.y -= 1
+                self.going_up = True
                 self.facing("up")
-                self.climb()
                 return
 
             if keys[pygame.K_DOWN]:
@@ -73,6 +74,8 @@ class Player(pygame.sprite.Sprite):
             tile_above.type = "scaffolding_stone"
         if tile_above.type in DESERT_TILES:
             tile_above.type = "scaffolding_sandstone"
+            
+        self.going_up = False
 
     def facing(self, direction):
         self.image = pygame.transform.scale(pygame.image.load(f"Images/PLayer/Drill_{direction}.png"), (32, 32))
