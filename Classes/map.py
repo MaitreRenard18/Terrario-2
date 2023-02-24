@@ -13,6 +13,44 @@ for file in os.listdir("{}\Images\Tiles".format(os.getcwd())):
         
         textures[file_name] = image
 
+biomes = {
+    float("-inf"): ["forest", "desert", "snow"],
+    16: ["cave", "sand_cave", "snowy_cave"],
+    128: ["crystal_cave", "haunted_cave"],
+    256: ["lush_cave"],
+    512: ["hell"]
+}
+
+tile_palette = {
+    "forest": {
+        "background": "air",
+        "primary_tile": "dirt",
+        "top_tile": "grass"
+    },
+
+    "desert": {
+        "background": "air",
+        "primary_tile": "sand",
+        "top_tile": "sand"
+    },
+
+    "snow": {
+        #TODO
+    }
+}
+
+props = {
+    "forest": [generate_tree],
+    "desert": [generate_cactus],
+    "snow": [generate_snowy_tree]
+}
+
+ores = {
+    "forest": [],
+    "desert": [],
+    "snow": []
+}
+
 class Map:
     def __init__(self):
         self.display_surface = pygame.display.get_surface()
