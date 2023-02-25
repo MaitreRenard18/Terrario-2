@@ -30,7 +30,7 @@ class Tile:
                 case _:
                     self.mined_texture: pygame.Surface = self.generate_mined_texture()
         
-        self.minable = minable
+        self.minable: bool = minable
         self.can_collide: bool = can_collide
         if drops is None:
             self.drops: list = []
@@ -46,7 +46,6 @@ class Tile:
 
     def mine(self) -> Union[str, None]:
         if not self.minable:
-            print(self.type)
             return None
 
         self.can_collide = False
