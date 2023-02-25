@@ -1,6 +1,6 @@
 import pygame, opensimplex, os, random
 from Classes.player import Player
-from Classes.tile import Tile
+from Classes.tile import Tile, Cave
 from Classes.props import *
 
 biomes = {
@@ -75,7 +75,7 @@ class Map:
             if y < 0:
                 value = int(opensimplex.noise2(x * self.scale * 0.5, 0) * 10)
 
-                self.tiles[x][y] = Tile("air", "air", False)
+                self.tiles[x][y] = Tile("air", "air", minable=False, can_collide=False)
                 if y == value:
                     self.tiles[x][y] = Tile(tile_palette["surface_block"], tile_palette["surface_block"])
 
@@ -104,7 +104,7 @@ class Map:
                     else:
                         if random.randint(0, 2) == 0:
                             type = "tulip" if random.randint(0, 1) else "weed"
-                            self.tiles[x][y-1] = Tile(type, type, False)
+                            self.tiles[x][y-1] = Tile(type, type, minable=False, can_collide=False)
                             
             else:
                 self.tiles[x][y] = Tile(tile_palette["primary_block"], tile_palette["primary_block"])
@@ -120,7 +120,7 @@ class Map:
             if opensimplex.noise2(x * self.scale, y * self.scale) < 0:
                 self.tiles[x][y] = Tile(tile_palette["primary_block"], tile_palette["primary_block"])
             else:
-                self.tiles[x][y] = Tile(tile_palette["cave_block"], tile_palette["cave_block"], False)
+                self.tiles[x][y] = Cave("cave", tile_palette["primary_block"])
             
     def render(self):
         self.display_surface.fill(pygame.Color(77, 165, 217))
@@ -133,9 +133,8 @@ class Map:
                 if not x in self.tiles or not y in self.tiles[x]:
                     self.generate_tile(x, y)
 
-                image = self.tiles[x][y].texture
-                offset_rect = pygame.Vector2(x * 32, y * 32) - self.offset
-                self.display_surface.blit(image, offset_rect)
+                offset_rect = pygame.Vector2(x, y) * 32 - self.offset
+                self.tiles[x][y].update(offset_rect)
 
         offset_rect = self.player.rect.copy()
         offset_rect.center -= self.offset

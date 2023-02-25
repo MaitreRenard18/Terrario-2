@@ -54,10 +54,7 @@ class Player(pygame.sprite.Sprite):
 
     def mine(self):
         current_tile = self.map.tiles[self.position.x][self.position.y]
-        if current_tile.type in PLAINS_BLOCKS:
-            current_tile.type = "cave"
-        if current_tile.type in DESERT_BLOCKS:
-            current_tile.type = "sandstone_cave"
+        current_tile.mine()
 
     def fall(self):
         tile_below = self.map.tiles[self.position.x][self.position.y + 1]
@@ -69,7 +66,7 @@ class Player(pygame.sprite.Sprite):
 
     def climb(self):
         tile_above = self.map.tiles[self.position.x][self.position.y + 1]
-        self.map.tiles[self.position.x][self.position.y + 1] = Scaffolding(tile_above.type, tile_above.type)
+        self.map.tiles[self.position.x][self.position.y + 1] = Scaffolding(tile_above.type, tile_above.texture)
         
         self.going_up = False
 
