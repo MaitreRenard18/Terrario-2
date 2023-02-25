@@ -1,5 +1,4 @@
 import pygame
-from Classes.VARIABLES import *
 from Classes.tile import Scaffolding
 
 class Player(pygame.sprite.Sprite):
