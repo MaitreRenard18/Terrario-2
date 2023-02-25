@@ -38,9 +38,8 @@ class Tile:
     def generate_mined_texture(self) -> pygame.Surface:
         overlay = pygame.Surface((32, 32)).convert_alpha()
         overlay.fill(pygame.Color(0, 0, 0, 64))
-        texture = self.texture.copy()
         surface = pygame.Surface((32, 32))
-        surface.blit(texture, (0, 0))
+        surface.blit(self.texture, (0, 0))
         surface.blit(overlay, (0, 0))
         return surface
 
