@@ -57,6 +57,18 @@ class Map:
 
         opensimplex.random_seed()
 
+    def get_tile(self, x, y):
+        if not x in self.tiles or not y in self.tiles[x]:
+            self.generate_tile(x, y)
+
+        return self.tiles[x][y]
+
+    def set_tile(self, x:int , y: int, tile: Tile):
+        if not x in self.tiles or not y in self.tiles[x]:
+            self.generate_tile(x, y)
+        
+        self.tiles[x][y] = tile
+
     def generate_tile(self, x, y):
         if not x in self.tiles:
             self.tiles[x] = {}
@@ -89,6 +101,9 @@ class Map:
                             self.generate_tile(x, y-1)
                             self.tiles[x][y-1].type = "tulip" if random.randint(0, 1) else "weed"
 
+                        if random.randint(0, 10) == 0:
+                            generate_tree(self, x, y-1)
+
                 elif y > value: 
                     self.tiles[x][y] = Tile(tile_palette["primary_block"], tile_palette["primary_block"])
 
@@ -100,7 +115,7 @@ class Map:
                 if self.tiles[x][y-1].type == "air":
                     if biome == "desert":
                         if random.randint(0, 10) == 0:
-                            generate_cactus(self, x, y - 1, random.randint(1, 4))
+                            generate_snowman(self, x, y - 1)
                     else:
                         if random.randint(0, 2) == 0:
                             type = "tulip" if random.randint(0, 1) else "weed"
