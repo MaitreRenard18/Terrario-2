@@ -57,17 +57,18 @@ class Map:
 
         opensimplex.random_seed()
 
-    def get_tile(self, x, y):
+    def get_tile(self, x: int, y: int) -> Tile:
         if not x in self.tiles or not y in self.tiles[x]:
             self.generate_tile(x, y)
 
         return self.tiles[x][y]
 
-    def set_tile(self, x:int , y: int, tile: Tile):
+    def set_tile(self, tile: Tile, x:int , y: int) -> Tile:
         if not x in self.tiles or not y in self.tiles[x]:
             self.generate_tile(x, y)
         
         self.tiles[x][y] = tile
+        return Tile
 
     def generate_tile(self, x, y):
         if not x in self.tiles:

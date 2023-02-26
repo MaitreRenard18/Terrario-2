@@ -1,11 +1,11 @@
 import pygame
-from Classes.tile import Scaffolding
+from Classes.tile import Scaffolding, Fluid
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, position, map):
         super().__init__()
 
-        self.image = pygame.transform.scale(pygame.image.load("Images/PLayer/Drill_right.png"), (32, 32))
+        self.image = pygame.transform.scale(pygame.image.load("Images/Tiles/Air.png"), (32, 32))
         self.rect = self.image.get_rect()
         
         self.position = pygame.Vector2(position)
@@ -27,6 +27,13 @@ class Player(pygame.sprite.Sprite):
 
         if not self.falling and self.moving >= 1:
             keys = pygame.key.get_pressed()
+            if keys[pygame.K_g]:
+                print("Placed water")
+                self.map.set_tile(Fluid(self.map, self.position.copy(), "water", "water", 25), self.position.x, self.position.y)
+
+            if keys[pygame.K_a]:
+                print(self.map.get_tile(self.position.x, self.position.y).can_collide)
+
             if keys[pygame.K_UP]:
                 self.position.y -= 1
                 self.going_up = True
@@ -47,7 +54,7 @@ class Player(pygame.sprite.Sprite):
                 self.position.x -= 1
                 self.facing("left")
                 return
-    
+
         self.mine()
         self.fall()
 
@@ -70,5 +77,5 @@ class Player(pygame.sprite.Sprite):
         self.going_up = False
 
     def facing(self, direction):
-        self.image = pygame.transform.scale(pygame.image.load(f"Images/PLayer/Drill_{direction}.png"), (32, 32))
+        #self.image = pygame.transform.scale(pygame.image.load(f"Images/PLayer/Drill_{direction}.png"), (32, 32))
         self.moving = 0
