@@ -1,8 +1,9 @@
 from random import randint
 from Classes.tile import Tile
 
+
 def _place_tile(map, type: str, x: int, y: int) -> Tile:
-    if not map.get_tile(x, y).can_collide:
+    if map.get_tile(x, y).type == "air":
         return map.set_tile(Tile(type, type, minable=False, can_collide=False), x, y)
 
 

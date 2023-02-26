@@ -1,5 +1,5 @@
 import pygame
-from Classes.tile import Scaffolding, Fluid
+from Classes.tile import Scaffolding
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, position, map):
@@ -27,10 +27,6 @@ class Player(pygame.sprite.Sprite):
 
         if not self.falling and self.moving >= 1:
             keys = pygame.key.get_pressed()
-            if keys[pygame.K_g]:
-                print("Placed water")
-                self.map.set_tile(Fluid(self.map, self.position.copy(), "water", "water", 1), self.position.x, self.position.y)
-
             if keys[pygame.K_a]:
                 print(self.map.get_tile(self.position.x, self.position.y).can_collide)
 
@@ -59,11 +55,11 @@ class Player(pygame.sprite.Sprite):
         self.fall()
 
     def mine(self):
-        current_tile = self.map.tiles[self.position.x][self.position.y]
+        current_tile = self.map._tiles[self.position.x][self.position.y]
         current_tile.mine()
 
     def fall(self):
-        tile_below = self.map.tiles[self.position.x][self.position.y + 1]
+        tile_below = self.map._tiles[self.position.x][self.position.y + 1]
         if not tile_below.can_collide:
             self.falling = True
             self.position.y += 1
@@ -71,8 +67,8 @@ class Player(pygame.sprite.Sprite):
             self.falling = False
 
     def climb(self):
-        tile_above = self.map.tiles[self.position.x][self.position.y + 1]
-        self.map.tiles[self.position.x][self.position.y + 1] = Scaffolding(tile_above.type, tile_above.texture)
+        tile_above = self.map._tiles[self.position.x][self.position.y + 1]
+        self.map._tiles[self.position.x][self.position.y + 1] = Scaffolding(tile_above.type, tile_above.texture)
         
         self.going_up = False
 
