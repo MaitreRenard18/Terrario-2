@@ -29,7 +29,7 @@ class Player(pygame.sprite.Sprite):
             keys = pygame.key.get_pressed()
             if keys[pygame.K_g]:
                 print("Placed water")
-                self.map.set_tile(Fluid(self.map, self.position.copy(), "water", "water", 25), self.position.x, self.position.y)
+                self.map.set_tile(Fluid(self.map, self.position.copy(), "water", "water", 1), self.position.x, self.position.y)
 
             if keys[pygame.K_a]:
                 print(self.map.get_tile(self.position.x, self.position.y).can_collide)
