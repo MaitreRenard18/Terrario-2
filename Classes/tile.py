@@ -114,9 +114,9 @@ class Fluid(Tile):
         
             tile = self.map.get_tile(x, y)
             if type(tile) is Fluid:
-                if tile.fluid_level < 1:
-                    self.fluid_level -= 0.1
+                if int(tile.fluid_level) < 1:
                     tile.fluid_level += 0.1
+                    self.fluid_level -= 0.1
 
             elif not (tile.can_collide):
                 self.fluid_level -= 0.1
