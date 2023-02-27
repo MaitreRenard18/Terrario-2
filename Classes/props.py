@@ -71,5 +71,36 @@ def generate_plants(map, x: int, y:int) -> None:
 def generate_dead_weed(map, x: int, y:int) -> None:
     _place_tile(map, "dead_weed", x, y)
 
-def generate_snowy_tree(map, x, y):
-    pass
+def generate_snowy_tree(map, x: int, y: int):
+    x, y = int(x), int(y)
+
+    if map.get_tile(Vector2(x+1, y)).type != "air" or map.get_tile(Vector2(x-1, y)).type != "air":
+        return
+    
+    _place_tile(map, "fir_trunk", x, y)
+    _place_tile(map, "fir_leaves_covered_trunk", x, y-1)
+    _place_tile(map, "fir_leaves", x+1, y-1)
+    _place_tile(map, "fir_leaves", x-1, y-1)
+    for i in range(-6, -1):
+        _place_tile(map, "fir_dark_leaves_covered_trunk", x, y+i)
+    for i in range(-4, -1):
+        _place_tile(map, "fir_dark_leaves", x-1, y+i)
+    for i in range(-4, -1):
+        _place_tile(map, "fir_dark_leaves", x+1, y+i)
+
+    _place_tile(map, "fir_leaves", x-2, y-2)
+    _place_tile(map, "fir_leaves", x-2, y-3)
+    _place_tile(map, "fir_snow_covered_leaves", x-2, y-4)
+
+    _place_tile(map, "fir_leaves", x+2, y-2)
+    _place_tile(map, "fir_leaves", x+2, y-3)
+    _place_tile(map, "fir_snow_covered_leaves", x+2, y-4)
+
+    _place_tile(map, "fir_leaves", x-1, y-5)
+    _place_tile(map, "fir_snow_covered_leaves", x-1, y-6)
+
+    _place_tile(map, "fir_leaves", x+1, y-5)
+    _place_tile(map, "fir_snow_covered_leaves", x+1, y-6)
+
+    _place_tile(map, "fir_leaves", x, y-7)
+    _place_tile(map, "fir_snow_covered_leaves", x, y-8)
