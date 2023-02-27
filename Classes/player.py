@@ -27,9 +27,6 @@ class Player(pygame.sprite.Sprite):
 
         if not self.falling and self.moving >= 1:
             keys = pygame.key.get_pressed()
-            if keys[pygame.K_a]:
-                print(self.map.get_tile(self.position.x, self.position.y).can_collide)
-
             if keys[pygame.K_UP]:
                 self.position.y -= 1
                 self.going_up = True

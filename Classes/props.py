@@ -1,13 +1,19 @@
-from random import randint
+from random import randint, choice
+from pygame import Vector2
 from Classes.tile import Tile
 
-
 def _place_tile(map, type: str, x: int, y: int) -> Tile:
-    if map.get_tile(x, y).type == "air":
-        return map.set_tile(Tile(type, type, minable=False, can_collide=False), x, y)
+    x, y = int(x), int(y)
+    
+    if map.get_tile(Vector2(x, y)).type == "air":
+        return map.set_tile(Tile(type, type, minable=False, can_collide=False), Vector2(x, y))
 
+def generate_nothing(map, x: int, y:int) -> None:
+    return None
 
 def generate_cactus(map, x: int, y: int, height: int = None) -> None:
+    x, y = int(x), int(y)
+
     if height is None:
         height = randint(1, 4)
 
@@ -20,6 +26,11 @@ def generate_cactus(map, x: int, y: int, height: int = None) -> None:
 
 
 def generate_snowman(map, x: int, y: int) -> None:
+    x, y = int(x), int(y)
+
+    if map.get_tile(Vector2(x+1, y)).type == "snowman_belly" or map.get_tile(Vector2(x-1, y)).type == "snowman_belly":
+        return
+    
     _place_tile(map, "snowman_belly", x, y)
     _place_tile(map, "snowman_torso", x, y-1)
     _place_tile(map, "snowman_right_arm", x-1, y-1)
@@ -28,10 +39,15 @@ def generate_snowman(map, x: int, y: int) -> None:
 
 
 def generate_tree(map, x: int, y: int) -> None:
-    map.set_tile(Tile("oak_trunk", "oak_trunk", minable=False, can_collide=False), x, y)
-    map.set_tile(Tile("oak_trunk", "oak_trunk", minable=False, can_collide=False), x, y-1)
-    map.set_tile(Tile("oak_branch", "oak_branch", minable=False, can_collide=False), x+1, y-1)
-    map.set_tile(Tile("oak_leaves_covered_trunk", "oak_leaves_covered_trunk", minable=False, can_collide=False), x, y-2)
+    x, y = int(x), int(y)
+
+    if map.get_tile(Vector2(x+1, y)).type == "oak_trunk" or map.get_tile(Vector2(x-1, y)).type == "oak_trunk":
+        return
+
+    map.set_tile(Tile("oak_trunk", "oak_trunk", minable=False, can_collide=False), Vector2(x, y))
+    map.set_tile(Tile("oak_trunk", "oak_trunk", minable=False, can_collide=False), Vector2(x, y-1))
+    map.set_tile(Tile("oak_branch", "oak_branch", minable=False, can_collide=False), Vector2(x+1, y-1))
+    map.set_tile(Tile("oak_leaves_covered_trunk", "oak_leaves_covered_trunk", minable=False, can_collide=False), Vector2(x, y-2))
     _place_tile(map, "oak_dark_leaves", x, y-3)
 
     for i in range(y-3, y-1):
@@ -48,5 +64,12 @@ def generate_tree(map, x: int, y: int) -> None:
         _place_tile(map, "oak_leaves", i, y-4)
 
 
-def generate_snowy_tree(map, x, y, height):
+def generate_plants(map, x: int, y:int) -> None:
+    plant = choice(["weed", "tulip"])
+    _place_tile(map, plant, x, y)
+
+def generate_dead_weed(map, x: int, y:int) -> None:
+    _place_tile(map, "dead_weed", x, y)
+
+def generate_snowy_tree(map, x, y):
     pass

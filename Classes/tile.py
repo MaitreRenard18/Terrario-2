@@ -40,7 +40,6 @@ class Tile:
 
     def mine(self) -> Union[str, None]:
         if not self.minable:
-            print(self.minable)   
             return None
 
         self.can_collide = False
@@ -48,10 +47,7 @@ class Tile:
         return choice(self.drops) if len(self.drops) > 0 else None
     
     def update(self, position: Vector2) -> None:
-        try:
-            pygame.display.get_surface().blit(self.texture, position)
-        except:
-            print(type(self))
+        pygame.display.get_surface().blit(self.texture, position)
 
 
 class Cave(Tile):

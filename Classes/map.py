@@ -11,7 +11,7 @@ biomes: dict[Union[float, int], list[str]] = {
     256: ["lush_cave"],
     128: ["crystal_cave", "haunted_cave"],
     16: ["sand_cave", "cave", "snowy_cave"],
-    float("-inf"): ["desert", "forest", "snow"]
+    float("-inf"): ["desert", "forest", "snowy_forest"]
 }
 
 tile_palettes = {
@@ -25,7 +25,7 @@ tile_palettes = {
         "top_tile": "sand"
     },
 
-    "snow": {
+    "snowy_forest": {
         "primary_tile": "snowy_dirt",
         "top_tile": "snowy_grass"
     },
@@ -37,15 +37,15 @@ tile_palettes = {
 }
 
 props = {
-    "forest": [generate_tree],
-    "desert": [generate_cactus],
-    "snow": [generate_snowy_tree]
+    "forest": [generate_tree, generate_plants, generate_plants],
+    "desert": [generate_cactus, generate_dead_weed, generate_dead_weed],
+    "snowy_forest": [generate_snowy_tree, generate_snowman]
 }
 
 ores = {
     "forest": [],
     "desert": [],
-    "snow": []
+    "snowy_forest": []
 }
 
 class Map:
@@ -56,7 +56,7 @@ class Map:
         self.player: Player = Player((0, 0), self)
 
         self.scale: float = 0.1
-        self.biome_size: float = 0.01
+        self.biome_size: float = 0.0075
 
         self.render_distance: int = 32
 
@@ -64,13 +64,13 @@ class Map:
 
     def get_tile(self, position: Vector2) -> Tile:
         if not position.x in self._tiles or not position.y in self._tiles[position.x]:
-            self.generate_tile(position)
+            self.generate_tile(position.copy())
 
         return self._tiles[position.x][position.y]
 
     def set_tile(self, tile: Tile, position: Vector2) -> Tile:
         if not position.x in self._tiles or not position.y in self._tiles[position.x]:
-            self.generate_tile(position)
+            self.generate_tile(position.copy())
         
         self._tiles[position.x][position.y] = tile
         return tile
@@ -82,13 +82,13 @@ class Map:
         for k in biomes.keys():
             if position.y >= k:
                 number_range = 2 / len(biomes[k])
-                noise_value = opensimplex.noise2(position.x * self.biome_size, 0) + 1
+                noise_value = opensimplex.noise2(position.x * self.biome_size, position.y * self.biome_size) + 1
                 biome = biomes[k][int(noise_value // number_range)]
                 break
-
+        
         tile_palette = tile_palettes[biome] if biome in tile_palettes else tile_palettes["cave"]
         if position.y < 16:
-            noise_value = int(opensimplex.noise2(position.x * self.scale * 0.5, 0) * 10)
+            noise_value = int(opensimplex.noise2(position.x * self.scale * 0.25, 0) * 8)
             if position.y == noise_value:
                 self._tiles[position.x][position.y] = Tile(tile_palette["top_tile"], tile_palette["top_tile"])
             
@@ -103,7 +103,12 @@ class Map:
                 self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
             else:
                 self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], tile_palette["primary_tile"])
-                
+        
+        #Génération des props
+        if self._tiles[position.x][position.y].can_collide and not self.get_tile(position - Vector2(0, 1)).can_collide and biome in props:
+            if randint(1, 4) == 1:
+                choice(props[biome])(self, position.x, position.y-1)
+
         return self._tiles[position.x][position.y]
         
     def render(self) -> None:
