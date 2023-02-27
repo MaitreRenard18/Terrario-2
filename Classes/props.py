@@ -25,17 +25,8 @@ def generate_cactus(map, x: int, y: int, height: int = None) -> None:
     generate_cactus(map, x, y-1, height-1)
 
 
-def generate_snowman(map, x: int, y: int) -> None:
-    x, y = int(x), int(y)
-
-    if map.get_tile(Vector2(x+1, y)).type == "snowman_belly" or map.get_tile(Vector2(x-1, y)).type == "snowman_belly":
-        return
-    
-    _place_tile(map, "snowman_belly", x, y)
-    _place_tile(map, "snowman_torso", x, y-1)
-    _place_tile(map, "snowman_right_arm", x-1, y-1)
-    _place_tile(map, "snowman_left_arm", x+1, y-1)
-    _place_tile(map, "snowman_head", x, y-2)
+def generate_dead_weed(map, x: int, y:int) -> None:
+    _place_tile(map, "dead_weed", x, y)
 
 
 def generate_tree(map, x: int, y: int) -> None:
@@ -68,8 +59,6 @@ def generate_plants(map, x: int, y:int) -> None:
     plant = choice(["weed", "tulip"])
     _place_tile(map, plant, x, y)
 
-def generate_dead_weed(map, x: int, y:int) -> None:
-    _place_tile(map, "dead_weed", x, y)
 
 def generate_snowy_tree(map, x: int, y: int):
     x, y = int(x), int(y)
@@ -104,3 +93,18 @@ def generate_snowy_tree(map, x: int, y: int):
 
     _place_tile(map, "fir_leaves", x, y-7)
     _place_tile(map, "fir_snow_covered_leaves", x, y-8)
+
+def generate_snowman(map, x: int, y: int) -> None:
+    x, y = int(x), int(y)
+
+    if map.get_tile(Vector2(x+1, y)).type == "snowman_belly" or map.get_tile(Vector2(x-1, y)).type == "snowman_belly":
+        return
+    
+    _place_tile(map, "snowman_belly", x, y)
+    _place_tile(map, "snowman_torso", x, y-1)
+    _place_tile(map, "snowman_right_arm", x-1, y-1)
+    _place_tile(map, "snowman_left_arm", x+1, y-1)
+    _place_tile(map, "snowman_head", x, y-2)
+
+def generate_snowy_weed(map, x: int, y: int) -> None:
+    _place_tile(map, "snowy_weed", x, y)

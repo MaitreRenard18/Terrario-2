@@ -39,7 +39,7 @@ tile_palettes = {
 props = {
     "forest": [generate_tree, generate_plants, generate_plants],
     "desert": [generate_cactus, generate_dead_weed, generate_dead_weed],
-    "snowy_forest": [generate_snowy_tree, generate_snowy_tree, generate_snowman, generate_nothing, generate_nothing, generate_nothing]
+    "snowy_forest": [generate_snowy_tree, generate_snowy_tree, generate_snowy_weed, generate_snowy_weed, generate_snowman]
 }
 
 ores = {
