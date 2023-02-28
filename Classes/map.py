@@ -10,7 +10,7 @@ biomes: dict[Union[float, int], list[str]] = {
     512: ["hell"],
     256: ["lush_cave"],
     128: ["crystal_cave", "haunted_cave"],
-    16: ["sand_cave", "cave", "snowy_cave"],
+    16: ["sand_cave", "cave", "ice_cave"],
     float("-inf"): ["desert", "forest", "snowy_forest"]
 }
 
@@ -33,6 +33,16 @@ tile_palettes = {
     "cave": {
         "primary_tile": "stone",
         "top_tile": "stone"
+    },
+
+    "sand_cave": {
+        "primary_tile": "sandstone",
+        "top_tile": "sandstone"
+    },
+
+    "ice_cave": {
+        "primary_tile": "ice",
+        "top_tile": "ice"
     }
 }
 
@@ -53,7 +63,7 @@ class Map:
         self.display_surface: Surface = display.get_surface()
 
         self._tiles: dict[int, dict[int, Tile]] = {}
-        self.player: Player = Player((0, 0), self)
+        self.player: Player = Player((0, -1), self)
 
         self.scale: float = 0.1
         self.biome_size: float = 0.0075
@@ -82,7 +92,7 @@ class Map:
         for k in biomes.keys():
             if position.y >= k:
                 number_range = 2 / len(biomes[k])
-                noise_value = opensimplex.noise2(position.x * self.biome_size, position.y * self.biome_size) + 1
+                noise_value = opensimplex.noise2(position.x * self.biome_size, position.y * self.biome_size * 0.5) + 1
                 biome = biomes[k][int(noise_value // number_range)]
                 break
         

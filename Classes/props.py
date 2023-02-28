@@ -66,12 +66,12 @@ def generate_snowy_tree(map, x: int, y: int):
     if map.get_tile(Vector2(x+1, y)).type != "air" or map.get_tile(Vector2(x-1, y)).type != "air":
         return
     
-    _place_tile(map, "fir_trunk", x, y)
-    _place_tile(map, "fir_leaves_covered_trunk", x, y-1)
+    map.set_tile(Tile("fir_trunk", "fir_trunk", minable=False, can_collide=False), Vector2(x, y))
+    map.set_tile(Tile("fir_leaves_covered_trunk", "fir_leaves_covered_trunk", minable=False, can_collide=False), Vector2(x, y-1))
     _place_tile(map, "fir_leaves", x+1, y-1)
     _place_tile(map, "fir_leaves", x-1, y-1)
     for i in range(-6, -1):
-        _place_tile(map, "fir_dark_leaves_covered_trunk", x, y+i)
+        map.set_tile(Tile("fir_dark_leaves_covered_trunk", "fir_dark_leaves_covered_trunk", minable=False, can_collide=False), Vector2(x, y+i))
     for i in range(-4, -1):
         _place_tile(map, "fir_dark_leaves", x-1, y+i)
     for i in range(-4, -1):
@@ -100,11 +100,11 @@ def generate_snowman(map, x: int, y: int) -> None:
     if map.get_tile(Vector2(x+1, y)).type == "snowman_belly" or map.get_tile(Vector2(x-1, y)).type == "snowman_belly":
         return
     
-    _place_tile(map, "snowman_belly", x, y)
-    _place_tile(map, "snowman_torso", x, y-1)
+    map.set_tile(Tile("snowman_belly", "snowman_belly", minable=False, can_collide=False), Vector2(x, y))
+    map.set_tile(Tile("snowman_torso", "snowman_torso", minable=False, can_collide=False), Vector2(x, y-1))
     _place_tile(map, "snowman_right_arm", x-1, y-1)
     _place_tile(map, "snowman_left_arm", x+1, y-1)
-    _place_tile(map, "snowman_head", x, y-2)
+    map.set_tile(Tile("snowman_head", "snowman_head", minable=False, can_collide=False), Vector2(x, y-2))
 
 def generate_snowy_weed(map, x: int, y: int) -> None:
     _place_tile(map, "snowy_weed", x, y)
