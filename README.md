@@ -3,17 +3,15 @@
 </p>
 
 # Présentation du projet
-Terrario 2 est la suite du mondialement connu <a href="https://github.com/MaitreRenard18/Terrario">Terrario<a>.
+Terrario 2 est la suite du mondialement connu [Terrario](https://github.com/MaitreRenard18/Terrario).
 
 # Prérequis
-Il faudra installer le module python Pygame et Opensimplex ainsi qu'installer la police d'écriture fournie dans le dossier, pour que le jeu fonctionne correctement.
+Il faudra installer le module python Pygame et Opensimplex pour que le jeu fonctionne.
 
+Ci dessous la commandes pour installer ces modules :
 
-<p>Ci dessous les commandes pour installer ces modules :</p>
-
-```
->>> pip install pygame
->>> pip install opensimplex
+```bash
+  $ pip install -r requirements.txt
 ```
 
 # Comment jouer ?
