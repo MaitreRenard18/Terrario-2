@@ -88,11 +88,10 @@ class Map:
     def generate_tile(self, position: Vector2) -> Tile:
         if not position.x in self._tiles:
             self._tiles[position.x] = {}
-
         for k in biomes.keys():
-            if position.y >= k:
+            if position.y + randint(0, 3) >= k:
                 number_range = 2 / len(biomes[k])
-                noise_value = opensimplex.noise2(position.x * self.biome_size, position.y * self.biome_size * 0.5) + 1
+                noise_value = opensimplex.noise2((position.x + randint(0, 3)) * self.biome_size, 0) + 1
                 biome = biomes[k][int(noise_value // number_range)]
                 break
         
