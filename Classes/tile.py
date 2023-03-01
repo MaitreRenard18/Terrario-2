@@ -39,7 +39,7 @@ class Tile:
         surface.blit(overlay, (0, 0))
         return surface
 
-    def mine(self) -> Union[str, None]:
+    def destroy(self) -> Union[str, None]:
         if not self.minable:
             return None
 
