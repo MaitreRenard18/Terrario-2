@@ -8,7 +8,7 @@ Terrario 2 est la suite du mondialement connu [Terrario](https://github.com/Mait
 # Prérequis
 Il faudra installer le module python Pygame et Opensimplex pour que le jeu fonctionne.
 
-<p>Ci dessous la commandes pour installer ces modules :</p>
+Ci dessous la commandes pour installer ces modules :
 
 ```bash
   $ pip install -r requirements.txt
