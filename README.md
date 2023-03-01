@@ -11,7 +11,7 @@ Il faudra installer le module python Pygame et Opensimplex pour que le jeu fonct
 Ci dessous la commandes pour installer ces modules :
 
 ```bash
-  $ pip install -r requirements.txt
+  $ pip install -r Requirements.txt
 ```
 
 # Comment jouer ?
