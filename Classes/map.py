@@ -96,7 +96,7 @@ class Map:
                 break
         
         tile_palette = tile_palettes[biome] if biome in tile_palettes else tile_palettes["cave"]
-        if position.y < 16:
+        if position.y - randint(0, 3) < 16:
             noise_value = int(opensimplex.noise2(position.x * self.scale * 0.25, 0) * 8)
             if position.y == noise_value:
                 self._tiles[position.x][position.y] = Tile(tile_palette["top_tile"], tile_palette["top_tile"])
