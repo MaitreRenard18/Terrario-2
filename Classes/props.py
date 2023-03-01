@@ -1,5 +1,7 @@
 from random import randint, choice
+
 from pygame import Vector2
+
 from Classes.tile import Tile
 
 def _place_tile(map, type: str, x: int, y: int) -> Tile:

@@ -1,6 +1,7 @@
 import pygame, os
-from random import choice, randint
+from random import choice
 from typing import Union
+
 from pygame import Surface, Vector2, Color
 
 

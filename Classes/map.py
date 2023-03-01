@@ -1,10 +1,11 @@
-import  opensimplex, random
-from pygame import Vector2, Surface, Color, transform, image, display
 from typing import Union
+
+import pygame,  opensimplex
+from pygame import Vector2, Surface, Color, transform, image, display
+
 from Classes.player import Player
 from Classes.tile import Tile, Cave
 from Classes.props import *
-
 
 biomes: dict[Union[float, int], list[str]] = {
     512: ["hell"],
