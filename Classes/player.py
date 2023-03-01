@@ -2,73 +2,85 @@ import pygame
 from Classes.tile import Scaffolding
 
 class Player(pygame.sprite.Sprite):
+
     def __init__(self, position, map):
         super().__init__()
 
-        self.image = pygame.transform.scale(pygame.image.load("Images/Player/Drill_right.png"), (32, 32))
+        self.image = pygame.transform.scale(pygame.image.load("Images/PLayer/Drill_right.png"), (32, 32))
+        self.tip = pygame.transform.scale(pygame.image.load("Images/PLayer/DrillTip_right.png"), (32, 32))
         self.rect = self.image.get_rect()
-        
+
+        self.original_pos = pygame.Vector2()
         self.position = pygame.Vector2(position)
+        self.destination = pygame.Vector2()
         self.rect.topleft = self.position * 32
 
-        self.moving = 1
-        self.falling = False
-        self.going_up = False
+        self.going = ["right", (1,0)]
+        self.falling = None
 
         self.map = map
 
     def update(self):
 
-        if self.moving < 1:
-            self.moving += 0.5
-
-
         self.rect.topleft = self.position * 32
+        pygame.sprite.Sprite.update(self)
 
-        if not self.falling and self.moving >= 1:
+        self.mine()
+        #self.fall() Je désactive la gravité, parce qu'elle bug
+
+        if self.position != self.destination:
+            self.position += (self.destination - self.original_pos) / 5
+            return
+        
+        self.original_pos.x = self.position.x
+        self.original_pos.y = self.position.y
+
+        if self.falling == None:
             keys = pygame.key.get_pressed()
             if keys[pygame.K_UP]:
-                self.position.y -= 1
-                self.going_up = True
-                self.facing("up")
+                self.destination.y -= 1
+                self.original_pos.y = self.position.y
+                self.going = ["up", (0, -1)]
                 return
 
             if keys[pygame.K_DOWN]:
-                self.position.y += 1
-                self.facing("down")
+                self.destination.y += 1
+                self.original_pos.y = self.position.y
+                self.going = ["down", (0, 1)]
                 return
 
             if keys[pygame.K_RIGHT]:
-                self.position.x += 1
-                self.facing("right")
+                self.destination.x += 1
+                self.original_pos.x = self.position.x
+                self.going = ["right", (1, 0)]
                 return
 
             if keys[pygame.K_LEFT]:
-                self.position.x -= 1
-                self.facing("left")
+                self.destination.x -= 1
+                self.original_pos.x = self.position.x
+                self.going = ["left", (-1, 0)]
                 return
 
-        self.mine()
-        self.fall()
-
     def mine(self):
-        current_tile = self.map._tiles[self.position.x][self.position.y]
-        current_tile.mine()
+        current_tile = self.map.get_tile(self.destination.x, self.destination.y)
+        current_tile.destroy()
 
     def fall(self):
-        tile_below = self.map._tiles[self.position.x][self.position.y + 1]
+        tile_below = self.map.get_tile(self.destination.x, self.destination.y + 1)
         if not tile_below.can_collide:
-            self.falling = True
-            self.position.y += 1
+            if self.falling is None:
+                self.falling = 0.5
+
+            self.destination.y += round(self.falling)
+            self.falling += 0.15
+
         else:
-            self.falling = False
+            self.falling = None
 
     def climb(self):
-        tile_above = self.map._tiles[self.position.x][self.position.y + 1]
-        self.map._tiles[self.position.x][self.position.y + 1] = Scaffolding(tile_above.type, tile_above.texture)
-        
-        self.going_up = False
-
+        tile_below = self.map.get_tile(self.destination.x, self.destination.y + 1)
+        self.map.tiles[self.destination.x][self.destination.y + 1] = Scaffolding(tile_below.type, tile_below.texture)
+            
     def facing(self, direction):
-        self.image = pygame.transform.scale(pygame.image.load(f"Images/Player/Drill_{direction}.png"), (32, 32))
-        self.moving = 0
+        self.image = pygame.transform.scale(pygame.image.load(f"Images/PLayer/Drill_{direction[0]}.png"), (32, 32))
+        self.tip = pygame.transform.scale(pygame.image.load(f"Images/PLayer/DrillTip_{direction[0]}.png"), (32, 32))
