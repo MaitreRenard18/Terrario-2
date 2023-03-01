@@ -135,10 +135,11 @@ class Map:
 
         offset_rect = self.player.rect.copy()
         offset_rect.center -= offset
+        
+        self.player.facing(self.player.going)
+
         self.display_surface.blit(self.player.image, offset_rect)
+        self.display_surface.blit(self.player.tip, (offset_rect.x + self.player.going[1][0] * 32, offset_rect.y + self.player.going[1][1] * 32))
         
-        if self.player.going_up == True:
+        if self.player.going[0] == "up":
             self.player.climb()
-        
-        if self.player.falling:
-            self.display_surface.blit(transform.scale(image.load("Images/PLayer/Parachute.png"), (32, 32)), (offset_rect[0], offset_rect[1] - 32))
