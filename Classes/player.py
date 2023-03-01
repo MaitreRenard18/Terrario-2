@@ -5,7 +5,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, position, map):
         super().__init__()
 
-        self.image = pygame.transform.scale(pygame.image.load("Images/PLayer/Drill_right.png"), (32, 32))
+        self.image = pygame.transform.scale(pygame.image.load("Images/Player/Drill_right.png"), (32, 32))
         self.rect = self.image.get_rect()
         
         self.position = pygame.Vector2(position)
@@ -47,16 +47,16 @@ class Player(pygame.sprite.Sprite):
                 self.position.x -= 1
                 self.facing("left")
                 return
-    
+
         self.mine()
         self.fall()
 
     def mine(self):
-        current_tile = self.map.tiles[self.position.x][self.position.y]
+        current_tile = self.map._tiles[self.position.x][self.position.y]
         current_tile.mine()
 
     def fall(self):
-        tile_below = self.map.tiles[self.position.x][self.position.y + 1]
+        tile_below = self.map._tiles[self.position.x][self.position.y + 1]
         if not tile_below.can_collide:
             self.falling = True
             self.position.y += 1
@@ -64,11 +64,11 @@ class Player(pygame.sprite.Sprite):
             self.falling = False
 
     def climb(self):
-        tile_above = self.map.tiles[self.position.x][self.position.y + 1]
-        self.map.tiles[self.position.x][self.position.y + 1] = Scaffolding(tile_above.type, tile_above.texture)
+        tile_above = self.map._tiles[self.position.x][self.position.y + 1]
+        self.map._tiles[self.position.x][self.position.y + 1] = Scaffolding(tile_above.type, tile_above.texture)
         
         self.going_up = False
 
     def facing(self, direction):
-        self.image = pygame.transform.scale(pygame.image.load(f"Images/PLayer/Drill_{direction}.png"), (32, 32))
+        self.image = pygame.transform.scale(pygame.image.load(f"Images/Player/Drill_{direction}.png"), (32, 32))
         self.moving = 0

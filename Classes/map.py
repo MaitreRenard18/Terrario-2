@@ -1,162 +1,143 @@
-import pygame, opensimplex, os, random
+import  opensimplex, random
+from pygame import Vector2, Surface, Color, transform, image, display
+from typing import Union
 from Classes.player import Player
 from Classes.tile import Tile, Cave
 from Classes.props import *
 
-biomes = {
-    float("-inf"): ["forest", "desert", "snow"],
-    16: ["cave", "sand_cave", "snowy_cave"],
-    128: ["crystal_cave", "haunted_cave"],
+
+biomes: dict[Union[float, int], list[str]] = {
+    512: ["hell"],
     256: ["lush_cave"],
-    512: ["hell"]
+    128: ["crystal_cave", "haunted_cave"],
+    16: ["sand_cave", "cave", "ice_cave"],
+    float("-inf"): ["desert", "forest", "snowy_forest"]
 }
 
-tile_palette = {
+tile_palettes = {
     "forest": {
-        "background": "air",
         "primary_tile": "dirt",
         "top_tile": "grass"
     },
 
     "desert": {
-        "background": "air",
         "primary_tile": "sand",
         "top_tile": "sand"
     },
 
-    "snow": {
-        "background": "air",
-        "primary_tile": "dirt",
+    "snowy_forest": {
+        "primary_tile": "snowy_dirt",
         "top_tile": "snowy_grass"
+    },
+
+    "cave": {
+        "primary_tile": "stone",
+        "top_tile": "stone"
+    },
+
+    "sand_cave": {
+        "primary_tile": "sandstone",
+        "top_tile": "sandstone"
+    },
+
+    "ice_cave": {
+        "primary_tile": "ice",
+        "top_tile": "ice"
     }
 }
 
 props = {
-    "forest": [generate_tree],
-    "desert": [generate_cactus],
-    "snow": [generate_snowy_tree]
+    "forest": [generate_tree, generate_plants, generate_plants],
+    "desert": [generate_cactus, generate_dead_weed, generate_dead_weed],
+    "snowy_forest": [generate_snowy_tree, generate_snowy_tree, generate_snowy_weed, generate_snowy_weed, generate_snowman]
 }
 
 ores = {
     "forest": [],
     "desert": [],
-    "snow": []
+    "snowy_forest": []
 }
 
 class Map:
-    def __init__(self):
-        self.display_surface = pygame.display.get_surface()
+    def __init__(self) -> None:
+        self.display_surface: Surface = display.get_surface()
 
-        self.tiles = {}
-        self.player = Player((0, 0), self)
+        self._tiles: dict[int, dict[int, Tile]] = {}
+        self.player: Player = Player((0, -1), self)
 
-        self.scale = 0.1
+        self.scale: float = 0.1
+        self.biome_size: float = 0.0075
 
-        self.offset = pygame.Vector2()
-        self.render_distance = 32
+        self.render_distance: int = 32
 
         opensimplex.random_seed()
 
-    def get_tile(self, x, y):
-        if not x in self.tiles or not y in self.tiles[x]:
-            self.generate_tile(x, y)
+    def get_tile(self, position: Vector2) -> Tile:
+        if not position.x in self._tiles or not position.y in self._tiles[position.x]:
+            self.generate_tile(position.copy())
 
-        return self.tiles[x][y]
+        return self._tiles[position.x][position.y]
 
-    def set_tile(self, x:int , y: int, tile: Tile):
-        if not x in self.tiles or not y in self.tiles[x]:
-            self.generate_tile(x, y)
+    def set_tile(self, tile: Tile, position: Vector2) -> Tile:
+        if not position.x in self._tiles or not position.y in self._tiles[position.x]:
+            self.generate_tile(position.copy())
         
-        self.tiles[x][y] = tile
+        self._tiles[position.x][position.y] = tile
+        return tile
 
-    def generate_tile(self, x, y):
-        if not x in self.tiles:
-            self.tiles[x] = {}
-
-        if y in self.tiles[x]:
-            return
-
-        # Génération de la surface
-        if y < 4:
-            biome = "plains" if opensimplex.noise2(x * 0.0075, y * 0.0075) > 0 else "desert"
-            tile_palette = {
-                "surface_block": "grass" if biome == "plains" else "sand",
-                "primary_block": "dirt" if biome == "plains" else "sand"
-            }
-
-            if y < 0:
-                value = int(opensimplex.noise2(x * self.scale * 0.5, 0) * 10)
-
-                self.tiles[x][y] = Tile("air", "air", minable=False, can_collide=False)
-                if y == value:
-                    self.tiles[x][y] = Tile(tile_palette["surface_block"], tile_palette["surface_block"])
-
-                    if biome == "desert":
-                        if random.randint(0, 10) == 0:
-                            self.generate_tile(x, y-1)
-                            generate_cactus(self, x, y - 1, random.randint(1, 4))
-
-                    else:
-                        if random.randint(0, 2) == 0:
-                            self.generate_tile(x, y-1)
-                            self.tiles[x][y-1].type = "tulip" if random.randint(0, 1) else "weed"
-
-                        if random.randint(0, 10) == 0:
-                            generate_tree(self, x, y-1)
-
-                elif y > value: 
-                    self.tiles[x][y] = Tile(tile_palette["primary_block"], tile_palette["primary_block"])
-
-            elif y == 0:
-                self.generate_tile(x, y-1)
-                type = tile_palette["surface_block"] if self.tiles[x][y-1].type == "air" else tile_palette["primary_block"]
-                self.tiles[x][y] = Tile(type, type)
-
-                if self.tiles[x][y-1].type == "air":
-                    if biome == "desert":
-                        if random.randint(0, 10) == 0:
-                            generate_snowman(self, x, y - 1)
-                    else:
-                        if random.randint(0, 2) == 0:
-                            type = "tulip" if random.randint(0, 1) else "weed"
-                            self.tiles[x][y-1] = Tile(type, type, minable=False, can_collide=False)
-                            
-            else:
-                self.tiles[x][y] = Tile(tile_palette["primary_block"], tile_palette["primary_block"])
-
-        # Génération des grottes
-        else:
-            biome = "plains" if opensimplex.noise2(x * 0.0075, y * 0.0025) > 0 else "desert"
-            tile_palette = {
-                "primary_block": "stone" if biome == "plains" else "sandstone",
-                "cave_block": "cave" if biome == "plains" else "sandstone_cave"
-            }
-
-            if opensimplex.noise2(x * self.scale, y * self.scale) < 0:
-                self.tiles[x][y] = Tile(tile_palette["primary_block"], tile_palette["primary_block"])
-            else:
-                self.tiles[x][y] = Cave("cave", tile_palette["primary_block"])
+    def generate_tile(self, position: Vector2) -> Tile:
+        if not position.x in self._tiles:
+            self._tiles[position.x] = {}
+        for k in biomes.keys():
+            if position.y + randint(0, 3) >= k:
+                number_range = 2 / len(biomes[k])
+                noise_value = opensimplex.noise2((position.x + randint(0, 3)) * self.biome_size, 0) + 1
+                biome = biomes[k][int(noise_value // number_range)]
+                break
+        
+        tile_palette = tile_palettes[biome] if biome in tile_palettes else tile_palettes["cave"]
+        if position.y - randint(0, 3) < 16:
+            noise_value = int(opensimplex.noise2(position.x * self.scale * 0.25, 0) * 8)
+            if position.y == noise_value:
+                self._tiles[position.x][position.y] = Tile(tile_palette["top_tile"], tile_palette["top_tile"])
             
-    def render(self):
-        self.display_surface.fill(pygame.Color(77, 165, 217))
+            elif position.y > noise_value:
+                self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
 
-        self.offset.x = self.player.rect.centerx - self.display_surface.get_width() / 2
-        self.offset.y = self.player.rect.centery - self.display_surface.get_height() / 2
+            else:
+                self._tiles[position.x][position.y] = Tile("air", "air", minable=False, can_collide=False)
+
+        else:
+            if opensimplex.noise2(position.x * self.scale, position.y * self.scale) < 0:
+                self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
+            else:
+                self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], tile_palette["primary_tile"])
+        
+        #Génération des props
+        if self._tiles[position.x][position.y].can_collide and not self.get_tile(position - Vector2(0, 1)).can_collide and biome in props:
+            if randint(1, 4) == 1:
+                choice(props[biome])(self, position.x, position.y-1)
+
+        return self._tiles[position.x][position.y]
+        
+    def render(self) -> None:
+        self.display_surface.fill(Color(77, 165, 217))
+
+        offset = Vector2()
+        offset.x = self.player.rect.centerx - self.display_surface.get_width() / 2
+        offset.y = self.player.rect.centery - self.display_surface.get_height() / 2
 
         for x in range(int(self.player.position.x) - self.render_distance, int(self.player.position.x) + self.render_distance + 1):
             for y in range(int(self.player.position.y) - self.render_distance, int(self.player.position.y) + self.render_distance + 1):
-                if not x in self.tiles or not y in self.tiles[x]:
-                    self.generate_tile(x, y)
-
-                offset_rect = pygame.Vector2(x, y) * 32 - self.offset
-                self.tiles[x][y].update(offset_rect)
+                offset_rect = Vector2(x, y) * 32 - offset
+                self.get_tile(Vector2(x, y)).update(offset_rect)
 
         offset_rect = self.player.rect.copy()
-        offset_rect.center -= self.offset
+        offset_rect.center -= offset
         self.display_surface.blit(self.player.image, offset_rect)
         
         if self.player.going_up == True:
             self.player.climb()
         
         if self.player.falling:
-            self.display_surface.blit(pygame.transform.scale(pygame.image.load("Images/PLayer/Parachute.png"), (32, 32)), (offset_rect[0], offset_rect[1] - 32))
+            self.display_surface.blit(transform.scale(image.load("Images/PLayer/Parachute.png"), (32, 32)), (offset_rect[0], offset_rect[1] - 32))
