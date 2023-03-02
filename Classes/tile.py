@@ -1,11 +1,11 @@
 import pygame, os
 from random import choice
-from typing import Union
+from typing import Union, Dict, List
 
 from pygame import Surface, Vector2, Color
 
 
-textures: dict[str, Surface] = {}
+textures: Dict[str, Surface] = {}
 _textures_path = os.path.join("Images", "Tiles")
 for file in os.listdir(_textures_path):
     if file.endswith(".png"):
@@ -18,7 +18,7 @@ for file in os.listdir(_textures_path):
 
 
 class Tile:
-    def __init__(self, type: str, texture: Union[Surface, str], mined_texture: Union[Surface, str] = None, can_collide: bool = True, minable: bool = True, drops: list[str] = None) -> None:
+    def __init__(self, type: str, texture: Union[Surface, str], mined_texture: Union[Surface, str] = None, can_collide: bool = True, minable: bool = True, drops: List[str] = None) -> None:
         self.type: str = type
 
         self.texture: Surface = textures[texture] if isinstance(texture, str) else texture
@@ -28,7 +28,7 @@ class Tile:
         self.minable: bool = minable
 
         if drops is None:
-            self.drops: list[str] = []
+            self.drops: List[str] = []
 
     def generate_mined_texture(self) -> Surface:
         overlay = Surface((32, 32)).convert_alpha()

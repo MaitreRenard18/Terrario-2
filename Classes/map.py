@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Dict, List
 
 import pygame,  opensimplex
 from pygame import Vector2, Surface, Color, transform, image, display
@@ -7,7 +7,7 @@ from Classes.player import Player
 from Classes.tile import Tile, Cave
 from Classes.props import *
 
-biomes: dict[Union[float, int], list[str]] = {
+biomes: Dict[Union[float, int], List[str]] = {
     512: ["hell"],
     256: ["lush_cave"],
     128: ["crystal_cave", "haunted_cave"],
@@ -15,7 +15,7 @@ biomes: dict[Union[float, int], list[str]] = {
     float("-inf"): ["desert", "forest", "snowy_forest"]
 }
 
-tile_palettes = {
+tile_palettes: Dict[str, Dict[str, str]] = {
     "forest": {
         "primary_tile": "dirt",
         "top_tile": "grass"
@@ -47,13 +47,13 @@ tile_palettes = {
     }
 }
 
-props = {
+props: Dict[str, List[function]] = {
     "forest": [generate_tree, generate_plants, generate_plants],
     "desert": [generate_cactus, generate_dead_weed, generate_dead_weed],
     "snowy_forest": [generate_snowy_tree, generate_snowy_tree, generate_snowy_weed, generate_snowy_weed, generate_snowman]
 }
 
-ores = {
+ores: Dict[str, list[str]] = {
     "forest": [],
     "desert": [],
     "snowy_forest": []
@@ -63,7 +63,7 @@ class Map:
     def __init__(self) -> None:
         self.display_surface: Surface = display.get_surface()
 
-        self._tiles: dict[int, dict[int, Tile]] = {}
+        self._tiles: Dict[int, Dict[int, Tile]] = {}
         self.player: Player = Player((0, -1), self)
 
         self.scale: float = 0.1
