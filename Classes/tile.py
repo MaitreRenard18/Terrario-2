@@ -52,7 +52,7 @@ class Tile:
 
 
 class Cave(Tile):
-    def __init__(self, type: str, texture: Union[Surface, str]):
+    def __init__(self, type: str, texture: Union[Surface, str]) -> None:
         self.texture: pygame.Surface = textures[texture] if isinstance(texture, str) else texture
         self.texture = self.generate_mined_texture()
 

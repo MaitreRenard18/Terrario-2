@@ -1,4 +1,4 @@
-from typing import Union, Dict, List
+from typing import Union, Dict, List, Callable
 
 import pygame,  opensimplex
 from pygame import Vector2, Surface, Color, transform, image, display
@@ -47,7 +47,7 @@ tile_palettes: Dict[str, Dict[str, str]] = {
     }
 }
 
-props: Dict[str, List[function]] = {
+props: Dict[str, List[Callable[[map, Vector2], None]]] = {
     "forest": [generate_tree, generate_plants, generate_plants],
     "desert": [generate_cactus, generate_dead_weed, generate_dead_weed],
     "snowy_forest": [generate_snowy_tree, generate_snowy_tree, generate_snowy_weed, generate_snowy_weed, generate_snowman]
@@ -71,7 +71,7 @@ class Map:
 
         self.render_distance: int = 32
 
-        opensimplex.random_seed()
+        opensimplex.seed = randint(0, 2048)
 
     def get_tile(self, position: Vector2) -> Tile:
         if not position.x in self._tiles or not position.y in self._tiles[position.x]:

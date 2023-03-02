@@ -1,2 +1,2 @@
-pygame
+pygame >= 2.1.1
 opensimplex
