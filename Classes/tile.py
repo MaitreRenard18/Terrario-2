@@ -56,6 +56,12 @@ class Cave(Tile):
         super().__init__(type, texture, texture, minable=False, can_collide=False)
         self.texture = self.generate_mined_texture()
 
+class Air(Tile):
+    def __init__(self) -> None:
+        super().__init__("air", "air", can_collide=False, minable=False)
+
+    def update(self, position: Vector2) -> None:
+        pass
 
 class Scaffolding(Tile):
     def __init__(self, type: str, texture: Union[Surface, str]) -> None:

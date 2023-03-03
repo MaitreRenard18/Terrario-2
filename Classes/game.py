@@ -27,4 +27,4 @@ class Game:
             self.map.player.update()
             self.map.render()
             pygame.display.update()
-            self.clock.tick(30)
+            self.clock.tick(60)

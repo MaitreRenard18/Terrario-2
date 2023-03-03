@@ -4,7 +4,7 @@ import pygame,  opensimplex
 from pygame import Vector2, Surface, Color, transform, image, display
 
 from Classes.player import Player
-from Classes.tile import Tile, Cave
+from Classes.tile import Tile, Cave, Air
 
 class Map:
     def __init__(self) -> None:
@@ -53,7 +53,7 @@ class Map:
                 self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
 
             else:
-                self._tiles[position.x][position.y] = Tile("air", "air", minable=False, can_collide=False)
+                self._tiles[position.x][position.y] = Air()
 
         else:
             if opensimplex.noise2(position.x * self.scale, position.y * self.scale) < 0:
