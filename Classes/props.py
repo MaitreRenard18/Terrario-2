@@ -3,8 +3,9 @@ from random import randint, choice
 from pygame import Vector2
 
 from Classes.tile import Tile
+from Classes.map import Map
 
-def _place_tile(map, type: str, x: int, y: int) -> Tile:
+def _place_tile(map: Map, type: str, x: int, y: int) -> Tile:
     x, y = int(x), int(y)
     
     if map.get_tile(Vector2(x, y)).type == "air":
@@ -13,7 +14,7 @@ def _place_tile(map, type: str, x: int, y: int) -> Tile:
 def generate_nothing(map, x: int, y:int) -> None:
     return None
 
-def generate_cactus(map, x: int, y: int, height: int = None) -> None:
+def generate_cactus(map: Map, x: int, y: int, height: int = None) -> None:
     x, y = int(x), int(y)
 
     if height is None:
@@ -27,11 +28,11 @@ def generate_cactus(map, x: int, y: int, height: int = None) -> None:
     generate_cactus(map, x, y-1, height-1)
 
 
-def generate_dead_weed(map, x: int, y:int) -> None:
+def generate_dead_weed(map: Map, x: int, y:int) -> None:
     _place_tile(map, "dead_weed", x, y)
 
 
-def generate_tree(map, x: int, y: int) -> None:
+def generate_tree(map: Map, x: int, y: int) -> None:
     x, y = int(x), int(y)
 
     if map.get_tile(Vector2(x+1, y)).type == "oak_trunk" or map.get_tile(Vector2(x-1, y)).type == "oak_trunk":
@@ -57,12 +58,12 @@ def generate_tree(map, x: int, y: int) -> None:
         _place_tile(map, "oak_leaves", i, y-4)
 
 
-def generate_plants(map, x: int, y:int) -> None:
+def generate_plants(map: Map, x: int, y:int) -> None:
     plant = choice(["weed", "tulip"])
     _place_tile(map, plant, x, y)
 
 
-def generate_snowy_tree(map, x: int, y: int):
+def generate_snowy_tree(map: Map, x: int, y: int):
     x, y = int(x), int(y)
 
     if map.get_tile(Vector2(x+1, y)).type != "air" or map.get_tile(Vector2(x-1, y)).type != "air":
@@ -96,7 +97,7 @@ def generate_snowy_tree(map, x: int, y: int):
     _place_tile(map, "fir_leaves", x, y-7)
     _place_tile(map, "fir_snow_covered_leaves", x, y-8)
 
-def generate_snowman(map, x: int, y: int) -> None:
+def generate_snowman(map: Map, x: int, y: int) -> None:
     x, y = int(x), int(y)
 
     if map.get_tile(Vector2(x+1, y)).type == "snowman_belly" or map.get_tile(Vector2(x-1, y)).type == "snowman_belly":
@@ -108,5 +109,5 @@ def generate_snowman(map, x: int, y: int) -> None:
     _place_tile(map, "snowman_left_arm", x+1, y-1)
     map.set_tile(Tile("snowman_head", "snowman_head", minable=False, can_collide=False), Vector2(x, y-2))
 
-def generate_snowy_weed(map, x: int, y: int) -> None:
+def generate_snowy_weed(map: Map, x: int, y: int) -> None:
     _place_tile(map, "snowy_weed", x, y)

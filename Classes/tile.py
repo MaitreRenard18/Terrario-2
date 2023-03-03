@@ -53,10 +53,8 @@ class Tile:
 
 class Cave(Tile):
     def __init__(self, type: str, texture: Union[Surface, str]) -> None:
-        self.texture: pygame.Surface = textures[texture] if isinstance(texture, str) else texture
+        super().__init__(type, texture, texture, minable=False, can_collide=False)
         self.texture = self.generate_mined_texture()
-
-        super().__init__(type, self.texture, self.texture, minable=False, can_collide=False)
 
 
 class Scaffolding(Tile):

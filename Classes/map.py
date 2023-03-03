@@ -5,59 +5,6 @@ from pygame import Vector2, Surface, Color, transform, image, display
 
 from Classes.player import Player
 from Classes.tile import Tile, Cave
-from Classes.props import *
-
-biomes: Dict[Union[float, int], List[str]] = {
-    512: ["hell"],
-    256: ["lush_cave"],
-    128: ["crystal_cave", "haunted_cave"],
-    16: ["sand_cave", "cave", "ice_cave"],
-    float("-inf"): ["desert", "forest", "snowy_forest"]
-}
-
-tile_palettes: Dict[str, Dict[str, str]] = {
-    "forest": {
-        "primary_tile": "dirt",
-        "top_tile": "grass"
-    },
-
-    "desert": {
-        "primary_tile": "sand",
-        "top_tile": "sand"
-    },
-
-    "snowy_forest": {
-        "primary_tile": "snowy_dirt",
-        "top_tile": "snowy_grass"
-    },
-
-    "cave": {
-        "primary_tile": "stone",
-        "top_tile": "stone"
-    },
-
-    "sand_cave": {
-        "primary_tile": "sandstone",
-        "top_tile": "sandstone"
-    },
-
-    "ice_cave": {
-        "primary_tile": "ice",
-        "top_tile": "ice"
-    }
-}
-
-props: Dict[str, List[Callable[[map, Vector2], None]]] = {
-    "forest": [generate_tree, generate_plants, generate_plants],
-    "desert": [generate_cactus, generate_dead_weed, generate_dead_weed],
-    "snowy_forest": [generate_snowy_tree, generate_snowy_tree, generate_snowy_weed, generate_snowy_weed, generate_snowman]
-}
-
-ores: Dict[str, list[str]] = {
-    "forest": [],
-    "desert": [],
-    "snowy_forest": []
-}
 
 class Map:
     def __init__(self) -> None:
@@ -143,3 +90,56 @@ class Map:
         
         if self.player.going[0] == "up":
             self.player.climb()
+
+from Classes.props import *
+biomes: Dict[Union[float, int], List[str]] = {
+    512: ["hell"],
+    256: ["lush_cave"],
+    128: ["crystal_cave", "haunted_cave"],
+    16: ["sand_cave", "cave", "ice_cave"],
+    float("-inf"): ["desert", "forest", "snowy_forest"]
+}
+
+tile_palettes: Dict[str, Dict[str, str]] = {
+    "forest": {
+        "primary_tile": "dirt",
+        "top_tile": "grass"
+    },
+
+    "desert": {
+        "primary_tile": "sand",
+        "top_tile": "sand"
+    },
+
+    "snowy_forest": {
+        "primary_tile": "snowy_dirt",
+        "top_tile": "snowy_grass"
+    },
+
+    "cave": {
+        "primary_tile": "stone",
+        "top_tile": "stone"
+    },
+
+    "sand_cave": {
+        "primary_tile": "sandstone",
+        "top_tile": "sandstone"
+    },
+
+    "ice_cave": {
+        "primary_tile": "ice",
+        "top_tile": "ice"
+    }
+}
+
+props: Dict[str, List[Callable[[map, Vector2], None]]] = {
+    "forest": [generate_tree, generate_plants, generate_plants],
+    "desert": [generate_cactus, generate_dead_weed, generate_dead_weed],
+    "snowy_forest": [generate_snowy_tree, generate_snowy_tree, generate_snowy_weed, generate_snowy_weed, generate_snowman]
+}
+
+ores: Dict[str, list[str]] = {
+    "forest": [],
+    "desert": [],
+    "snowy_forest": []
+}
