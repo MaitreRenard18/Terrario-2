@@ -6,8 +6,8 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, position, map):
         super().__init__()
 
-        self.image = pygame.transform.scale(pygame.image.load("Images/PLayer/Drill_right.png"), (32, 32))
-        self.tip = pygame.transform.scale(pygame.image.load("Images/PLayer/DrillTip_right.png"), (32, 32))
+        self.image = pygame.transform.scale(pygame.image.load("Images/Player/Drill_right.png"), (32, 32))
+        self.tip = pygame.transform.scale(pygame.image.load("Images/Player/DrillTip_right.png"), (32, 32))
         self.rect = self.image.get_rect()
 
         self.original_pos = pygame.Vector2(position)
@@ -82,5 +82,5 @@ class Player(pygame.sprite.Sprite):
         self.map._tiles[self.destination.x][self.destination.y + 1] = Scaffolding(tile_below.type, tile_below.texture)
             
     def facing(self, direction):
-        self.image = pygame.transform.scale(pygame.image.load(f"Images/PLayer/Drill_{direction[0]}.png"), (32, 32))
-        self.tip = pygame.transform.scale(pygame.image.load(f"Images/PLayer/DrillTip_{direction[0]}.png"), (32, 32))
+        self.image = pygame.transform.scale(pygame.image.load(f"Images/Player/Drill_{direction[0]}.png"), (32, 32))
+        self.tip = pygame.transform.scale(pygame.image.load(f"Images/Player/DrillTip_{direction[0]}.png"), (32, 32))
