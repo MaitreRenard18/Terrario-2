@@ -47,7 +47,11 @@ class Map:
         if position.y - randint(0, 3) < 16:
             noise_value = int(opensimplex.noise2(position.x * self.scale * 0.25, 0) * 8)
             if position.y == noise_value:
-                self._tiles[position.x][position.y] = Tile(tile_palette["top_tile"], tile_palette["top_tile"])
+                if "floor_tile" in tile_palette:
+                    self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], tile_palette["floor_tile"])
+
+                else:
+                    self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
             
             elif position.y > noise_value:
                 self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
@@ -57,9 +61,12 @@ class Map:
 
         else:
             if opensimplex.noise2(position.x * self.scale, position.y * self.scale) < 0:
-                if not self.get_tile(position - Vector2(0, 1)).can_collide:
-                    self._tiles[position.x][position.y] = Tile(tile_palette["top_tile"], tile_palette["top_tile"])
+                if "floor_tile" in tile_palette and not self.get_tile(position - Vector2(0, 1)).can_collide:
+                    self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], tile_palette["floor_tile"])
                 
+                elif "ceiling_tile" in tile_palette and not self.get_tile(position + Vector2(0, 1)).can_collide:
+                    self._tiles[position.x][position.y] = Tile(tile_palette["ceiling_tile"], tile_palette["ceiling_tile"])
+
                 else:
                     self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
             
@@ -96,6 +103,7 @@ class Map:
         if self.player.going[0] == "up":
             self.player.climb()
 
+
 from Classes.props import *
 biomes: Dict[Union[float, int], List[str]] = {
     512: ["hell"],
@@ -108,37 +116,34 @@ biomes: Dict[Union[float, int], List[str]] = {
 tile_palettes: Dict[str, Dict[str, str]] = {
     "forest": {
         "primary_tile": "dirt",
-        "top_tile": "grass"
+        "floor_tile": "grass"
     },
 
     "desert": {
-        "primary_tile": "sand",
-        "top_tile": "sand"
+        "primary_tile": "sand"
     },
 
     "snowy_forest": {
         "primary_tile": "snowy_dirt",
-        "top_tile": "snowy_grass"
+        "floor_tile": "snowy_grass"
     },
 
     "cave": {
         "primary_tile": "stone",
-        "top_tile": "stone"
     },
 
     "sand_cave": {
         "primary_tile": "sandstone",
-        "top_tile": "sandstone"
     },
 
     "ice_cave": {
         "primary_tile": "ice",
-        "top_tile": "ice"
     },
 
     "lush_cave": {
         "primary_tile": "tuff",
-        "top_tile": "mossy_tuff"
+        "floor_tile": "mossy_tuff",
+        "ceiling_tile": "tuff"
     },
 }
 
