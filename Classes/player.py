@@ -78,7 +78,7 @@ class Player(pygame.sprite.Sprite):
             self.falling = None
 
     def climb(self):
-        tile_below = self.map.get_tile(self.destination)
+        tile_below = self.map.get_tile(self.destination + (0, 1))
         self.map._tiles[self.destination.x][self.destination.y + 1] = Scaffolding(tile_below.type, tile_below.texture)
             
     def facing(self, direction):
