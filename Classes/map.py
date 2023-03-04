@@ -6,6 +6,7 @@ from pygame import Vector2, Surface, Color, transform, image, display
 from Classes.player import Player
 from Classes.tile import Tile, Cave, Air
 
+
 class Map:
     def __init__(self) -> None:
         self.display_surface: Surface = display.get_surface()
@@ -61,22 +62,21 @@ class Map:
 
         else:
             if opensimplex.noise2(position.x * self.scale, position.y * self.scale) < 0:
+                self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
+                
                 if "floor_tile" in tile_palette and not self.get_tile(position - Vector2(0, 1)).can_collide:
                     self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], tile_palette["floor_tile"])
                 
-                elif "ceiling_tile" in tile_palette and not self.get_tile(position + Vector2(0, 1)).can_collide:
+                if "ceiling_tile" in tile_palette and not self.get_tile(position + Vector2(0, 1)).can_collide:
                     self._tiles[position.x][position.y] = Tile(tile_palette["ceiling_tile"], tile_palette["ceiling_tile"])
 
-                else:
-                    self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
-            
             else:
                 self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], tile_palette["primary_tile"])
         
         #Génération des props
         if self._tiles[position.x][position.y].can_collide and not self.get_tile(position - Vector2(0, 1)).can_collide and biome in props:
             if randint(1, 4) == 1:
-                choice(props[biome])(self, position.x, position.y-1)
+                choice(props[biome])(self, position - (0, 1))
 
         return self._tiles[position.x][position.y]
         
@@ -106,9 +106,9 @@ class Map:
 
 from Classes.props import *
 biomes: Dict[Union[float, int], List[str]] = {
-    512: ["hell"],
-    256: ["crystal_cave", "haunted_cave"],
-    128: ["lush_cave"],
+    #512: ["hell"],
+    #256: ["crystal_cave", "haunted_cave"],
+    #128: ["lush_cave"],
     16: ["sand_cave", "cave", "ice_cave"],
     float("-inf"): ["desert", "forest", "snowy_forest"]
 }
@@ -148,9 +148,9 @@ tile_palettes: Dict[str, Dict[str, str]] = {
 }
 
 props: Dict[str, List[Callable[[map, Vector2], None]]] = {
-    "forest": [generate_tree, generate_plants, generate_plants],
+    "forest": [generate_oak_tree, generate_plants, generate_plants], 
     "desert": [generate_cactus, generate_dead_weed, generate_dead_weed],
-    "snowy_forest": [generate_snowy_tree, generate_snowy_tree, generate_snowy_weed, generate_snowy_weed, generate_snowman],
+    "snowy_forest": [generate_fir, generate_fir, generate_snowy_weed, generate_snowy_weed, generate_snowman]
 }
 
 ores: Dict[str, list[str]] = {
