@@ -101,3 +101,26 @@ def generate_snowman(map: Map, position: Vector2) -> None:
         map.set_tile(Tile("snowman_left_arm", "snowman_left_arm", minable=False, can_collide=False), position + (1, -1))
 
     map.set_tile(Tile("snowman_head", "snowman_head", minable=False, can_collide=False), position - (0, 2))
+
+def generate_stalagmite(map: Map, position: Vector2, height: int = None) -> None:
+    if height is None:
+        if position.y < 20:
+            return
+
+        tile = Tile("stalagmite_base", "stalagmite_base", can_collide=False, minable=False)
+        map.set_tile(tile, position)
+        return generate_stalagmite(map, position - (0, 1), randint(1, 3))
+
+    if height == 0:
+        tile = Tile("stalagmite_tip", "stalagmite_tip", can_collide=False, minable=False)
+        map.set_tile(tile, position)
+        return
+    
+    if height == 1:
+        tile = Tile("stalagmite_upper_middle", "stalagmite_upper_middle", can_collide=False, minable=False)
+        map.set_tile(tile, position)
+        return generate_stalagmite(map, position - (0, 1), height-1)
+
+    tile = Tile("stalagmite_middle", "stalagmite_middle", can_collide=False, minable=False)
+    map.set_tile(tile, position)
+    generate_stalagmite(map, position - (0, 1), height-1)

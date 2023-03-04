@@ -150,7 +150,9 @@ tile_palettes: Dict[str, Dict[str, str]] = {
 props: Dict[str, List[Callable[[map, Vector2], None]]] = {
     "forest": [generate_oak_tree, generate_plants, generate_plants], 
     "desert": [generate_cactus, generate_dead_weed, generate_dead_weed],
-    "snowy_forest": [generate_fir, generate_fir, generate_snowy_weed, generate_snowy_weed, generate_snowman]
+    "snowy_forest": [generate_fir, generate_fir, generate_snowy_weed, generate_snowy_weed, generate_snowman],
+
+    "cave": [generate_stalagmite]
 }
 
 ores: Dict[str, list[str]] = {
