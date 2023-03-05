@@ -6,7 +6,6 @@ from pygame import Vector2, Surface, Color, transform, image, display
 from Classes.player import Player
 from Classes.tile import Tile, Cave, Air
 
-
 class Map:
     def __init__(self) -> None:
         self.display_surface: Surface = display.get_surface()
@@ -22,12 +21,14 @@ class Map:
         opensimplex.seed = randint(0, 2048)
 
     def get_tile(self, position: Vector2) -> Tile:
-        if not position.x in self._tiles or not position.y in self._tiles[position.x]:
+        position.x, position.y = int(position.x), int(position.y)
+        if not int(position.x) in self._tiles or not int(position.y) in self._tiles[position.x]:
             self.generate_tile(position.copy())
 
         return self._tiles[position.x][position.y]
 
     def set_tile(self, tile: Tile, position: Vector2) -> Tile:
+        position.x, position.y = int(position.x), int(position.y)
         if not position.x in self._tiles or not position.y in self._tiles[position.x]:
             self.generate_tile(position.copy())
         
@@ -102,7 +103,6 @@ class Map:
         
         if self.player.going[0] == "up":
             self.player.climb()
-
 
 from Classes.props import *
 biomes: Dict[Union[float, int], List[str]] = {

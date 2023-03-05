@@ -1,10 +1,9 @@
-from random import choice
+from random import choice, randint
 from typing import Union, Dict, List
 import os
 
 import pygame
 from pygame import Surface, Vector2, Color
-
 
 textures: Dict[str, Surface] = {}
 _textures_path = os.path.join("Images", "Tiles")
@@ -74,3 +73,85 @@ class Scaffolding(Tile):
         surface.blit(textures["scaffolding"], (0, 0))
         
         super().__init__(type, surface, minable=False)
+
+class Fluid(Tile):
+    def __init__(self, map, position: pygame.Vector2, type: str, texture: Union[pygame.Surface, str], level: float = 1) -> None:
+        self.map = map
+        self.position = position
+        self.fluid_level = level
+
+        super().__init__(type, texture, minable=False, can_collide=False)
+
+    def update(self, screen_position: pygame.Vector2) -> None:
+        if self.check_empty():
+            return
+        
+        texture = pygame.Surface((32, 32))
+        texture.blit(self.texture, (0, 0))
+        texture.fill(pygame.Color(0, 0, 128), pygame.Rect(0, 32 - 32 * self.fluid_level, 32, 32))
+        pygame.display.get_surface().blit(texture, screen_position)
+
+        """font = pygame.font.SysFont("Arial", 16)
+        img = font.render(str(self.fluid_level), True, pygame.Color(255, 0, 0))
+        pygame.display.get_surface().blit(img, screen_position)"""
+
+        tile_underneath = self.map.get_tile(self.position + (0, 1))
+        if type(tile_underneath) is Fluid:
+            if tile_underneath.fluid_level < 1:
+                self.fluid_level -= 0.1
+                tile_underneath.fluid_level += 0.1
+
+        elif not (tile_underneath.can_collide):
+            self.map.set_tile(Tile("error", self.texture, minable=False, can_collide=False), self.position)
+            self.position = self.position + pygame.Vector2(0, 1)
+            self.map.set_tile(self, self.position)
+            return
+
+        if self.check_empty():
+            return
+
+        def _check_tile(x, y):
+            if self.check_empty():
+                return
+        
+            tile = self.map.get_tile(Vector2(x, y))
+            if type(tile) is Fluid:
+                tile.fluid_level += 0.1
+                self.fluid_level -= 0.1
+
+            elif not (tile.can_collide):
+                self.fluid_level -= 0.1
+                self.map.set_tile(Fluid(self.map, pygame.Vector2(x, y), self.type, tile.texture, 0.1), Vector2(x, y))
+
+        tile_left = self.map.get_tile(self.position - (1, 0))
+        tile_right = self.map.get_tile(self.position + (1, 0))
+        if type(tile_right) is Fluid and type(tile_left) is Fluid:
+            if tile_left.fluid_level > tile_right.fluid_level:
+                _check_tile(self.position.x+1, self.position.y)
+                _check_tile(self.position.x-1, self.position.y)
+            else:
+                _check_tile(self.position.x-1, self.position.y)
+                _check_tile(self.position.x+1, self.position.y)
+
+        elif type(tile_left) is Fluid:
+            _check_tile(self.position.x+1, self.position.y)
+            _check_tile(self.position.x-1, self.position.y)
+
+        elif type(tile_right) is Fluid:
+            _check_tile(self.position.x-1, self.position.y)
+            _check_tile(self.position.x+1, self.position.y)
+
+        elif randint(0, 1) == 0:
+            _check_tile(self.position.x+1, self.position.y)
+            _check_tile(self.position.x-1, self.position.y)
+        
+        else:
+            _check_tile(self.position.x-1, self.position.y)
+            _check_tile(self.position.x+1, self.position.y)
+
+    def check_empty(self):
+        if self.fluid_level <= 0:
+            self.map.set_tile(Tile("error", self.texture, minable=False, can_collide=False), self.position)
+            return True
+        
+        return False
