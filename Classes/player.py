@@ -23,8 +23,6 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
 
-        print(self.original_pos, self.position, self.destination, self.falling)
-
         self.rect.topleft = self.position * 32
         pygame.sprite.Sprite.update(self)
         
