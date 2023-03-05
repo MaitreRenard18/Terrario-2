@@ -1,5 +1,5 @@
 import pygame
-from Classes.tile import Scaffolding
+from Classes.tile import Scaffolding, Fluid
 
 class Player(pygame.sprite.Sprite):
 
@@ -37,6 +37,9 @@ class Player(pygame.sprite.Sprite):
 
         if self.falling == None:
             keys = pygame.key.get_pressed()
+            if keys[pygame.K_g]:
+                self.map.set_tile(Fluid(self.map, self.position.copy(), "water", "water", 1), self.position.copy())
+
             if keys[pygame.K_UP]:
                 self.destination.y -= 1
                 self.original_pos.y = self.position.y

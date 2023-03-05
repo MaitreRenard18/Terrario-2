@@ -21,12 +21,14 @@ class Map:
         opensimplex.seed = randint(0, 2048)
 
     def get_tile(self, position: Vector2) -> Tile:
-        if not position.x in self._tiles or not position.y in self._tiles[position.x]:
+        position.x, position.y = int(position.x), int(position.y)
+        if not int(position.x) in self._tiles or not int(position.y) in self._tiles[position.x]:
             self.generate_tile(position.copy())
 
         return self._tiles[position.x][position.y]
 
     def set_tile(self, tile: Tile, position: Vector2) -> Tile:
+        position.x, position.y = int(position.x), int(position.y)
         if not position.x in self._tiles or not position.y in self._tiles[position.x]:
             self.generate_tile(position.copy())
         
