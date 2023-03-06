@@ -138,7 +138,7 @@ props: Dict[str, List[Callable[[map, Vector2], None]]] = {
     "snowy_forest": [generate_snowy_tree, generate_snowy_tree, generate_snowy_weed, generate_snowy_weed, generate_snowman]
 }
 
-ores: Dict[str, list[str]] = {
+ores: Dict[str, List[str]] = {
     "forest": [],
     "desert": [],
     "snowy_forest": []
