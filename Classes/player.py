@@ -1,27 +1,31 @@
+from typing import Union, Dict, Callable
+
 import pygame
-from Classes.tile import Scaffolding
+from pygame import Vector2, Surface, Rect, transform, image, display
+
+from Classes.tile import Tile, Scaffolding
 
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, position, map):
+    def __init__(self, position, map) -> None:
         super().__init__()
 
-        self.image = pygame.transform.scale(pygame.image.load("Images/Player/Drill_right.png"), (32, 32))
-        self.tip = pygame.transform.scale(pygame.image.load("Images/Player/DrillTip_right.png"), (32, 32))
-        self.rect = self.image.get_rect()
+        self.image: Surface = pygame.transform.scale(pygame.image.load("Images/Player/Drill_right.png"), (32, 32))
+        self.tip: Surface = pygame.transform.scale(pygame.image.load("Images/Player/DrillTip_right.png"), (32, 32))
+        self.rect: Rect = self.image.get_rect()
 
-        self.original_pos = pygame.Vector2(position)
-        self.position = pygame.Vector2(position)
-        self.destination = pygame.Vector2(position)
-        self.rect.topleft = self.position * 32
+        self.original_pos: Vector2 = pygame.Vector2(position)
+        self.position: Vector2 = pygame.Vector2(position)
+        self.destination: Vector2 = pygame.Vector2(position)
+        self.rect.topleft: tuple = self.position * 32
 
-        self.move = {"direction": "right", "tip_tile": (1, 0), "going_down": False}
-        self.falling = None
-        self.tile_below = None
+        self.move: Dict[str, Union[str, tuple, bool]] = {"direction": "right", "tip_tile": (1, 0), "going_down": False}
+        self.falling: Union[None, float] = None
+        self.tile_below: Tile = None
 
         self.map = map
 
-    def update(self):
+    def update(self) -> None:
 
         self.rect.topleft = self.position * 32
         pygame.sprite.Sprite.update(self)
@@ -70,11 +74,11 @@ class Player(pygame.sprite.Sprite):
                 self.move["direction"], self.move["tip_tile"] = "left", (-1, 0)
                 return
 
-    def mine(self):
+    def mine(self) -> None:
         dest_tile = self.map.get_tile(self.destination)
         dest_tile.destroy()
 
-    def fall(self):
+    def fall(self) -> None:
         self.tile_below = self.map.get_tile(self.original_pos + (0, 1))
         if not self.tile_below.can_collide:
             if self.falling is None:
@@ -93,17 +97,17 @@ class Player(pygame.sprite.Sprite):
         else:
             self.falling = None
 
-    def get_lowest_dest(self):
+    def get_lowest_dest(self) -> None:
         self.tile_below = self.map.get_tile(self.destination + (0, 1))
         if not self.tile_below.can_collide:
             self.destination.y += 1
             self.get_lowest_dest()
         return
 
-    def climb(self):
+    def climb(self) -> None:
         self.tile_below = self.map.get_tile(self.destination + (0, 1))
         self.map._tiles[self.destination.x][self.destination.y + 1] = Scaffolding(self.tile_below.type, self.tile_below.texture)
             
-    def facing(self, direction):
+    def facing(self, direction: str) -> None:
         self.image = pygame.transform.scale(pygame.image.load(f"Images/Player/Drill_{direction}.png"), (32, 32))
         self.tip = pygame.transform.scale(pygame.image.load(f"Images/Player/DrillTip_{direction}.png"), (32, 32))
