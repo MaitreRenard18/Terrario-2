@@ -15,7 +15,7 @@ class Player(pygame.sprite.Sprite):
         self.destination = pygame.Vector2(position)
         self.rect.topleft = self.position * 32
 
-        self.going = {"direction": "right", "tip_tile": (1, 0)}
+        self.move = {"direction": "right", "tip_tile": (1, 0), "going_down": False}
         self.falling = None
         self.tile_below = None
 
@@ -26,7 +26,10 @@ class Player(pygame.sprite.Sprite):
         self.rect.topleft = self.position * 32
         pygame.sprite.Sprite.update(self)
         
-        self.fall()
+        if self.move["going_down"]:
+            pass
+        else:
+            self.fall()
 
         if self.falling is None:
 
@@ -41,32 +44,35 @@ class Player(pygame.sprite.Sprite):
                 self.position.y = round(self.position.y)
                 self.original_pos.x = self.position.x
                 self.original_pos.y = self.position.y
+                self.move["going_down"] = False
                 return
             
             keys = pygame.key.get_pressed()
             if keys[pygame.K_UP]:
                 self.destination.y -= 1
-                self.going["direction"], self.going["tip_tile"] = "up", (0, -1)
+                self.move["direction"], self.move["tip_tile"] = "up", (0, -1)
                 return
 
             if keys[pygame.K_DOWN]:
                 self.destination.y += 1
-                self.going["direction"], self.going["tip_tile"] = "down", (0, 1)
+                self.move["direction"], self.move["tip_tile"] = "down", (0, 1)
+                if not self.move["going_down"]:
+                    self.move["going_down"] = True
                 return
 
             if keys[pygame.K_RIGHT]:
                 self.destination.x += 1
-                self.going["direction"], self.going["tip_tile"] = "right", (1, 0)
+                self.move["direction"], self.move["tip_tile"] = "right", (1, 0)
                 return
 
             if keys[pygame.K_LEFT]:
                 self.destination.x -= 1
-                self.going["direction"], self.going["tip_tile"] = "left", (-1, 0)
+                self.move["direction"], self.move["tip_tile"] = "left", (-1, 0)
                 return
 
     def mine(self):
-        current_tile = self.map.get_tile(self.destination)
-        current_tile.destroy()
+        dest_tile = self.map.get_tile(self.destination)
+        dest_tile.destroy()
 
     def fall(self):
         self.tile_below = self.map.get_tile(self.original_pos + (0, 1))
