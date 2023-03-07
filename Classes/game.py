@@ -1,14 +1,16 @@
 import pygame, sys
-from Classes.map import Map
+
 
 class Game:
     def __init__(self):
         """Initialise la fenêtre Pygame et les différentes instances nécessaires au jeu."""
 
         pygame.init()
-        self.screen = pygame.display.set_mode()
+        flags = pygame.FULLSCREEN | pygame.DOUBLEBUF
+        self.screen = pygame.display.set_mode(flags=flags)
         self.clock = pygame.time.Clock()
 
+        from Classes.map import Map
         self.map = Map()
 
         self.run()

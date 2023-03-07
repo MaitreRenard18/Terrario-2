@@ -13,7 +13,7 @@ for file in os.listdir(_textures_path):
         file_name = file.replace(".png", "").lower()
         
         path = os.path.join(_textures_path, file)
-        image = pygame.transform.scale(pygame.image.load(path), (32, 32))
+        image = pygame.transform.scale(pygame.image.load(path), (32, 32)).convert_alpha()
         
         textures[file_name] = image
 
