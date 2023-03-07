@@ -6,6 +6,8 @@ class Game:
         """Initialise la fenêtre Pygame et les différentes instances nécessaires au jeu."""
 
         pygame.init()
+        pygame.event.set_allowed([pygame.QUIT, pygame.KEYDOWN, pygame.KEYUP])
+
         flags = pygame.FULLSCREEN | pygame.DOUBLEBUF
         self.screen = pygame.display.set_mode(flags=flags)
         self.clock = pygame.time.Clock()
