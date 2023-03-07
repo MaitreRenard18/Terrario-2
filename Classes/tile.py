@@ -49,7 +49,9 @@ class Tile:
         return choice(self.drops) if len(self.drops) > 0 else None
     
     def update(self, position: Vector2) -> None:
-        pygame.display.get_surface().blit(self.texture, position)
+        display = pygame.display.get_surface()
+        if position.x >= -32 and position.y >= -32 and position.x <= display.get_size()[0] and position.y <= display.get_size()[0]:
+            display.blit(self.texture, position)
 
 
 class Cave(Tile):

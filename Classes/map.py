@@ -16,9 +16,9 @@ class Map:
         self.scale: float = 0.1
         self.biome_size: float = 0.0075
 
-        self.render_distance: int = 32
-
-        opensimplex.seed = randint(0, 2048)
+        self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 4, self.display_surface.get_size()[1] // 32 // 2 + 4)
+        
+        opensimplex.seed = randint(0, 2**16)
 
     def get_tile(self, position: Vector2) -> Tile:
         if not position.x in self._tiles or not position.y in self._tiles[position.x]:
@@ -75,8 +75,8 @@ class Map:
         offset.x = self.player.rect.centerx - self.display_surface.get_width() / 2
         offset.y = self.player.rect.centery - self.display_surface.get_height() / 2
 
-        for x in range(int(self.player.position.x) - self.render_distance, int(self.player.position.x) + self.render_distance + 1):
-            for y in range(int(self.player.position.y) - self.render_distance, int(self.player.position.y) + self.render_distance + 1):
+        for x in range(int(self.player.position.x) - self.render_distance[0], int(self.player.position.x) + self.render_distance[0]):
+            for y in range(int(self.player.position.y) - self.render_distance[1], int(self.player.position.y) + self.render_distance[1]):
                 offset_rect = Vector2(x, y) * 32 - offset
                 self.get_tile(Vector2(x, y)).update(offset_rect)
 
