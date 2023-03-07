@@ -83,12 +83,12 @@ class Map:
         offset_rect = self.player.rect.copy()
         offset_rect.center -= offset
         
-        self.player.facing(self.player.going["direction"])
+        self.player.facing(self.player.move["direction"])
 
         self.display_surface.blit(self.player.image, offset_rect)
-        self.display_surface.blit(self.player.tip, (offset_rect.x + self.player.going["tip_tile"][0] * 32, offset_rect.y + self.player.going["tip_tile"][1] * 32))
+        self.display_surface.blit(self.player.tip, (offset_rect.x + self.player.move["tip_tile"][0] * 32, offset_rect.y + self.player.move["tip_tile"][1] * 32))
         
-        if self.player.going["direction"] == "up":
+        if self.player.move["direction"] == "up":
             self.player.climb()
 
 from Classes.props import *
