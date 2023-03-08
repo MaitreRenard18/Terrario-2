@@ -1,22 +1,22 @@
-from typing import Union, Dict, Callable
+from typing import Union, Dict
 
 import pygame
-from pygame import Vector2, Surface, Rect, transform, image, display
+from pygame import Vector2, Surface, Rect, sprite, transform, image, key
 
 from Classes.tile import Tile, Scaffolding
 
-class Player(pygame.sprite.Sprite):
+class Player(sprite.Sprite):
 
-    def __init__(self, position, map) -> None:
+    def __init__(self, position: Vector2, map) -> None:
         super().__init__()
 
-        self.image: Surface = pygame.transform.scale(pygame.image.load("Images/Player/Drill_right.png"), (32, 32))
-        self.tip: Surface = pygame.transform.scale(pygame.image.load("Images/Player/DrillTip_right.png"), (32, 32))
+        self.image: Surface = transform.scale(image.load("Images/Player/Drill_right.png"), (32, 32)).convert_alpha()
+        self.tip: Surface = transform.scale(image.load("Images/Player/DrillTip_right.png"), (32, 32)).convert_alpha()
         self.rect: Rect = self.image.get_rect()
 
-        self.original_pos: Vector2 = pygame.Vector2(position)
-        self.position: Vector2 = pygame.Vector2(position)
-        self.destination: Vector2 = pygame.Vector2(position)
+        self.original_pos: Vector2 = Vector2(position)
+        self.position: Vector2 = Vector2(position)
+        self.destination: Vector2 = Vector2(position)
         self.rect.topleft: tuple = self.position * 32
 
         self.move: Dict[str, Union[str, tuple, bool]] = {"direction": "right", "tip_tile": (1, 0), "going_down": False}
@@ -28,7 +28,6 @@ class Player(pygame.sprite.Sprite):
     def update(self) -> None:
 
         self.rect.topleft = self.position * 32
-        pygame.sprite.Sprite.update(self)
         
         if self.move["going_down"]:
             pass
@@ -51,7 +50,7 @@ class Player(pygame.sprite.Sprite):
                 self.move["going_down"] = False
                 return
             
-            keys = pygame.key.get_pressed()
+            keys = key.get_pressed()
             if keys[pygame.K_UP]:
                 self.destination.y -= 1
                 self.move["direction"], self.move["tip_tile"] = "up", (0, -1)
@@ -109,5 +108,5 @@ class Player(pygame.sprite.Sprite):
         self.map._tiles[self.destination.x][self.destination.y + 1] = Scaffolding(self.tile_below.type, self.tile_below.texture)
             
     def facing(self, direction: str) -> None:
-        self.image = pygame.transform.scale(pygame.image.load(f"Images/Player/Drill_{direction}.png"), (32, 32))
-        self.tip = pygame.transform.scale(pygame.image.load(f"Images/Player/DrillTip_{direction}.png"), (32, 32))
+        self.image = transform.scale(image.load(f"Images/Player/Drill_{direction}.png"), (32, 32)).convert_alpha()
+        self.tip = transform.scale(image.load(f"Images/Player/DrillTip_{direction}.png"), (32, 32)).convert_alpha()
