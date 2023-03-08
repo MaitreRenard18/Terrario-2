@@ -2,7 +2,7 @@
   <img src="https://github.com/MaitreRenard18/Terrario-2/blob/master/Images/UI/Logo.png" alt="Terrario 2 Logo" width="50%">
 </p>
 
-[![license](https://img.shields.io/github/license/MaitreRenard18/Terrario-2.svg)](https://github.com/MaitreRenard18/Terrario-2/LICENSE)
+[![license](https://img.shields.io/github/license/MaitreRenard18/Terrario-2.svg)](https://github.com/MaitreRenard18/Terrario-2/blob/master/LICENSE)
 
 # Présentation du projet
 Terrario 2 est la suite du mondialement connu [Terrario](https://github.com/MaitreRenard18/Terrario).
