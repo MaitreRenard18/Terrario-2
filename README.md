@@ -2,7 +2,7 @@
   <img src="https://github.com/MaitreRenard18/Terrario-2/blob/master/Images/UI/Logo.png" alt="Terrario 2 Logo" width="50%">
 </p>
 
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pygame)](https://pypi.org/project/pygame/)
+[![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/release/python-360/)
 [![license](https://img.shields.io/github/license/MaitreRenard18/Terrario-2.svg)](https://github.com/MaitreRenard18/Terrario-2/LICENSE)
 
 # Présentation du projet
