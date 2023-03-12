@@ -1,17 +1,14 @@
-from typing import Callable, Dict, List, Union
+from typing import Union, Dict, List, Callable
 
+from pygame import Vector2, Surface, Color, display
 import opensimplex
-from pygame import Color, Surface, display
-from pygame.math import Vector2
 
 from Classes.player import Player
-from Classes.tile import Air, Cave, Tile
-
+from Classes.tile import Tile, Cave, Air
 
 class Map:
     """
-    Classe qui représente une carte 2D générée procéduralement composée de grottes et de différents biomes
-    en fonction de la profondeur.
+    Class qui réprésente une carte 2D générée procéduralement composée de grottes et de différents biomes en fonction de la profondeur.
     """
 
     def __init__(self) -> None:
@@ -35,7 +32,7 @@ class Map:
         self.biome_blend: int = 3
 
         # Récupère le nombre de tuiles qui peut être afficher en x et en y.
-        self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 8, self.display_surface.get_size()[1] // 32 // 2 + 8)
+        self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 4, self.display_surface.get_size()[1] // 32 // 2 + 4)
 
     def get_tile(self, position: Vector2) -> Tile:
         """
@@ -44,7 +41,6 @@ class Map:
         """
 
         # Vérifie si la tuile existe dans self._tiles, et la génère si se n'est pas le cas.
-        position.x, position.y = int(position.x), int(position.y)
         if not position.x in self._tiles or not position.y in self._tiles[position.x]:
             self._generate_tile(position.copy())
 
@@ -53,13 +49,11 @@ class Map:
 
     def set_tile(self, tile: Tile, position: Vector2) -> Tile:
         """
-        Prend en paramètre une Tuile et un Vector2, et change la tuile se trouvant à cette position par la tuile
-        passée en paramètre.
+        Prend en paramètre une Tuile et un Vector2, et change la tuile se trouvant à cette position par la tuile passée en paramètre. 
         Retourne la tuile passée en paramètre.
         """
 
         # Vérifie si la tuile existe dans self._tiles, et la génère si se n'est pas le cas.
-        position.x, position.y = int(position.x), int(position.y)
         if not position.x in self._tiles or not position.y in self._tiles[position.x]:
             self._generate_tile(position.copy())
 
@@ -78,52 +72,36 @@ class Map:
             self._tiles[position.x] = {}
 
         # Récupère le biome.
-        hardness = 0
-        biome = "cave"
-        for hardness, k in enumerate(biomes.keys()):
-            if position.y + randint(0, self.biome_blend) >= k:
+        for k in biomes.keys():
+            if position.y + randint(0, 3) >= k:
                 number_range = 2 / len(biomes[k])
                 noise_value = opensimplex.noise2((position.x + randint(0, self.biome_blend)) * self.biome_size, 0) + 1
                 biome = biomes[k][int(noise_value // number_range)]
                 break
-        
-        hardness = len(biomes) - hardness
-        tile_palette = tile_palettes[biome] if biome in tile_palettes else tile_palettes["cave"] # TODO à enlever quand tout les biomes seront implémentés. 
-        
-        # Génération de la tuile si elle se trouve à la surface.
-        if position.y - randint(0, self.biome_blend) < 16:
-            noise_value = round(opensimplex.noise2(position.x * self.scale * 0.25, 0) * 8)
-            if position.y == noise_value:
-                if "floor_tile" in tile_palette:
-                    self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], 0)
 
-                else:
-                    self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], 0)
-            
+        # Génération de la tuile.
+        tile_palette = tile_palettes[biome] if biome in tile_palettes else tile_palettes["cave"]
+        if position.y - randint(0, 3) < 16:
+            noise_value = int(opensimplex.noise2(position.x * self.scale * 0.25, 0) * 8)
+            if position.y == noise_value:
+                self._tiles[position.x][position.y] = Tile(tile_palette["top_tile"], tile_palette["top_tile"])
+
             elif position.y > noise_value:
-                self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], 0)
+                self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
 
             else:
                 self._tiles[position.x][position.y] = Air()
 
-        # Génération de la tuile si elle se trouve sous terre.
         else:
             if opensimplex.noise2(position.x * self.scale, position.y * self.scale) < (self.cave_size * 2) - 1:
-                self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], hardness)
-                
-                if "floor_tile" in tile_palette and not self.get_tile(position - Vector2(0, 1)).can_collide:
-                    self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], hardness)
-                
-                if "ceiling_tile" in tile_palette and not self.get_tile(position + Vector2(0, 1)).can_collide:
-                    self._tiles[position.x][position.y] = Tile(tile_palette["ceiling_tile"], hardness)
-
+                self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
             else:
-                self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"])
+                self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], tile_palette["primary_tile"])
 
-        # Génération des props.
+        # Génération des props
         if self._tiles[position.x][position.y].can_collide and not self.get_tile(position - Vector2(0, 1)).can_collide and biome in props:
             if randint(1, 4) == 1:
-                choice(props[biome])(self, position - (0, 1))
+                choice(props[biome])(self, position.x, position.y-1)
 
         return self._tiles[position.x][position.y]
 
@@ -134,41 +112,32 @@ class Map:
 
         # Affiche le ciel.
         self.display_surface.fill(Color(77, 165, 217))
-        
-        # Permet de décaller les tuiles en fonction du joueur pour que celui-ci soit au centre de l'écran.
+
         offset = Vector2()
         offset.x = self.player.rect.centerx - self.display_surface.get_width() / 2
         offset.y = self.player.rect.centery - self.display_surface.get_height() / 2
 
-        # Parcours chaques tuiles visibles à l'écran et les met à jour.
-        for x in range(round(self.player.position.x) - self.render_distance[0], round(self.player.position.x) + self.render_distance[0]):
-            for y in range(round(self.player.position.y) - self.render_distance[1], round(self.player.position.y) + self.render_distance[1]):
+        for x in range(int(self.player.position.x) - self.render_distance[0], int(self.player.position.x) + self.render_distance[0]):
+            for y in range(int(self.player.position.y) - self.render_distance[1], int(self.player.position.y) + self.render_distance[1]):
                 offset_rect = Vector2(x, y) * 32 - offset
                 self.get_tile(Vector2(x, y)).update(offset_rect)
 
-        # Détermine la position du joueur sur l'écran.
         offset_rect = self.player.rect.copy()
         offset_rect.center -= offset
 
-        self.player.facing(self.player.move["direction"])
+        self.player.facing(self.player.going["direction"])
 
-        # Met à jour le joueur.
         self.display_surface.blit(self.player.image, offset_rect)
-        self.display_surface.blit(self.player.tip, (offset_rect.x + self.player.move["tip_tile"][0] * 32, offset_rect.y + self.player.move["tip_tile"][1] * 32))
+        self.display_surface.blit(self.player.tip, (offset_rect.x + self.player.going["tip_tile"][0] * 32, offset_rect.y + self.player.going["tip_tile"][1] * 32))
 
-        if self.player.move["direction"] == "up":
+        if self.player.going["direction"] == "up":
             self.player.climb()
 
-        self.player.update()
-
-
-# Déclaration des biomes et du décors associé a chaque biome.
 from Classes.props import *
-
 biomes: Dict[Union[float, int], List[str]] = {
-    #512: ["hell"],
-    #256: ["crystal_cave", "haunted_cave"],
-    64: ["lush_cave", "shroom_cave"],
+    512: ["hell"],
+    256: ["lush_cave"],
+    128: ["crystal_cave", "haunted_cave"],
     16: ["sand_cave", "cave", "ice_cave"],
     float("-inf"): ["desert", "forest", "snowy_forest"]
 }
@@ -176,50 +145,39 @@ biomes: Dict[Union[float, int], List[str]] = {
 tile_palettes: Dict[str, Dict[str, str]] = {
     "forest": {
         "primary_tile": "dirt",
-        "floor_tile": "grass"
+        "top_tile": "grass"
     },
 
     "desert": {
-        "primary_tile": "sand"
+        "primary_tile": "sand",
+        "top_tile": "sand"
     },
 
     "snowy_forest": {
         "primary_tile": "snowy_dirt",
-        "floor_tile": "snowy_grass"
+        "top_tile": "snowy_grass"
     },
 
     "cave": {
-        "primary_tile": "loess",
+        "primary_tile": "stone",
+        "top_tile": "stone"
     },
 
     "sand_cave": {
         "primary_tile": "sandstone",
+        "top_tile": "sandstone"
     },
 
     "ice_cave": {
         "primary_tile": "ice",
-    },
-
-    "lush_cave": {
-        "primary_tile": "stone",
-        "floor_tile": "mossy_stone",
-    },
-
-    "shroom_cave": {
-        "primary_tile": "stone",
-        "floor_tile": "mycelium",
+        "top_tile": "ice"
     }
 }
 
-props: Dict[str, List[Callable]] = {
-    "forest": [generate_oak_tree, generate_plants, generate_plants], 
+props: Dict[str, List[Callable[[map, Vector2], None]]] = {
+    "forest": [generate_tree, generate_plants, generate_plants],
     "desert": [generate_cactus, generate_dead_weed, generate_dead_weed],
-    "snowy_forest": [generate_fir, generate_fir, generate_snowy_weed, generate_snowy_weed, generate_snowman],
-
-    "cave": [generate_stalagmite],
-
-    "lush_cave": [generate_cave_oak_tree, generate_plants, generate_plants],
-    "shroom_cave": [generate_mushroom],
+    "snowy_forest": [generate_snowy_tree, generate_snowy_tree, generate_snowy_weed, generate_snowy_weed, generate_snowman]
 }
 
 ores: Dict[str, List[str]] = {
