@@ -1,54 +1,91 @@
 from typing import Union, Dict, List, Callable
 
-import pygame,  opensimplex
-from pygame import Vector2, Surface, Color, transform, image, display
+from pygame import Vector2, Surface, Color, display
+import opensimplex
 
 from Classes.player import Player
 from Classes.tile import Tile, Cave, Air
 
 class Map:
+    """
+    Class qui réprésente une carte 2D générée procéduralement composée de grottes et de différents biomes en fonction de la profondeur.
+    """
+
     def __init__(self) -> None:
+        """
+        Initialise une Map.
+        """
+
+        # Récupère la surface d'affichage
         self.display_surface: Surface = display.get_surface()
 
-        self._tiles: Dict[int, Dict[int, Tile]] = {}
+        # Initialise le joueur et le dictionnaire contenant les tuiles.
         self.player: Player = Player((0, -1), self)
+        self._tiles: Dict[int, Dict[int, Tile]] = {}
 
-        self.scale: float = 0.1
-        self.biome_size: float = 0.0075
-
-        self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 4, self.display_surface.get_size()[1] // 32 // 2 + 4)
-        
+        # Initialise les valeurs utilisées lors de la génération de le carte.
         opensimplex.seed = randint(0, 2**16)
 
-    def get_tile(self, position: Vector2) -> Tile:
-        if not position.x in self._tiles or not position.y in self._tiles[position.x]:
-            self.generate_tile(position.copy())
+        self.scale: float = 0.1
+        self.cave_size: float = 0.5
+        self.biome_size: float = 0.0075
+        self.biome_blend: int = 3
 
+        # Récupère le nombre de tuiles qui peut être afficher en x et en y.
+        self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 4, self.display_surface.get_size()[1] // 32 // 2 + 4)
+
+    def get_tile(self, position: Vector2) -> Tile:
+        """
+        Prend en paramètre un Vector2 et retourne la tuile se trouvant à cette position. 
+        Si la tuile n'existe pas, en génère une nouvelle.
+        """
+
+        # Vérifie si la tuile existe dans self._tiles, et la génère si se n'est pas le cas.
+        if not position.x in self._tiles or not position.y in self._tiles[position.x]:
+            self._generate_tile(position.copy())
+
+        # Récupère la tuile et la retourne.
         return self._tiles[position.x][position.y]
 
     def set_tile(self, tile: Tile, position: Vector2) -> Tile:
+        """
+        Prend en paramètre une Tuile et un Vector2, et change la tuile se trouvant à cette position par la tuile passée en paramètre. 
+        Retourne la tuile passée en paramètre.
+        """
+
+        # Vérifie si la tuile existe dans self._tiles, et la génère si se n'est pas le cas.
         if not position.x in self._tiles or not position.y in self._tiles[position.x]:
-            self.generate_tile(position.copy())
-        
+            self._generate_tile(position.copy())
+
+        # Change la tuile et la retourne.
         self._tiles[position.x][position.y] = tile
         return tile
 
-    def generate_tile(self, position: Vector2) -> Tile:
+    def _generate_tile(self, position: Vector2) -> Tile:
+        """
+        Prend en paramètre un Vector2 et génère une tuile à cette position.
+        Retourne la tuile générée.
+        """
+
+        # Créer une entrée dans le dictionnaire.
         if not position.x in self._tiles:
             self._tiles[position.x] = {}
+
+        # Récupère le biome.
         for k in biomes.keys():
             if position.y + randint(0, 3) >= k:
                 number_range = 2 / len(biomes[k])
-                noise_value = opensimplex.noise2((position.x + randint(0, 3)) * self.biome_size, 0) + 1
+                noise_value = opensimplex.noise2((position.x + randint(0, self.biome_blend)) * self.biome_size, 0) + 1
                 biome = biomes[k][int(noise_value // number_range)]
                 break
-        
+
+        # Génération de la tuile.
         tile_palette = tile_palettes[biome] if biome in tile_palettes else tile_palettes["cave"]
         if position.y - randint(0, 3) < 16:
             noise_value = int(opensimplex.noise2(position.x * self.scale * 0.25, 0) * 8)
             if position.y == noise_value:
                 self._tiles[position.x][position.y] = Tile(tile_palette["top_tile"], tile_palette["top_tile"])
-            
+
             elif position.y > noise_value:
                 self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
 
@@ -56,19 +93,24 @@ class Map:
                 self._tiles[position.x][position.y] = Air()
 
         else:
-            if opensimplex.noise2(position.x * self.scale, position.y * self.scale) < 0:
+            if opensimplex.noise2(position.x * self.scale, position.y * self.scale) < (self.cave_size * 2) - 1:
                 self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
             else:
                 self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], tile_palette["primary_tile"])
-        
-        #Génération des props
+
+        # Génération des props
         if self._tiles[position.x][position.y].can_collide and not self.get_tile(position - Vector2(0, 1)).can_collide and biome in props:
             if randint(1, 4) == 1:
                 choice(props[biome])(self, position.x, position.y-1)
 
         return self._tiles[position.x][position.y]
-        
-    def render(self) -> None:
+
+    def update(self) -> None:
+        """
+        Affiche la carte sur l'écran et s'occupe de mettre à jour les différentes tuiles, ainsi que le joueur. 
+        """
+
+        # Affiche le ciel.
         self.display_surface.fill(Color(77, 165, 217))
 
         offset = Vector2()
@@ -82,12 +124,12 @@ class Map:
 
         offset_rect = self.player.rect.copy()
         offset_rect.center -= offset
-        
+
         self.player.facing(self.player.going["direction"])
 
         self.display_surface.blit(self.player.image, offset_rect)
         self.display_surface.blit(self.player.tip, (offset_rect.x + self.player.going["tip_tile"][0] * 32, offset_rect.y + self.player.going["tip_tile"][1] * 32))
-        
+
         if self.player.going["direction"] == "up":
             self.player.climb()
 
