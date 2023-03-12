@@ -4,7 +4,6 @@ import os
 import pygame
 from pygame import Surface, Vector2, Color
 
-
 textures: Dict[str, Surface] = {}
 _textures_path = os.path.join("Images", "Tiles")
 for file in os.listdir(_textures_path):

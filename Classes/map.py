@@ -35,10 +35,16 @@ class Map:
         self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 4, self.display_surface.get_size()[1] // 32 // 2 + 4)
 
     def get_tile(self, position: Vector2) -> Tile:
+<<<<<<< HEAD
         """
         Prend en paramètre un Vector2 et retourne la tuile se trouvant à cette position. 
         Si la tuile n'existe pas, en génère une nouvelle.
         """
+=======
+        position.x, position.y = int(position.x), int(position.y)
+        if not int(position.x) in self._tiles or not int(position.y) in self._tiles[position.x]:
+            self.generate_tile(position.copy())
+>>>>>>> props
 
         # Vérifie si la tuile existe dans self._tiles, et la génère si se n'est pas le cas.
         if not position.x in self._tiles or not position.y in self._tiles[position.x]:
@@ -48,12 +54,16 @@ class Map:
         return self._tiles[position.x][position.y]
 
     def set_tile(self, tile: Tile, position: Vector2) -> Tile:
+<<<<<<< HEAD
         """
         Prend en paramètre une Tuile et un Vector2, et change la tuile se trouvant à cette position par la tuile passée en paramètre. 
         Retourne la tuile passée en paramètre.
         """
 
         # Vérifie si la tuile existe dans self._tiles, et la génère si se n'est pas le cas.
+=======
+        position.x, position.y = int(position.x), int(position.y)
+>>>>>>> props
         if not position.x in self._tiles or not position.y in self._tiles[position.x]:
             self._generate_tile(position.copy())
 
@@ -84,8 +94,17 @@ class Map:
         if position.y - randint(0, 3) < 16:
             noise_value = int(opensimplex.noise2(position.x * self.scale * 0.25, 0) * 8)
             if position.y == noise_value:
+<<<<<<< HEAD
                 self._tiles[position.x][position.y] = Tile(tile_palette["top_tile"], tile_palette["top_tile"])
 
+=======
+                if "floor_tile" in tile_palette:
+                    self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], tile_palette["floor_tile"])
+
+                else:
+                    self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
+            
+>>>>>>> props
             elif position.y > noise_value:
                 self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
 
@@ -95,13 +114,20 @@ class Map:
         else:
             if opensimplex.noise2(position.x * self.scale, position.y * self.scale) < (self.cave_size * 2) - 1:
                 self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
+                
+                if "floor_tile" in tile_palette and not self.get_tile(position - Vector2(0, 1)).can_collide:
+                    self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], tile_palette["floor_tile"])
+                
+                if "ceiling_tile" in tile_palette and not self.get_tile(position + Vector2(0, 1)).can_collide:
+                    self._tiles[position.x][position.y] = Tile(tile_palette["ceiling_tile"], tile_palette["ceiling_tile"])
+
             else:
                 self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], tile_palette["primary_tile"])
 
         # Génération des props
         if self._tiles[position.x][position.y].can_collide and not self.get_tile(position - Vector2(0, 1)).can_collide and biome in props:
             if randint(1, 4) == 1:
-                choice(props[biome])(self, position.x, position.y-1)
+                choice(props[biome])(self, position - (0, 1))
 
         return self._tiles[position.x][position.y]
 
@@ -135,9 +161,9 @@ class Map:
 
 from Classes.props import *
 biomes: Dict[Union[float, int], List[str]] = {
-    512: ["hell"],
-    256: ["lush_cave"],
-    128: ["crystal_cave", "haunted_cave"],
+    #512: ["hell"],
+    #256: ["crystal_cave", "haunted_cave"],
+    #128: ["lush_cave"],
     16: ["sand_cave", "cave", "ice_cave"],
     float("-inf"): ["desert", "forest", "snowy_forest"]
 }
@@ -145,39 +171,43 @@ biomes: Dict[Union[float, int], List[str]] = {
 tile_palettes: Dict[str, Dict[str, str]] = {
     "forest": {
         "primary_tile": "dirt",
-        "top_tile": "grass"
+        "floor_tile": "grass"
     },
 
     "desert": {
-        "primary_tile": "sand",
-        "top_tile": "sand"
+        "primary_tile": "sand"
     },
 
     "snowy_forest": {
         "primary_tile": "snowy_dirt",
-        "top_tile": "snowy_grass"
+        "floor_tile": "snowy_grass"
     },
 
     "cave": {
         "primary_tile": "stone",
-        "top_tile": "stone"
     },
 
     "sand_cave": {
         "primary_tile": "sandstone",
-        "top_tile": "sandstone"
     },
 
     "ice_cave": {
         "primary_tile": "ice",
-        "top_tile": "ice"
-    }
+    },
+
+    "lush_cave": {
+        "primary_tile": "tuff",
+        "floor_tile": "mossy_tuff",
+        "ceiling_tile": "tuff"
+    },
 }
 
 props: Dict[str, List[Callable[[map, Vector2], None]]] = {
-    "forest": [generate_tree, generate_plants, generate_plants],
+    "forest": [generate_oak_tree, generate_plants, generate_plants], 
     "desert": [generate_cactus, generate_dead_weed, generate_dead_weed],
-    "snowy_forest": [generate_snowy_tree, generate_snowy_tree, generate_snowy_weed, generate_snowy_weed, generate_snowman]
+    "snowy_forest": [generate_fir, generate_fir, generate_snowy_weed, generate_snowy_weed, generate_snowman],
+
+    "cave": [generate_stalagmite]
 }
 
 ores: Dict[str, List[str]] = {
