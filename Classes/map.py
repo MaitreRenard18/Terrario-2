@@ -35,17 +35,10 @@ class Map:
         self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 4, self.display_surface.get_size()[1] // 32 // 2 + 4)
 
     def get_tile(self, position: Vector2) -> Tile:
-<<<<<<< HEAD
         """
         Prend en paramètre un Vector2 et retourne la tuile se trouvant à cette position. 
         Si la tuile n'existe pas, en génère une nouvelle.
         """
-=======
-        position.x, position.y = int(position.x), int(position.y)
-        if not int(position.x) in self._tiles or not int(position.y) in self._tiles[position.x]:
-            self.generate_tile(position.copy())
->>>>>>> props
-
         # Vérifie si la tuile existe dans self._tiles, et la génère si se n'est pas le cas.
         if not position.x in self._tiles or not position.y in self._tiles[position.x]:
             self._generate_tile(position.copy())
@@ -54,16 +47,13 @@ class Map:
         return self._tiles[position.x][position.y]
 
     def set_tile(self, tile: Tile, position: Vector2) -> Tile:
-<<<<<<< HEAD
         """
         Prend en paramètre une Tuile et un Vector2, et change la tuile se trouvant à cette position par la tuile passée en paramètre. 
         Retourne la tuile passée en paramètre.
         """
 
         # Vérifie si la tuile existe dans self._tiles, et la génère si se n'est pas le cas.
-=======
         position.x, position.y = int(position.x), int(position.y)
->>>>>>> props
         if not position.x in self._tiles or not position.y in self._tiles[position.x]:
             self._generate_tile(position.copy())
 
@@ -91,20 +81,16 @@ class Map:
 
         # Génération de la tuile.
         tile_palette = tile_palettes[biome] if biome in tile_palettes else tile_palettes["cave"]
-        if position.y - randint(0, 3) < 16:
+        if position.y - randint(0, self.biome_blend) < 16:
             noise_value = int(opensimplex.noise2(position.x * self.scale * 0.25, 0) * 8)
             if position.y == noise_value:
-<<<<<<< HEAD
                 self._tiles[position.x][position.y] = Tile(tile_palette["top_tile"], tile_palette["top_tile"])
-
-=======
                 if "floor_tile" in tile_palette:
                     self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], tile_palette["floor_tile"])
 
                 else:
                     self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
             
->>>>>>> props
             elif position.y > noise_value:
                 self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
 
