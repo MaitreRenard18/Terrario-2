@@ -1,6 +1,4 @@
-import sys
-
-import pygame
+import pygame, sys
 
 
 class Game:
@@ -21,20 +19,17 @@ class Game:
 
     def run(self):
         """Commence la boucle d'execution."""
-
         show_fps = False
 
         while True:
             for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_F1:
-                    show_fps = not show_fps
-
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
 
             self.map.update()
 
+            # Affiche les FPS.
             if show_fps:
                 font = pygame.font.SysFont("Arial Bold", 48)
                 img = font.render(f"FPS: {round(self.clock.get_fps())}", True, pygame.Color(255, 0, 0))
