@@ -2,6 +2,7 @@ from typing import Union, Dict, List, Callable
 
 from pygame import Vector2, Surface, Color, display
 import opensimplex
+import pygame
 
 from Classes.player import Player
 from Classes.tile import Tile, Cave, Air
@@ -39,6 +40,7 @@ class Map:
         Prend en paramètre un Vector2 et retourne la tuile se trouvant à cette position. 
         Si la tuile n'existe pas, en génère une nouvelle.
         """
+
         # Vérifie si la tuile existe dans self._tiles, et la génère si se n'est pas le cas.
         if not position.x in self._tiles or not position.y in self._tiles[position.x]:
             self._generate_tile(position.copy())
@@ -73,47 +75,50 @@ class Map:
 
         # Récupère le biome.
         for k in biomes.keys():
-            if position.y + randint(0, 3) >= k:
+            if position.y + randint(0, self.biome_blend) >= k:
                 number_range = 2 / len(biomes[k])
                 noise_value = opensimplex.noise2((position.x + randint(0, self.biome_blend)) * self.biome_size, 0) + 1
                 biome = biomes[k][int(noise_value // number_range)]
                 break
 
-        # Génération de la tuile.
-        tile_palette = tile_palettes[biome] if biome in tile_palettes else tile_palettes["cave"]
+        tile_palette = tile_palettes[biome] if biome in tile_palettes else tile_palettes["cave"] # TODO à enlever quand tout les biomes seront implémentés. 
+        
+        # Génération de la tuile si elle se trouve à la surface.
         if position.y - randint(0, self.biome_blend) < 16:
             noise_value = int(opensimplex.noise2(position.x * self.scale * 0.25, 0) * 8)
             if position.y == noise_value:
-                self._tiles[position.x][position.y] = Tile(tile_palette["top_tile"], tile_palette["top_tile"])
                 if "floor_tile" in tile_palette:
-                    self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], tile_palette["floor_tile"])
+                    self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], 0)
 
                 else:
-                    self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
+                    self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], 0)
             
             elif position.y > noise_value:
-                self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
+                self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], 0)
 
             else:
                 self._tiles[position.x][position.y] = Air()
 
+        # Génération de la tuile si elle se trouve sous terre.
         else:
             if opensimplex.noise2(position.x * self.scale, position.y * self.scale) < (self.cave_size * 2) - 1:
-                self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], tile_palette["primary_tile"])
+                self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], 0) # TODO à changer quand le niveau du drill sera implémenté.
                 
                 if "floor_tile" in tile_palette and not self.get_tile(position - Vector2(0, 1)).can_collide:
-                    self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], tile_palette["floor_tile"])
+                    self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], 0 ) # TODO à changer quand le niveau du drill sera implémenté.
                 
                 if "ceiling_tile" in tile_palette and not self.get_tile(position + Vector2(0, 1)).can_collide:
-                    self._tiles[position.x][position.y] = Tile(tile_palette["ceiling_tile"], tile_palette["ceiling_tile"])
+                    self._tiles[position.x][position.y] = Tile(tile_palette["ceiling_tile"], 0) # TODO à changer quand le niveau du drill sera implémenté.
 
             else:
-                self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], tile_palette["primary_tile"])
+                self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"])
 
-        # Génération des props
+        # Génération des props.
+        """
         if self._tiles[position.x][position.y].can_collide and not self.get_tile(position - Vector2(0, 1)).can_collide and biome in props:
             if randint(1, 4) == 1:
                 choice(props[biome])(self, position - (0, 1))
+        """ #TODO Fix les props
 
         return self._tiles[position.x][position.y]
 
@@ -124,7 +129,7 @@ class Map:
 
         # Affiche le ciel.
         self.display_surface.fill(Color(77, 165, 217))
-
+        
         offset = Vector2()
         offset.x = self.player.rect.centerx - self.display_surface.get_width() / 2
         offset.y = self.player.rect.centery - self.display_surface.get_height() / 2
@@ -144,6 +149,9 @@ class Map:
 
         if self.player.going["direction"] == "up":
             self.player.climb()
+
+        self.player.update()
+
 
 from Classes.props import *
 biomes: Dict[Union[float, int], List[str]] = {

@@ -19,16 +19,21 @@ class Game:
 
     def run(self):
         """Commence la boucle d'execution."""
-        
-        self.map.render()
-        self.map.player.update()
+        show_fps = False
+
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
 
-            self.map.player.update()
-            self.map.render()
+            self.map.update()
+
+            # Affiche les FPS.
+            if show_fps:
+                font = pygame.font.SysFont("Arial Bold", 48)
+                img = font.render(f"FPS: {round(self.clock.get_fps())}", True, pygame.Color(255, 0, 0))
+                pygame.display.get_surface().blit(img, (0, 0))
+
             pygame.display.update()
-            self.clock.tick(60)
+            self.clock.tick(30)

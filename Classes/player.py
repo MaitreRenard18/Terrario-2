@@ -1,5 +1,5 @@
 import pygame
-from Classes.tile import Scaffolding, Fluid
+from Classes.tile import Scaffolding
 
 class Player(pygame.sprite.Sprite):
 
@@ -99,7 +99,7 @@ class Player(pygame.sprite.Sprite):
 
     def climb(self):
         self.tile_below = self.map.get_tile(self.destination + (0, 1))
-        self.map._tiles[self.destination.x][self.destination.y + 1] = Scaffolding(self.tile_below.type, self.tile_below.texture)
+        self.map._tiles[self.destination.x][self.destination.y + 1] = Scaffolding(self.tile_below.texture)
             
     def facing(self, direction):
         self.image = pygame.transform.scale(pygame.image.load(f"Images/Player/Drill_{direction}.png"), (32, 32))
