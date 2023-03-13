@@ -24,10 +24,12 @@ class Tile:
         self.hardness: int = hardness
 
     def destroy(self) -> Union[str, None]:
+        if self.hardness == float("inf"):
+            return
+
+        self.texture = self._generate_mined_texture()
         self.can_collide = False
         self.hardness = float("inf")
-        self.texture = self._generate_mined_texture()
-        self.destroy = lambda: None
 
     def update(self, position: Vector2) -> None:
         display = pygame.display.get_surface()
@@ -62,6 +64,7 @@ class Cave(Tile):
 
 class Scaffolding(Tile):
     def __init__(self, texture: Union[Surface, str]) -> None:
+        texture = texture.copy()
         texture.set_colorkey((0, 0, 0))
 
         surface = pygame.Surface((32, 32), pygame.SRCALPHA, depth=32)
