@@ -1,4 +1,5 @@
-import pygame, sys
+import pygame
+import sys
 
 
 class Game:
@@ -23,6 +24,9 @@ class Game:
 
         while True:
             for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_F1:
+                    show_fps = not show_fps
+
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
