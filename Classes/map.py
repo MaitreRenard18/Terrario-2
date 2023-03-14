@@ -33,7 +33,7 @@ class Map:
         self.biome_blend: int = 3
 
         # Récupère le nombre de tuiles qui peut être afficher en x et en y.
-        self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 4, self.display_surface.get_size()[1] // 32 // 2 + 4)
+        self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 8, self.display_surface.get_size()[1] // 32 // 2 + 8)
 
     def get_tile(self, position: Vector2) -> Tile:
         """
@@ -114,11 +114,9 @@ class Map:
                 self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"])
 
         # Génération des props.
-        """
         if self._tiles[position.x][position.y].can_collide and not self.get_tile(position - Vector2(0, 1)).can_collide and biome in props:
             if randint(1, 4) == 1:
                 choice(props[biome])(self, position - (0, 1))
-        """ #TODO Fix les props
 
         return self._tiles[position.x][position.y]
 
