@@ -107,20 +107,20 @@ def generate_stalagmite(map: Map, position: Vector2, height: int = None) -> None
         if position.y < 20:
             return
 
-        tile = Tile( "stalagmite_base", can_collide=False, hardness=float("inf"))
+        tile = Tile("stalagmite_base", hardness=float("inf"), can_collide=False)
         map.set_tile(tile, position)
         return generate_stalagmite(map, position - (0, 1), randint(1, 3))
 
     if height == 0:
-        tile = Tile("stalagmite_tip", can_collide=False, hardness=float("inf"))
+        tile = Tile("stalagmite_tip", hardness=float("inf"), can_collide=False)
         map.set_tile(tile, position)
         return
     
     if height == 1:
-        tile = Tile("stalagmite_upper_middle", can_collide=False, hardness=float("inf"))
+        tile = Tile("stalagmite_upper_middle", hardness=float("inf"), can_collide=False)
         map.set_tile(tile, position)
         return generate_stalagmite(map, position - (0, 1), height-1)
 
-    tile = Tile("stalagmite_middle", can_collide=False, hardness=float("inf"))
+    tile = Tile("stalagmite_middle", hardness=float("inf"), can_collide=False)
     map.set_tile(tile, position)
     generate_stalagmite(map, position - (0, 1), height-1)

@@ -1,11 +1,12 @@
-from typing import Union, Dict, List, Callable
+from typing import Callable, Dict, List, Union
 
-from pygame import Vector2, Surface, Color, display
 import opensimplex
-import pygame
+from pygame import Color, Surface, display
+from pygame.math import Vector2
 
 from Classes.player import Player
-from Classes.tile import Tile, Cave, Air
+from Classes.tile import Air, Cave, Tile
+
 
 class Map:
     """
@@ -42,6 +43,7 @@ class Map:
         """
 
         # Vérifie si la tuile existe dans self._tiles, et la génère si se n'est pas le cas.
+        position.x, position.y = int(position.x), int(position.y)
         if not position.x in self._tiles or not position.y in self._tiles[position.x]:
             self._generate_tile(position.copy())
 
@@ -85,7 +87,7 @@ class Map:
         
         # Génération de la tuile si elle se trouve à la surface.
         if position.y - randint(0, self.biome_blend) < 16:
-            noise_value = int(opensimplex.noise2(position.x * self.scale * 0.25, 0) * 8)
+            noise_value = round(opensimplex.noise2(position.x * self.scale * 0.25, 0) * 8)
             if position.y == noise_value:
                 if "floor_tile" in tile_palette:
                     self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], 0)
@@ -128,20 +130,24 @@ class Map:
         # Affiche le ciel.
         self.display_surface.fill(Color(77, 165, 217))
         
+        # Permet de décaller les tuiles en fonction du joueur pour que celui-ci soit au centre de l'écran.
         offset = Vector2()
         offset.x = self.player.rect.centerx - self.display_surface.get_width() / 2
         offset.y = self.player.rect.centery - self.display_surface.get_height() / 2
 
-        for x in range(int(self.player.position.x) - self.render_distance[0], int(self.player.position.x) + self.render_distance[0]):
-            for y in range(int(self.player.position.y) - self.render_distance[1], int(self.player.position.y) + self.render_distance[1]):
+        # Parcours chaques tuiles visibles à l'écran et les met à jour.
+        for x in range(round(self.player.position.x) - self.render_distance[0], round(self.player.position.x) + self.render_distance[0]):
+            for y in range(round(self.player.position.y) - self.render_distance[1], round(self.player.position.y) + self.render_distance[1]):
                 offset_rect = Vector2(x, y) * 32 - offset
                 self.get_tile(Vector2(x, y)).update(offset_rect)
 
+        # Détermine la position du joueur sur l'écran.
         offset_rect = self.player.rect.copy()
         offset_rect.center -= offset
 
         self.player.facing(self.player.going["direction"])
 
+        # Met à jour le joueur.
         self.display_surface.blit(self.player.image, offset_rect)
         self.display_surface.blit(self.player.tip, (offset_rect.x + self.player.going["tip_tile"][0] * 32, offset_rect.y + self.player.going["tip_tile"][1] * 32))
 
@@ -151,11 +157,13 @@ class Map:
         self.player.update()
 
 
+# Déclaration des biomes et du décors associé a chaque biome.
 from Classes.props import *
+
 biomes: Dict[Union[float, int], List[str]] = {
     #512: ["hell"],
     #256: ["crystal_cave", "haunted_cave"],
-    #128: ["lush_cave"],
+    #128: ["lush_cave", "shrooms_cave"],
     16: ["sand_cave", "cave", "ice_cave"],
     float("-inf"): ["desert", "forest", "snowy_forest"]
 }
