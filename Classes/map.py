@@ -163,7 +163,7 @@ from Classes.props import *
 biomes: Dict[Union[float, int], List[str]] = {
     #512: ["hell"],
     #256: ["crystal_cave", "haunted_cave"],
-    #128: ["lush_cave", "shrooms_cave"],
+    64: ["lush_cave", "shrooms_cave"],
     16: ["sand_cave", "cave", "ice_cave"],
     float("-inf"): ["desert", "forest", "snowy_forest"]
 }
@@ -184,7 +184,7 @@ tile_palettes: Dict[str, Dict[str, str]] = {
     },
 
     "cave": {
-        "primary_tile": "stone",
+        "primary_tile": "loess",
     },
 
     "sand_cave": {
@@ -196,10 +196,14 @@ tile_palettes: Dict[str, Dict[str, str]] = {
     },
 
     "lush_cave": {
-        "primary_tile": "tuff",
-        "floor_tile": "mossy_tuff",
-        "ceiling_tile": "tuff"
+        "primary_tile": "stone",
+        "floor_tile": "mossy_stone",
     },
+
+    "shrooms_cave": {
+        "primary_tile": "stone",
+        "floor_tile": "mycelium",
+    }
 }
 
 props: Dict[str, List[Callable[[map, Vector2], None]]] = {
@@ -207,7 +211,10 @@ props: Dict[str, List[Callable[[map, Vector2], None]]] = {
     "desert": [generate_cactus, generate_dead_weed, generate_dead_weed],
     "snowy_forest": [generate_fir, generate_fir, generate_snowy_weed, generate_snowy_weed, generate_snowman],
 
-    "cave": [generate_stalagmite]
+    "cave": [generate_stalagmite],
+
+    "lush_cave": [generate_cave_oak_tree, generate_plants, generate_plants],
+    "shrooms_cave": [generate_mushroom],
 }
 
 ores: Dict[str, List[str]] = {

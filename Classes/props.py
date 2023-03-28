@@ -1,12 +1,12 @@
-from random import randint, choice
-from typing import List, Dict
-from csv import reader
 import os
+from csv import reader
+from random import choice, randint
+from typing import Dict, List
 
 from pygame import Vector2
 
-from Classes.tile import Tile, Air
 from Classes.map import Map
+from Classes.tile import Air, Cave, PropTile, Tile
 
 props: Dict[str, List[List[str]]] = {}
 _props_path = os.path.join("Props")
@@ -19,6 +19,7 @@ for file in os.listdir(_props_path):
             prop = list(reader(file, delimiter=';'))
 
         props[file_name] = prop
+
 
 def generate_oak_tree(map: Map, position: Vector2) -> None:
     if not isinstance(map.get_tile(position - (1, 0)), Air) or not isinstance(map.get_tile(position + (1, 0)), Air):
@@ -33,18 +34,54 @@ def generate_oak_tree(map: Map, position: Vector2) -> None:
             tile_position = position - (center - x, len(props["oak_tree"]) - y - 1)
             if column in ["oak_leaves", "oak_dark_leaves"]:
                 if isinstance(map.get_tile(tile_position), Air):
-                    tile = Tile(column, can_collide=False, hardness=float("inf"))
+                    tile = PropTile(column)
                     map.set_tile(tile, tile_position)
                 
                 continue
 
-            tile = Tile(column, can_collide=False, hardness=float("inf"))
+            tile = PropTile(column)
             map.set_tile(tile, tile_position)
 
+
 def generate_plants(map: Map, position: Vector2) -> None:
+    if map.get_tile(position).can_collide:
+        return
+    
     plant = choice(["weed", "tulip"])
-    tile = Tile(plant, can_collide=False, hardness=float("inf"))
+    tile = PropTile(plant, map.get_tile(position).texture)
     map.set_tile(tile, position)
+
+
+def generate_cave_oak_tree(map: Map, position: Vector2) -> None:
+    if isinstance(map.get_tile(position - (1, 0)), PropTile) or isinstance(map.get_tile(position + (1, 0)), PropTile):
+        return
+    
+    center = len(props["oak_tree"][-1]) // 2
+    for y, row in enumerate(props["oak_tree"]):
+        for x, column in enumerate(row):
+            if column == "placeholder":
+                continue
+            
+            tile_position = position - (center - x, len(props["oak_tree"]) - y - 1)
+            if column in ["oak_leaves", "oak_dark_leaves", "oak_branch"]:
+                if isinstance(map.get_tile(tile_position), Cave):
+                    tile = PropTile(column, map.get_tile(tile_position).texture)
+                    map.set_tile(tile, tile_position)
+                
+                continue
+
+            tile = PropTile(column, map.get_tile(tile_position).texture)
+            map.set_tile(tile, tile_position)
+
+
+def generate_mushroom(map: Map, position: Vector2) -> None:
+    if map.get_tile(position).can_collide:
+        return
+    
+    plant = choice(["red_mushroom", "brown_mushroom"])
+    tile = PropTile(plant, map.get_tile(position).texture)
+    map.set_tile(tile, position)
+
 
 def generate_cactus(map: Map, position: Vector2, height: int = None) -> None:
     if height is None:
@@ -59,9 +96,11 @@ def generate_cactus(map: Map, position: Vector2, height: int = None) -> None:
     map.set_tile(tile, position)
     generate_cactus(map, position - (0, 1), height-1)
 
+
 def generate_dead_weed(map: Map, position: Vector2) -> None:
     tile = Tile("dead_weed", can_collide=False, hardness=float("inf"))
     map.set_tile(tile, position)
+
 
 def generate_fir(map: Map, position: Vector2) -> None:
     if isinstance(map.get_tile(position - (1, 0)), Air) or isinstance(map.get_tile(position + (1, 0)), Air):
@@ -84,9 +123,11 @@ def generate_fir(map: Map, position: Vector2) -> None:
             tile = Tile(column, can_collide=False, hardness=float("inf"))
             map.set_tile(tile, tile_position)
 
+
 def generate_snowy_weed(map: Map, position: Vector2) -> None:
     tile = Tile("snowy_weed", can_collide=False, hardness=float("inf"))
     map.set_tile(tile, position)
+
 
 def generate_snowman(map: Map, position: Vector2) -> None:
     if not isinstance(map.get_tile(position - (1, 0)), Air) or not isinstance(map.get_tile(position + (1, 0)), Air):
@@ -101,6 +142,7 @@ def generate_snowman(map: Map, position: Vector2) -> None:
         map.set_tile(Tile("snowman_left_arm", hardness=float("inf"), can_collide=False), position + (1, -1))
 
     map.set_tile(Tile("snowman_head", hardness=float("inf"), can_collide=False), position - (0, 2))
+
 
 def generate_stalagmite(map: Map, position: Vector2, height: int = None) -> None:
     if height is None:
