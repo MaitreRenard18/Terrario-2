@@ -103,7 +103,7 @@ def generate_dead_weed(map: Map, position: Vector2) -> None:
 
 
 def generate_fir(map: Map, position: Vector2) -> None:
-    if isinstance(map.get_tile(position - (1, 0)), Air) or isinstance(map.get_tile(position + (1, 0)), Air):
+    if not isinstance(map.get_tile(position - (1, 0)), Air) or not isinstance(map.get_tile(position + (1, 0)), Air):
         return
 
     center = len(props["fir"][-1]) // 2
