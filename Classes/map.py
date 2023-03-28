@@ -145,13 +145,13 @@ class Map:
         offset_rect = self.player.rect.copy()
         offset_rect.center -= offset
 
-        self.player.facing(self.player.going["direction"])
+        self.player.facing(self.player.move["direction"])
 
         # Met à jour le joueur.
         self.display_surface.blit(self.player.image, offset_rect)
-        self.display_surface.blit(self.player.tip, (offset_rect.x + self.player.going["tip_tile"][0] * 32, offset_rect.y + self.player.going["tip_tile"][1] * 32))
+        self.display_surface.blit(self.player.tip, (offset_rect.x + self.player.move["tip_tile"][0] * 32, offset_rect.y + self.player.move["tip_tile"][1] * 32))
 
-        if self.player.going["direction"] == "up":
+        if self.player.move["direction"] == "up":
             self.player.climb()
 
         self.player.update()
@@ -163,7 +163,7 @@ from Classes.props import *
 biomes: Dict[Union[float, int], List[str]] = {
     #512: ["hell"],
     #256: ["crystal_cave", "haunted_cave"],
-    64: ["lush_cave", "shrooms_cave"],
+    64: ["lush_cave", "shroom_cave"],
     16: ["sand_cave", "cave", "ice_cave"],
     float("-inf"): ["desert", "forest", "snowy_forest"]
 }
