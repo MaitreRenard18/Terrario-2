@@ -76,13 +76,14 @@ class Map:
             self._tiles[position.x] = {}
 
         # Récupère le biome.
-        for k in biomes.keys():
+        for hardness, k in enumerate(biomes.keys()):
             if position.y + randint(0, self.biome_blend) >= k:
                 number_range = 2 / len(biomes[k])
                 noise_value = opensimplex.noise2((position.x + randint(0, self.biome_blend)) * self.biome_size, 0) + 1
                 biome = biomes[k][int(noise_value // number_range)]
                 break
-
+        
+        hardness = len(biomes) - hardness
         tile_palette = tile_palettes[biome] if biome in tile_palettes else tile_palettes["cave"] # TODO à enlever quand tout les biomes seront implémentés. 
         
         # Génération de la tuile si elle se trouve à la surface.
@@ -104,13 +105,13 @@ class Map:
         # Génération de la tuile si elle se trouve sous terre.
         else:
             if opensimplex.noise2(position.x * self.scale, position.y * self.scale) < (self.cave_size * 2) - 1:
-                self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], 0) # TODO à changer quand le niveau du drill sera implémenté.
+                self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], hardness)
                 
                 if "floor_tile" in tile_palette and not self.get_tile(position - Vector2(0, 1)).can_collide:
-                    self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], 0 ) # TODO à changer quand le niveau du drill sera implémenté.
+                    self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], hardness)
                 
                 if "ceiling_tile" in tile_palette and not self.get_tile(position + Vector2(0, 1)).can_collide:
-                    self._tiles[position.x][position.y] = Tile(tile_palette["ceiling_tile"], 0) # TODO à changer quand le niveau du drill sera implémenté.
+                    self._tiles[position.x][position.y] = Tile(tile_palette["ceiling_tile"], hardness)
 
             else:
                 self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"])
