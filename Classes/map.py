@@ -200,7 +200,7 @@ tile_palettes: Dict[str, Dict[str, str]] = {
         "floor_tile": "mossy_stone",
     },
 
-    "shrooms_cave": {
+    "shroom_cave": {
         "primary_tile": "stone",
         "floor_tile": "mycelium",
     }
@@ -214,7 +214,7 @@ props: Dict[str, List[Callable[[map, Vector2], None]]] = {
     "cave": [generate_stalagmite],
 
     "lush_cave": [generate_cave_oak_tree, generate_plants, generate_plants],
-    "shrooms_cave": [generate_mushroom],
+    "shroom_cave": [generate_mushroom],
 }
 
 ores: Dict[str, List[str]] = {
