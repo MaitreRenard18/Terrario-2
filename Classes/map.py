@@ -1,6 +1,7 @@
 from typing import Callable, Dict, List, Union
 
 import opensimplex
+import pygame
 from pygame import Color, Surface, display
 from pygame.math import Vector2
 
@@ -20,6 +21,7 @@ class Map:
 
         # Récupère la surface d'affichage
         self.display_surface: Surface = display.get_surface()
+        self.lightmap: Surface = Surface(self.display_surface.get_size())
 
         # Initialise le joueur et le dictionnaire contenant les tuiles.
         self.player: Player = Player((0, -1), self)
@@ -131,6 +133,9 @@ class Map:
         # Affiche le ciel.
         self.display_surface.fill(Color(77, 165, 217))
         
+        # Réinitialise la lightmap
+        self.lightmap.fill(Color(128, 128, 128))
+
         # Permet de décaller les tuiles en fonction du joueur pour que celui-ci soit au centre de l'écran.
         offset = Vector2()
         offset.x = self.player.rect.centerx - self.display_surface.get_width() / 2
@@ -140,7 +145,12 @@ class Map:
         for x in range(round(self.player.position.x) - self.render_distance[0], round(self.player.position.x) + self.render_distance[0]):
             for y in range(round(self.player.position.y) - self.render_distance[1], round(self.player.position.y) + self.render_distance[1]):
                 offset_rect = Vector2(x, y) * 32 - offset
-                self.get_tile(Vector2(x, y)).update(offset_rect)
+                tile = self.get_tile(Vector2(x, y))
+                tile.update(offset_rect)
+
+                surface = Surface((32, 32))
+                surface.fill((tile.light_level, tile.light_level, tile.light_level))
+                self.lightmap.blit(surface, offset_rect)
 
         # Détermine la position du joueur sur l'écran.
         offset_rect = self.player.rect.copy()
@@ -156,6 +166,9 @@ class Map:
             self.player.climb()
 
         self.player.update()
+
+        # Affiche la lightmap
+        self.display_surface.blit(self.lightmap, (0, 0), special_flags=pygame.BLEND_MULT)
 
 
 # Déclaration des biomes et du décors associé a chaque biome.

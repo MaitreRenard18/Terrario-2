@@ -16,11 +16,12 @@ for file in os.listdir(_textures_path):
 
 
 class Tile:
-    def __init__(self, texture: Union[Surface, str], hardness: Union[int, float], can_collide: bool = True) -> None:
+    def __init__(self, texture: Union[Surface, str], hardness: Union[int, float], can_collide: bool = True, light_level: int = 255) -> None:
         self.texture: Surface = textures[texture] if isinstance(texture, str) else texture
 
         self.can_collide: bool = can_collide
         self.hardness: int = hardness
+        self.light_level: int = light_level
 
     def update(self, position: Vector2) -> None:
         display = pygame.display.get_surface()
