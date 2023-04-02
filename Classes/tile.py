@@ -1,37 +1,41 @@
-from random import choice
-from typing import Union, Dict, List
 import os
+from typing import Dict, Union
 
 import pygame
-from pygame import Surface, Vector2, Color
-
+from pygame import Color, Surface, Vector2
 
 textures: Dict[str, Surface] = {}
 _textures_path = os.path.join("Images", "Tiles")
 for file in os.listdir(_textures_path):
     if file.endswith(".png"):
         file_name = file.replace(".png", "").lower()
-        
+
         path = os.path.join(_textures_path, file)
-        image = pygame.transform.scale(pygame.image.load(path), (32, 32)).convert_alpha()
-        
+        image = pygame.transform.scale(pygame.image.load(path), (32, 32))
         textures[file_name] = image
 
 
 class Tile:
-    def __init__(self, type: str, texture: Union[Surface, str], mined_texture: Union[Surface, str] = None, can_collide: bool = True, minable: bool = True, drops: List[str] = None) -> None:
-        self.type: str = type
-
+    def __init__(self, texture: Union[Surface, str], hardness: Union[int, float], can_collide: bool = True, light_level: int = 255) -> None:
         self.texture: Surface = textures[texture] if isinstance(texture, str) else texture
-        self.mined_texture: Surface = textures[mined_texture] if isinstance(mined_texture, str) else mined_texture if isinstance(mined_texture, Surface) else self.generate_mined_texture()
-        
+
         self.can_collide: bool = can_collide
-        self.minable: bool = minable
+        self.hardness: int = hardness
+        self.light_level: int = light_level
 
-        if drops is None:
-            self.drops: List[str] = []
+    def update(self, position: Vector2) -> None:
+        display = pygame.display.get_surface()
+        display.blit(self.texture, position)
 
-    def generate_mined_texture(self) -> Surface:
+    def destroy(self) -> Union[str, None]:
+        if self.hardness == float("inf"):
+            return
+
+        self.texture = self._generate_mined_texture()
+        self.can_collide = False
+        self.hardness = float("inf")
+    
+    def _generate_mined_texture(self) -> Surface:
         overlay = Surface((32, 32)).convert_alpha()
         overlay.fill(Color(0, 0, 0, 64))
 
@@ -40,39 +44,51 @@ class Tile:
         surface.blit(overlay, (0, 0))
         return surface
 
-    def destroy(self) -> Union[str, None]:
-        if not self.minable:
-            return None
-
-        self.can_collide = False
-        self.texture = self.mined_texture
-        return choice(self.drops) if len(self.drops) > 0 else None
-    
-    def update(self, position: Vector2) -> None:
-        display = pygame.display.get_surface()
-        if position.x >= -32 and position.y >= -32 and position.x <= display.get_size()[0] and position.y <= display.get_size()[0]:
-            display.blit(self.texture, position)
-
-
-class Cave(Tile):
-    def __init__(self, type: str, texture: Union[Surface, str]) -> None:
-        super().__init__(type, texture, texture, minable=False, can_collide=False)
-        self.texture = self.generate_mined_texture()
-
 
 class Air(Tile):
     def __init__(self) -> None:
-        super().__init__("air", "air", can_collide=False, minable=False)
+        super().__init__(texture="air", hardness=float("inf"), can_collide=False)
 
     def update(self, position: Vector2) -> None:
         pass
 
+    def destroy(self) -> None:
+        pass
+
+
+class Cave(Tile):
+    def __init__(self, texture: Union[Surface, str]) -> None:
+        super().__init__(texture=texture, hardness=float("inf"), can_collide=False)
+        self.texture = self._generate_mined_texture()
+
+
+class PropTile(Tile):
+    def __init__(self, texture: Union[Surface, str], background_texture: Union[Surface, str, None] = None) -> None:
+        
+        surface = pygame.Surface((32, 32), pygame.SRCALPHA, depth=32)
+
+        if background_texture is not None:
+            background_texture = textures[background_texture] if isinstance(background_texture, str) else background_texture
+            surface.blit(background_texture, (0, 0))
+
+        texture = textures[texture] if isinstance(texture, str) else texture
+        surface.blit(texture, (0, 0))
+
+        super().__init__(texture=surface, hardness=float("inf"), can_collide=False)
+
 
 class Scaffolding(Tile):
-    def __init__(self, type: str, texture: Union[Surface, str]) -> None:
-        surface = pygame.surface.Surface((32, 32))
-        surface.fill(pygame.Color(77, 165, 217))
+    def __init__(self, texture: Union[Surface, str]) -> None:
+        texture = texture.copy().convert_alpha()
+        texture.set_colorkey((0, 0, 0))
+
+        scaffolding_texture = textures["scaffolding"]
+
+        surface = pygame.Surface((32, 32), pygame.SRCALPHA, depth=32)
         surface.blit(textures[texture] if isinstance(texture, str) else texture, (0, 0))
-        surface.blit(textures["scaffolding"], (0, 0))
-        
-        super().__init__(type, surface, minable=False)
+        surface.blit(scaffolding_texture, (0, 0))
+
+        super().__init__(texture=surface, hardness=float("inf"))
+
+    def destroy(self) -> None:
+        pass

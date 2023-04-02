@@ -1,9 +1,10 @@
-from typing import Union, Dict
+from typing import Dict, Union
 
 import pygame
-from pygame import Vector2, Surface, Rect, sprite, transform, image, key
+from pygame import Rect, Surface, Vector2, image, key, sprite, transform
 
-from Classes.tile import Tile, Scaffolding
+from Classes.tile import Scaffolding, Tile
+
 
 class Player(sprite.Sprite):
 
@@ -105,7 +106,7 @@ class Player(sprite.Sprite):
 
     def climb(self) -> None:
         self.tile_below = self.map.get_tile(self.destination + (0, 1))
-        self.map._tiles[self.destination.x][self.destination.y + 1] = Scaffolding(self.tile_below.type, self.tile_below.texture)
+        self.map._tiles[self.destination.x][self.destination.y + 1] = Scaffolding(self.tile_below.texture)
             
     def facing(self, direction: str) -> None:
         self.image = transform.scale(image.load(f"Images/Player/Drill_{direction}.png"), (32, 32)).convert_alpha()
