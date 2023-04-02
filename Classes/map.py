@@ -146,7 +146,6 @@ class Map:
 
                 surface = Surface((32, 32))
                 surface.fill((tile.light_level, tile.light_level, tile.light_level))
-                self.lightmap.blit(surface, offset_rect)
 
         # Détermine la position du joueur sur l'écran.
         offset_rect = self.player.rect.copy()
