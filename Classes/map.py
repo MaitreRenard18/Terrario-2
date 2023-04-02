@@ -10,7 +10,8 @@ from Classes.tile import Air, Cave, Tile
 
 class Map:
     """
-    Class qui réprésente une carte 2D générée procéduralement composée de grottes et de différents biomes en fonction de la profondeur.
+    Classe qui représente une carte 2D générée procéduralement composée de grottes et de différents biomes
+    en fonction de la profondeur.
     """
 
     def __init__(self) -> None:
@@ -52,7 +53,8 @@ class Map:
 
     def set_tile(self, tile: Tile, position: Vector2) -> Tile:
         """
-        Prend en paramètre une Tuile et un Vector2, et change la tuile se trouvant à cette position par la tuile passée en paramètre. 
+        Prend en paramètre une Tuile et un Vector2, et change la tuile se trouvant à cette position par la tuile
+        passée en paramètre.
         Retourne la tuile passée en paramètre.
         """
 
@@ -76,6 +78,8 @@ class Map:
             self._tiles[position.x] = {}
 
         # Récupère le biome.
+        hardness = 0
+        biome = "cave"
         for hardness, k in enumerate(biomes.keys()):
             if position.y + randint(0, self.biome_blend) >= k:
                 number_range = 2 / len(biomes[k])
@@ -207,7 +211,7 @@ tile_palettes: Dict[str, Dict[str, str]] = {
     }
 }
 
-props: Dict[str, List[Callable[[map, Vector2], None]]] = {
+props: Dict[str, List[Callable]] = {
     "forest": [generate_oak_tree, generate_plants, generate_plants], 
     "desert": [generate_cactus, generate_dead_weed, generate_dead_weed],
     "snowy_forest": [generate_fir, generate_fir, generate_snowy_weed, generate_snowy_weed, generate_snowman],
