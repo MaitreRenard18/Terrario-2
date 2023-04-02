@@ -21,7 +21,6 @@ class Map:
 
         # Récupère la surface d'affichage
         self.display_surface: Surface = display.get_surface()
-        self.lightmap: Surface = Surface(self.display_surface.get_size())
 
         # Initialise le joueur et le dictionnaire contenant les tuiles.
         self.player: Player = Player((0, -1), self)
@@ -132,9 +131,6 @@ class Map:
 
         # Affiche le ciel.
         self.display_surface.fill(Color(77, 165, 217))
-        
-        # Réinitialise la lightmap
-        self.lightmap.fill(Color(128, 128, 128))
 
         # Permet de décaller les tuiles en fonction du joueur pour que celui-ci soit au centre de l'écran.
         offset = Vector2()
@@ -167,16 +163,13 @@ class Map:
 
         self.player.update()
 
-        # Affiche la lightmap
-        self.display_surface.blit(self.lightmap, (0, 0), special_flags=pygame.BLEND_MULT)
-
 
 # Déclaration des biomes et du décors associé a chaque biome.
 from Classes.props import *
 
 biomes: Dict[Union[float, int], List[str]] = {
-    #512: ["hell"],
-    #256: ["crystal_cave", "haunted_cave"],
+    # 512: ["hell"],
+    # 256: ["crystal_cave", "haunted_cave"],
     64: ["lush_cave", "shroom_cave"],
     16: ["sand_cave", "cave", "ice_cave"],
     float("-inf"): ["desert", "forest", "snowy_forest"]
@@ -220,7 +213,7 @@ tile_palettes: Dict[str, Dict[str, str]] = {
     }
 }
 
-props: Dict[str, List[Callable[[map, Vector2], None]]] = {
+props: Dict[str, List[Callable]] = {
     "forest": [generate_oak_tree, generate_plants, generate_plants], 
     "desert": [generate_cactus, generate_dead_weed, generate_dead_weed],
     "snowy_forest": [generate_fir, generate_fir, generate_snowy_weed, generate_snowy_weed, generate_snowman],
