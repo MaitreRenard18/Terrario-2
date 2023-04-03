@@ -114,12 +114,12 @@ class Map:
         # Génération de la tuile si elle se trouve sous terre.
         else:
             if opensimplex.noise2(position.x * self.scale, position.y * self.scale) < (self.cave_size * 2) - 1:
-                if randint(0, 32) > 0:
+                if randint(0, 32) == 0 and "ore" in tile_palette:
+                    self._tiles[position.x][position.y] = Ore(tile_palette["primary_tile"], tile_palette["ore"], hardness)
+
+                else:
                     self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], hardness)
 
-                elif "ore" in tile_palette:
-                    self._tiles[position.x][position.y] = Ore(tile_palette["primary_tile"], tile_palette["ore"], hardness)
-                
                 if "floor_tile" in tile_palette and not self.get_tile(position - Vector2(0, 1)).can_collide:
                     self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], hardness)
                 
