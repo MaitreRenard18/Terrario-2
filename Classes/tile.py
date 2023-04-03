@@ -16,12 +16,14 @@ for file in os.listdir(_textures_path):
 
 
 class Tile:
-    def __init__(self, texture: Union[Surface, str], hardness: Union[int, float], can_collide: bool = True, light_level: int = 255) -> None:
+    def __init__(self, texture: Union[Surface, str], hardness: Union[int, float], can_collide: bool = True) -> None:
         self.texture: Surface = textures[texture] if isinstance(texture, str) else texture
 
         self.can_collide: bool = can_collide
         self.hardness: int = hardness
-        self.light_level: int = light_level
+
+        self.light_level: int = 128
+        self.light_emission: int = 0
 
     def update(self, position: Vector2) -> None:
         display = pygame.display.get_surface()
@@ -48,6 +50,9 @@ class Tile:
 class Air(Tile):
     def __init__(self) -> None:
         super().__init__(texture="air", hardness=float("inf"), can_collide=False)
+
+        self.light_level = 255
+        self.light_emission = 255
 
     def update(self, position: Vector2) -> None:
         pass

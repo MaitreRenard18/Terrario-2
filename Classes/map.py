@@ -2,7 +2,7 @@ from typing import Callable, Dict, List, Union
 
 import opensimplex
 import pygame
-from pygame import Color, Surface, display
+from pygame import Color, Surface, display, Rect
 from pygame.math import Vector2
 
 from Classes.player import Player
@@ -11,7 +11,8 @@ from Classes.tile import Air, Cave, Tile
 
 class Map:
     """
-    Class qui réprésente une carte 2D générée procéduralement composée de grottes et de différents biomes en fonction de la profondeur.
+    Class qui représente une carte 2D générée procéduralement composée de grottes
+    et de différents biomes en fonction de la profondeur.
     """
 
     def __init__(self) -> None:
@@ -23,10 +24,10 @@ class Map:
         self.display_surface: Surface = display.get_surface()
 
         # Initialise le joueur et le dictionnaire contenant les tuiles.
-        self.player: Player = Player((0, -1), self)
+        self.player: Player = Player(Vector2(0, -1), self)
         self._tiles: Dict[int, Dict[int, Tile]] = {}
 
-        # Initialise les valeurs utilisées lors de la génération de le carte.
+        # Initialise les valeurs utilisées lors de la génération de la carte.
         opensimplex.seed = randint(0, 2**16)
 
         self.scale: float = 0.1
@@ -35,7 +36,11 @@ class Map:
         self.biome_blend: int = 3
 
         # Récupère le nombre de tuiles qui peut être afficher en x et en y.
-        self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 8, self.display_surface.get_size()[1] // 32 // 2 + 8)
+        self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 8,
+                                       self.display_surface.get_size()[1] // 32 // 2 + 8)
+
+        # Initialise une lightmap
+        self.lightmap: Surface = Surface(self.display_surface.get_size())
 
     def get_tile(self, position: Vector2) -> Tile:
         """
@@ -43,9 +48,9 @@ class Map:
         Si la tuile n'existe pas, en génère une nouvelle.
         """
 
-        # Vérifie si la tuile existe dans self._tiles, et la génère si se n'est pas le cas.
+        # Vérifie si la tuile existe dans _tiles, et la génère si se n'est pas le cas.
         position.x, position.y = int(position.x), int(position.y)
-        if not position.x in self._tiles or not position.y in self._tiles[position.x]:
+        if position.x not in self._tiles or position.y not in self._tiles[position.x]:
             self._generate_tile(position.copy())
 
         # Récupère la tuile et la retourne.
@@ -53,13 +58,14 @@ class Map:
 
     def set_tile(self, tile: Tile, position: Vector2) -> Tile:
         """
-        Prend en paramètre une Tuile et un Vector2, et change la tuile se trouvant à cette position par la tuile passée en paramètre. 
+        Prend en paramètre une Tuile et un Vector2, et change la tuile
+        se trouvant à cette position par la tuile passée en paramètre.
         Retourne la tuile passée en paramètre.
         """
 
-        # Vérifie si la tuile existe dans self._tiles, et la génère si se n'est pas le cas.
+        # Vérifie si la tuile existe dans _tiles, et la génère si se n'est pas le cas.
         position.x, position.y = int(position.x), int(position.y)
-        if not position.x in self._tiles or not position.y in self._tiles[position.x]:
+        if position.x not in self._tiles or position.y not in self._tiles[position.x]:
             self._generate_tile(position.copy())
 
         # Change la tuile et la retourne.
@@ -73,10 +79,12 @@ class Map:
         """
 
         # Créer une entrée dans le dictionnaire.
-        if not position.x in self._tiles:
+        if position.x not in self._tiles:
             self._tiles[position.x] = {}
 
         # Récupère le biome.
+        hardness = 0
+        biome = "cave"
         for hardness, k in enumerate(biomes.keys()):
             if position.y + randint(0, self.biome_blend) >= k:
                 number_range = 2 / len(biomes[k])
@@ -85,7 +93,7 @@ class Map:
                 break
         
         hardness = len(biomes) - hardness
-        tile_palette = tile_palettes[biome] if biome in tile_palettes else tile_palettes["cave"] # TODO à enlever quand tout les biomes seront implémentés. 
+        tile_palette = tile_palettes[biome] if biome in tile_palettes else tile_palettes["cave"]
         
         # Génération de la tuile si elle se trouve à la surface.
         if position.y - randint(0, self.biome_blend) < 16:
@@ -132,7 +140,7 @@ class Map:
         # Affiche le ciel.
         self.display_surface.fill(Color(77, 165, 217))
 
-        # Permet de décaller les tuiles en fonction du joueur pour que celui-ci soit au centre de l'écran.
+        # Permet de décaler les tuiles en fonction du joueur pour que celui-ci soit au centre de l'écran.
         offset = Vector2()
         offset.x = self.player.rect.centerx - self.display_surface.get_width() / 2
         offset.y = self.player.rect.centery - self.display_surface.get_height() / 2
@@ -140,12 +148,9 @@ class Map:
         # Parcours chaques tuiles visibles à l'écran et les met à jour.
         for x in range(round(self.player.position.x) - self.render_distance[0], round(self.player.position.x) + self.render_distance[0]):
             for y in range(round(self.player.position.y) - self.render_distance[1], round(self.player.position.y) + self.render_distance[1]):
-                offset_rect = Vector2(x, y) * 32 - offset
+                offset_vec = Vector2(x, y) * 32 - offset
                 tile = self.get_tile(Vector2(x, y))
-                tile.update(offset_rect)
-
-                surface = Surface((32, 32))
-                surface.fill((tile.light_level, tile.light_level, tile.light_level))
+                tile.update(offset_vec)
 
         # Détermine la position du joueur sur l'écran.
         offset_rect = self.player.rect.copy()
@@ -163,7 +168,7 @@ class Map:
         self.player.update()
 
 
-# Déclaration des biomes et du décors associé a chaque biome.
+# Déclaration des biomes et des décors associés à chaque biome.
 from Classes.props import *
 
 biomes: Dict[Union[float, int], List[str]] = {
