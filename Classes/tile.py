@@ -61,6 +61,25 @@ class Cave(Tile):
         self.texture = self._generate_mined_texture()
 
 
+class Ore(Tile):
+    def __init__(self, stone_type: str, ore_type: str, hardness: float):
+        super().__init__(texture=textures[f"{ore_type}_ore"], hardness=hardness)
+        self.ore_type: str = ore_type
+        self.mined_texture: Surface = textures[stone_type]
+
+    def destroy(self) -> Union[str, None]:
+        if self.hardness == float("inf"):
+            return
+
+        self.texture = self.mined_texture
+        self.texture = self._generate_mined_texture()
+
+        self.can_collide = False
+        self.hardness = float("inf")
+
+        return self.ore_type
+
+
 class PropTile(Tile):
     def __init__(self, texture: Union[Surface, str], background_texture: Union[Surface, str, None] = None) -> None:
         

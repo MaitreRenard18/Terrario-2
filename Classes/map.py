@@ -6,7 +6,7 @@ from pygame import Color, Surface, display, Rect
 from pygame.math import Vector2
 
 from Classes.player import Player
-from Classes.tile import Air, Cave, Tile
+from Classes.tile import Air, Cave, Tile, Ore
 
 
 class Map:
@@ -32,7 +32,7 @@ class Map:
 
         self.scale: float = 0.1
         self.cave_size: float = 0.5
-        self.biome_size: float = 0.0075
+        self.biome_size: float = 0.01
         self.biome_blend: int = 3
 
         # Récupère le nombre de tuiles qui peut être afficher en x et en y.
@@ -114,7 +114,11 @@ class Map:
         # Génération de la tuile si elle se trouve sous terre.
         else:
             if opensimplex.noise2(position.x * self.scale, position.y * self.scale) < (self.cave_size * 2) - 1:
-                self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], hardness)
+                if randint(0, 32) > 0:
+                    self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], hardness)
+
+                else:
+                    self._tiles[position.x][position.y] = Ore(tile_palette["primary_tile"], tile_palette["ore"], hardness)
                 
                 if "floor_tile" in tile_palette and not self.get_tile(position - Vector2(0, 1)).can_collide:
                     self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], hardness)
@@ -196,14 +200,17 @@ tile_palettes: Dict[str, Dict[str, str]] = {
 
     "cave": {
         "primary_tile": "loess",
+        "ore": "iron"
     },
 
     "sand_cave": {
         "primary_tile": "sandstone",
+        "ore": "gold"
     },
 
     "ice_cave": {
         "primary_tile": "ice",
+        "ore": "coal"
     },
 
     "lush_cave": {
