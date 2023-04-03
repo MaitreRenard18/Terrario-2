@@ -18,3 +18,8 @@ Ci dessous la commandes pour installer ces modules :
 
 # Comment jouer ?
 Pour lancer le jeu, executez tout simplement Terrario.pyw.
+
+# Captures d’écran :
+![Forêt](Images/Screenshots/Forest.png)
+![Desert](Images/Screenshots/Desert.png)
+![Biome neige](Images/Screenshots/Snowy_biome.png)
