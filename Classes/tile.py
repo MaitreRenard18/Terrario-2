@@ -22,9 +22,6 @@ class Tile:
         self.can_collide: bool = can_collide
         self.hardness: int = hardness
 
-        self.light_level: int = 128
-        self.light_emission: int = 0
-
     def update(self, position: Vector2) -> None:
         display = pygame.display.get_surface()
         display.blit(self.texture, position)
@@ -50,9 +47,6 @@ class Tile:
 class Air(Tile):
     def __init__(self) -> None:
         super().__init__(texture="air", hardness=float("inf"), can_collide=False)
-
-        self.light_level = 255
-        self.light_emission = 255
 
     def update(self, position: Vector2) -> None:
         pass
