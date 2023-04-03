@@ -117,7 +117,7 @@ class Map:
                 if randint(0, 32) > 0:
                     self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], hardness)
 
-                else:
+                elif "ore" in tile_palette:
                     self._tiles[position.x][position.y] = Ore(tile_palette["primary_tile"], tile_palette["ore"], hardness)
                 
                 if "floor_tile" in tile_palette and not self.get_tile(position - Vector2(0, 1)).can_collide:
