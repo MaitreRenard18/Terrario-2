@@ -113,7 +113,8 @@ class Map:
 
         # Génération de la tuile si elle se trouve sous terre.
         else:
-            if opensimplex.noise2(position.x * self.scale, position.y * self.scale) < (self.cave_size * 2) - 1:
+            noise_value = opensimplex.noise2(position.x * self.scale, position.y * self.scale)
+            if noise_value < (self.cave_size * 2) - 1:
                 if randint(0, 32) == 0 and "ore" in tile_palette:
                     self._tiles[position.x][position.y] = Ore(tile_palette["primary_tile"], tile_palette["ore"], hardness)
 
@@ -127,7 +128,13 @@ class Map:
                     self._tiles[position.x][position.y] = Tile(tile_palette["ceiling_tile"], hardness)
 
             else:
-                self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"])
+                depth = (1 + opensimplex.noise2(position.x * self.scale, position.y * self.scale)) / 3
+                if depth < 0.4:
+                    self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], 0.3)
+                elif depth < 0.5:
+                    self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], 0.4)
+                else:
+                    self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], 0.5)
 
         # Génération des props.
         if self._tiles[position.x][position.y].can_collide and not self.get_tile(position - Vector2(0, 1)).can_collide and biome in props:

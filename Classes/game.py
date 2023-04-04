@@ -23,11 +23,15 @@ class Game:
         """Commence la boucle d'execution."""
 
         show_fps = False
+        max_fps = 30
 
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_F1:
                     show_fps = not show_fps
+
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_F2:
+                    max_fps = 120 if max_fps == 60 else 60 if max_fps == 30 else 30
 
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -41,4 +45,4 @@ class Game:
                 pygame.display.get_surface().blit(img, (0, 0))
 
             pygame.display.update()
-            self.clock.tick(30)
+            self.clock.tick(max_fps)

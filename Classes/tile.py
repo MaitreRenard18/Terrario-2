@@ -56,9 +56,17 @@ class Air(Tile):
 
 
 class Cave(Tile):
-    def __init__(self, texture: Union[Surface, str]) -> None:
+    def __init__(self, texture: Union[Surface, str], depth: float = 0.5) -> None:
         super().__init__(texture=texture, hardness=float("inf"), can_collide=False)
-        self.texture = self._generate_mined_texture()
+        self.depth = depth
+
+        overlay = Surface((32, 32)).convert_alpha()
+        overlay.fill(Color(0, 0, 0, int(255 * depth)))
+
+        surface = Surface((32, 32))
+        surface.blit(self.texture, (0, 0))
+        surface.blit(overlay, (0, 0))
+        self.texture = surface
 
 
 class Ore(Tile):
