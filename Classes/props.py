@@ -153,6 +153,9 @@ def generate_stalagmite(map: Map, position: Vector2, height: int = None) -> None
         map.set_tile(tile, position)
         return generate_stalagmite(map, position - (0, 1), randint(1, 3))
 
+    if map.get_tile(position).can_collide:
+        map.set_tile(Cave(map.get_tile(position).texture), position)
+
     if height == 0:
         tile = PropTile("stalagmite_tip", map.get_tile(position).texture)
         map.set_tile(tile, position)
