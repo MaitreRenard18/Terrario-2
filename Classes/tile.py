@@ -67,7 +67,7 @@ class Background(Air):
         surface = Surface((32, 32))
         surface.blit(self.texture, (0, 0))
         surface.blit(overlay, (0, 0))
-        self.texture = surface
+        self.texture = surface.convert()
 
     def update(self, position: Vector2) -> None:
         display = pygame.display.get_surface()
