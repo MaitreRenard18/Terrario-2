@@ -130,9 +130,9 @@ class Map:
             else:
                 depth = (1 + opensimplex.noise2(position.x * self.scale, position.y * self.scale)) / 3
                 if depth < 0.4:
-                    self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], 0.3)
+                    self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], 0.35)
                 elif depth < 0.5:
-                    self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], 0.4)
+                    self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], 0.45)
                 else:
                     self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], 0.5)
 
