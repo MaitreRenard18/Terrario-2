@@ -1,12 +1,11 @@
-from typing import Callable, Dict, List, Union
+from typing import Callable, Union
 
 import opensimplex
-import pygame
-from pygame import Color, Surface, display, Rect
+from pygame import Color, Surface, display
 from pygame.math import Vector2
 
 from Classes.player import Player
-from Classes.tile import Air, Cave, Tile, Ore
+from Classes.tile import Tile, Ore, Background
 
 
 class Map:
@@ -28,7 +27,7 @@ class Map:
         self._tiles: Dict[int, Dict[int, Tile]] = {}
 
         # Initialise les valeurs utilisées lors de la génération de la carte.
-        opensimplex.seed = randint(0, 2**16)
+        opensimplex.seed(randint(0, 2**16))
 
         self.scale: float = 0.1
         self.cave_size: float = 0.5
@@ -109,7 +108,20 @@ class Map:
                 self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], 0)
 
             else:
-                self._tiles[position.x][position.y] = Air()
+                # Génération de l'arrière-plan
+                noise_value = round(opensimplex.noise2(position.x * self.scale * 0.25 + 128, 0) * 8) - 6
+                if position.y == noise_value:
+                    if "floor_tile" in tile_palette:
+                        self._tiles[position.x][position.y] = Background(tile_palette["floor_tile"])
+
+                    else:
+                        self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"])
+
+                elif position.y > noise_value:
+                    self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"])
+
+                else:
+                    self._tiles[position.x][position.y] = Air()
 
         # Génération de la tuile si elle se trouve sous terre.
         else:
