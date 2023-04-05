@@ -109,7 +109,7 @@ class Map:
 
             else:
                 # Génération de l'arrière-plan
-                noise_value = round(opensimplex.noise2(position.x * self.scale * 0.25 + 128, 0) * 8) - 6
+                noise_value = round(opensimplex.noise2(-position.x * self.scale * 0.25, 0) * 8) - 6
                 if position.y == noise_value:
                     if "floor_tile" in tile_palette:
                         self._tiles[position.x][position.y] = Background(tile_palette["floor_tile"])
