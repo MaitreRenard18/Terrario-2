@@ -42,11 +42,12 @@ class Game:
             if show_stats:
                 font = pygame.font.SysFont("Arial Bold", 48)
 
-                fps = font.render(f"FPS: {round(self.clock.get_fps())}", True, pygame.Color(255, 0, 0))
-                pygame.display.get_surface().blit(fps, (0, 0))
+                fps = font.render(f"FPS: {round(self.clock.get_fps())}", True, pygame.Color(255, 255, 255))
+                pygame.display.get_surface().blit(fps, (2, 0))
 
-                y = font.render(f"Y: {int(self.map.player.position.y)}", True, pygame.Color(255, 0, 0))
-                pygame.display.get_surface().blit(y, (0, 32))
+                y = font.render(f"Position: {int(self.map.player.position.x)}, {int(self.map.player.position.y)}",
+                                True, pygame.Color(255, 255, 255))
+                pygame.display.get_surface().blit(y, (2, 32))
 
             pygame.display.update()
             self.clock.tick(max_fps)
