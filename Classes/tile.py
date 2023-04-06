@@ -55,10 +55,37 @@ class Air(Tile):
         pass
 
 
+class Background(Air):
+    def __init__(self, texture: Union[Surface, str], depth: float = 0.5) -> None:
+        super().__init__()
+
+        self.depth: float = depth
+
+        self.texture: Surface = textures[texture] if isinstance(texture, str) else texture
+        overlay = Surface((32, 32)).convert_alpha()
+        overlay.fill(Color(77, 165, 217, int(255 * depth)))
+        surface = Surface((32, 32))
+        surface.blit(self.texture, (0, 0))
+        surface.blit(overlay, (0, 0))
+        self.texture = surface
+
+    def update(self, position: Vector2) -> None:
+        display = pygame.display.get_surface()
+        display.blit(self.texture, position)
+
+
 class Cave(Tile):
-    def __init__(self, texture: Union[Surface, str]) -> None:
+    def __init__(self, texture: Union[Surface, str], depth: float = 0.5) -> None:
         super().__init__(texture=texture, hardness=float("inf"), can_collide=False)
-        self.texture = self._generate_mined_texture()
+        self.depth: float = depth
+
+        overlay = Surface((32, 32)).convert_alpha()
+        overlay.fill(Color(0, 0, 0, int(255 * depth)))
+
+        surface = Surface((32, 32))
+        surface.blit(self.texture, (0, 0))
+        surface.blit(overlay, (0, 0))
+        self.texture = surface
 
 
 class Ore(Tile):
