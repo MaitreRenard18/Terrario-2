@@ -5,7 +5,7 @@ import os
 import pygame
 from pygame import Vector2
 
-from Classes.tile import Tile
+from Classes.tile import Tile, Scaffolding
 if TYPE_CHECKING:
     from Classes.map import Map
 
@@ -21,19 +21,32 @@ for file in os.listdir(_props_path):
 
 
 class Prop:
+    large_hit_box: bool = True
+
     def __init__(self, map: "Map", position: Vector2, prop_name: str) -> None:
         self.map = map
         self.position: Vector2 = position
         self.prop_name: str = prop_name
         self.tiles: Dict[int, Dict[int, Tile]] = _get_prop(prop_name)
 
-    def update(self, position: Vector2):
+    def update(self, position: Vector2) -> None:
+        display = pygame.display.get_surface()
+        can_fall = True
+
         for x, row in self.tiles.items():
             for y, tile in row.items():
-                display = pygame.display.get_surface()
                 display.blit(tile.texture, position + Vector2(x, -y) * 32)
 
-        if not self.map.get_tile(self.position).can_collide:
+                tile_underneath = self.map.get_tile(self.position + Vector2(x, -y + 1))
+                if self.large_hit_box and tile_underneath.can_collide and not isinstance(tile_underneath, Scaffolding):
+                    can_fall = False
+
+        if not self.large_hit_box:
+            tile_underneath = self.map.get_tile(self.position)
+            if tile_underneath.can_collide and not isinstance(tile_underneath, Scaffolding):
+                can_fall = False
+
+        if can_fall:
             self.map.props[self.position.x].pop(self.position.y)
             self.position = self.position + Vector2(0, 1)
             self.map.props[self.position.x][self.position.y] = self
