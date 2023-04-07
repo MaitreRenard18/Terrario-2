@@ -38,22 +38,20 @@ class Map:
         self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 8,
                                        self.display_surface.get_size()[1] // 32 // 2 + 8)
 
-        # Initialise une lightmap
-        self.lightmap: Surface = Surface(self.display_surface.get_size())
-
     def get_tile(self, position: Vector2) -> Tile:
         """
         Prend en paramètre un Vector2 et retourne la tuile se trouvant à cette position. 
         Si la tuile n'existe pas, en génère une nouvelle.
         """
 
-        # Vérifie si la tuile existe dans _tiles, et la génère si se n'est pas le cas.
         position.x, position.y = int(position.x), int(position.y)
-        if position.x not in self._tiles or position.y not in self._tiles[position.x]:
-            self._generate_tile(position.copy())
+        self._tiles[position.x] = self._tiles.get(position.x, {})
 
-        # Récupère la tuile et la retourne.
-        return self._tiles[position.x][position.y]
+        tile = self._tiles[position.x].get(position.y, None)
+        if tile is None:
+            tile = self._generate_tile(position)
+
+        return tile
 
     def set_tile(self, tile: Tile, position: Vector2) -> Tile:
         """
@@ -62,13 +60,10 @@ class Map:
         Retourne la tuile passée en paramètre.
         """
 
-        # Vérifie si la tuile existe dans _tiles, et la génère si se n'est pas le cas.
         position.x, position.y = int(position.x), int(position.y)
-        if position.x not in self._tiles or position.y not in self._tiles[position.x]:
-            self._generate_tile(position.copy())
-
-        # Change la tuile et la retourne.
+        self._tiles[position.x] = self._tiles.get(position.x, {})
         self._tiles[position.x][position.y] = tile
+
         return tile
 
     def _generate_tile(self, position: Vector2) -> Tile:
@@ -78,8 +73,7 @@ class Map:
         """
 
         # Créer une entrée dans le dictionnaire.
-        if position.x not in self._tiles:
-            self._tiles[position.x] = {}
+        self._tiles[position.x] = self._tiles.get(position.x, {})
 
         # Récupère le biome.
         hardness = 0
