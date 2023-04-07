@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, TYPE_CHECKING
 from csv import reader
 import os
 
@@ -6,8 +6,8 @@ import pygame
 from pygame import Vector2
 
 from Classes.tile import Tile
-from Classes.map import Map
-
+if TYPE_CHECKING:
+    from Classes.map import Map
 
 csvs: Dict[str, List[List[str]]] = {}
 _props_path = os.path.join("Props")
@@ -21,11 +21,11 @@ for file in os.listdir(_props_path):
 
 
 class Prop:
-    def __init__(self, map: Map, position: Vector2, prop_name: str) -> None:
+    def __init__(self, map: "Map", position: Vector2, prop_name: str) -> None:
         self.map = map
         self.position: Vector2 = position
         self.prop_name: str = prop_name
-        self.tiles: Dict[int, Dict[int, Tile]] = _get_prop_from_file(prop_name)
+        self.tiles: Dict[int, Dict[int, Tile]] = _get_prop(prop_name)
 
     def update(self, position: Vector2):
         for x, row in self.tiles.items():
@@ -39,8 +39,12 @@ class Prop:
             self.map.props[self.position.x][self.position.y] = self
 
 
-def _get_prop_from_file(prop_name: str) -> Dict[int, Dict[int, Tile]]:
+def _get_prop(prop_name: str) -> Dict[int, Dict[int, Tile]]:
     prop = {}
+    if not csvs.get(prop_name, False):
+        prop = {0: {1: Tile(prop_name, float("inf"), False)}}
+        return prop
+
     center = len(csvs[prop_name][-1]) // 2
     for y, row in enumerate(csvs[prop_name]):
         for x, value in enumerate(row):

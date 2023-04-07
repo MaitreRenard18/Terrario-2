@@ -1,5 +1,5 @@
 from time import sleep
-from typing import Callable, Union, Dict, List
+from typing import Callable, Union, Dict, List, TYPE_CHECKING
 from random import randint, choice
 
 import opensimplex
@@ -9,6 +9,7 @@ from pygame.math import Vector2
 
 from Classes.player import Player
 from Classes.tile import Tile, Ore, Background, Air, Cave, Scaffolding
+from Classes.prop import Prop
 
 
 class Map:
@@ -51,13 +52,23 @@ class Map:
         Si la tuile n'existe pas, en génère une nouvelle.
         """
 
-        # Vérifie si la tuile existe dans _tiles, et la génère si se n'est pas le cas.
         position.x, position.y = int(position.x), int(position.y)
-        if position.x not in self._tiles or position.y not in self._tiles[position.x]:
-            self._generate_tile(position.copy())
+        self._tiles[position.x] = self._tiles.get(position.x, {})
 
-        # Récupère la tuile et la retourne.
-        return self._tiles[position.x][position.y]
+        tile = self._tiles[position.x].get(position.y, None)
+        if tile is None:
+            tile = self._generate_tile(position)
+
+        return tile
+
+    def get_prop(self, position: Vector2) -> Union[Prop, None]:
+        """
+        Prend en paramètre un Vector2 et retourne le prop se trouvant à cette position.
+        Si le prop n'existe pas, retourne None.
+        """
+
+        position.x, position.y = int(position.x), int(position.y)
+        return self.props.get(position.x, {}).get(position.y, None)
 
     def set_tile(self, tile: Tile, position: Vector2) -> Tile:
         """
@@ -66,13 +77,10 @@ class Map:
         Retourne la tuile passée en paramètre.
         """
 
-        # Vérifie si la tuile existe dans _tiles, et la génère si se n'est pas le cas.
         position.x, position.y = int(position.x), int(position.y)
-        if position.x not in self._tiles or position.y not in self._tiles[position.x]:
-            self._generate_tile(position.copy())
-
-        # Change la tuile et la retourne.
+        self._tiles[position.x] = self._tiles.get(position.x, {})
         self._tiles[position.x][position.y] = tile
+
         return tile
 
     def _generate_tile(self, position: Vector2) -> Tile:
@@ -100,14 +108,13 @@ class Map:
         
         # Génération de la tuile si elle se trouve à la surface.
         if position.y - randint(0, self.biome_blend) < 16:
-            noise_value = round(opensimplex.noise2(position.x * self.scale * 0.25, 0) * 8)
+            noise_value = round(opensimplex.noise2(position.x * self.scale * 0.25, 0) * 6)
             if position.y == noise_value:
                 # Génération des props
-                if biome in props and position.x % choice([5, 7]) == 0:
-                    if position.x not in self.props:
-                        self.props[position.x] = {}
-
-                    self.props[position.x][position.y] = Prop(self, position, choice(props[biome]))
+                if biome in props and randint(1, 5) == 1:
+                    if self.get_prop(position - (1, 0)) is None and self.get_prop(position + (1, 0)) is None:
+                        self.props[position.x] = self.props.get(position.x, {})
+                        self.props[position.x][position.y] = Prop(self, position, choice(props[biome]))
 
                 # Génération de la tuile supérieure
                 if "floor_tile" in tile_palette:
@@ -151,7 +158,7 @@ class Map:
                         if position.x not in self.props:
                             self.props[position.x] = {}
 
-                        self.props[position.x][position.y] = Prop(self, position, choice(props[biome]))
+                        self.props[position.x][position.y] = Prop(self, position - (0, 1), choice(props[biome]))
 
                     # Génération de la tuile supérieure
                     if "floor_tile" in tile_palette:
@@ -216,8 +223,6 @@ class Map:
 
 
 # Déclaration des biomes et des décors associés à chaque biome.
-from Classes.prop import Prop
-
 biomes: Dict[Union[float, int], List[str]] = {
     # 512: ["hell"],
     # 256: ["crystal_cave", "haunted_cave"],
@@ -268,9 +273,9 @@ tile_palettes: Dict[str, Dict[str, str]] = {
 }
 
 props: Dict[str, List[str]] = {
-    "forest": ["oak_tree"],
-    # "desert": [],
-    "snowy_forest": ["fir"],
+    "forest": ["oak_tree_1", "oak_tree_2", "oak_tree_3", "weed", "weed", "tulip"],
+    "desert": ["cactus_1", "cactus_2", "cactus_3", "dead_weed", "dead_weed", "dead_weed"],
+    "snowy_forest": ["fir_1", "fir_2", "snowman", "snowy_weed"],
 
     # "cave": [],
 
