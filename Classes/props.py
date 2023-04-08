@@ -5,8 +5,8 @@ from typing import Dict, List
 
 from pygame import Vector2
 
-from Classes.map import Map
-from Classes.tile import Air, Cave, PropTile, Tile
+from .map import Map
+from .tile import Air, Cave, PropTile, Tile
 
 props: Dict[str, List[List[str]]] = {}
 _props_path = os.path.join("Props")

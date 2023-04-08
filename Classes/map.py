@@ -4,8 +4,8 @@ import opensimplex
 from pygame import Color, Surface, display
 from pygame.math import Vector2
 
-from Classes.player import Player
-from Classes.tile import Tile, Ore, Background
+from .player import Player
+from .tile import Tile, Ore, Background
 
 
 class Map:
@@ -186,7 +186,7 @@ class Map:
 
 
 # Déclaration des biomes et des décors associés à chaque biome.
-from Classes.props import *
+from .props import *
 
 biomes: Dict[Union[float, int], List[str]] = {
     # 512: ["hell"],
