@@ -5,7 +5,7 @@ import pygame
 from pygame import Color, Surface, Vector2
 
 from pathlib import Path
-MODULE_PATH = Path(__file__).parent.parent
+MODULE_PATH = Path(__file__).parent
 
 textures: Dict[str, Surface] = {}
 _textures_path = MODULE_PATH / "Images" / "Tiles"

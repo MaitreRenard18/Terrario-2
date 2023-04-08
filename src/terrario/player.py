@@ -6,7 +6,7 @@ from pygame import Rect, Surface, Vector2, image, key, sprite, transform
 from .tile import Scaffolding, Tile
 
 from pathlib import Path
-MODULE_PATH = Path(__file__).parent.parent
+MODULE_PATH = Path(__file__).parent
 
 
 class Player(sprite.Sprite):

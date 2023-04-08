@@ -10,7 +10,7 @@ from pathlib import Path
 from .map import Map
 from .tile import Air, Cave, PropTile, Tile
 
-MODULE_PATH = Path(__file__).parent.parent
+MODULE_PATH = Path(__file__).parent
 
 props: Dict[str, List[List[str]]] = {}
 _props_path = MODULE_PATH / "Props"

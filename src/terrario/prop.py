@@ -5,13 +5,17 @@ from typing import TYPE_CHECKING, Dict, List
 import pygame
 from pygame import Vector2
 
-from Classes.tile import Scaffolding, Tile
+from pathlib import Path
+
+from .tile import Scaffolding, Tile
 
 if TYPE_CHECKING:
-    from Classes.map import Map
+    from .map import Map
+
+MODULE_PATH = Path(__file__).parent
 
 csvs: Dict[str, List[List[str]]] = {}
-_props_path = os.path.join("Props")
+_props_path = MODULE_PATH / "Props"
 for file in os.listdir(_props_path):
     if file.endswith(".csv"):
         file_name = file.replace(".csv", "").lower()
