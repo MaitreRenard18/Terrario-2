@@ -14,7 +14,7 @@ class Game:
         self.screen = pygame.display.set_mode(flags=flags)
         self.clock = pygame.time.Clock()
 
-        from Classes.map import Map
+        from .map import Map
         self.map = Map()
 
         self.run()

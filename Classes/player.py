@@ -3,7 +3,7 @@ from typing import Dict, Union
 import pygame
 from pygame import Rect, Surface, Vector2, image, key, sprite, transform
 
-from Classes.tile import Scaffolding, Tile
+from .tile import Scaffolding, Tile
 
 
 class Player(sprite.Sprite):
