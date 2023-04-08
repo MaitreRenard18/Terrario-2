@@ -5,11 +5,15 @@ from typing import Dict, List
 
 from pygame import Vector2
 
+from pathlib import Path
+
 from .map import Map
 from .tile import Air, Cave, PropTile, Tile
 
+MODULE_PATH = Path(__file__).parent.parent
+
 props: Dict[str, List[List[str]]] = {}
-_props_path = os.path.join("Props")
+_props_path = MODULE_PATH / "Props"
 for file in os.listdir(_props_path):
     if file.endswith(".csv"):
         file_name = file.replace(".csv", "").lower()
