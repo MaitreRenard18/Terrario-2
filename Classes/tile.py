@@ -4,8 +4,11 @@ from typing import Dict, Union
 import pygame
 from pygame import Color, Surface, Vector2
 
+from pathlib import Path
+MODULE_PATH = Path(__file__).parent.parent
+
 textures: Dict[str, Surface] = {}
-_textures_path = os.path.join("Images", "Tiles")
+_textures_path = MODULE_PATH / "Images" / "Tiles"
 for file in os.listdir(_textures_path):
     if file.endswith(".png"):
         file_name = file.replace(".png", "").lower()

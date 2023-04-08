@@ -3,7 +3,10 @@ from typing import Dict, Union
 import pygame
 from pygame import Rect, Surface, Vector2, image, key, sprite, transform
 
-from Classes.tile import Scaffolding, Tile
+from .tile import Scaffolding, Tile
+
+from pathlib import Path
+MODULE_PATH = Path(__file__).parent.parent
 
 
 class Player(sprite.Sprite):
@@ -11,8 +14,8 @@ class Player(sprite.Sprite):
     def __init__(self, position: Vector2, map) -> None:
         super().__init__()
 
-        self.image: Surface = transform.scale(image.load("Images/Player/Drill_right.png"), (32, 32)).convert_alpha()
-        self.tip: Surface = transform.scale(image.load("Images/Player/DrillTip_right.png"), (32, 32)).convert_alpha()
+        self.image: Surface = transform.scale(image.load(MODULE_PATH / "Images" / "Player" / "Drill_right.png"), (32, 32)).convert_alpha()
+        self.tip: Surface = transform.scale(image.load(MODULE_PATH / "Images" / "Player" / "DrillTip_right.png"), (32, 32)).convert_alpha()
         self.rect: Rect = self.image.get_rect()
 
         self.original_pos: Vector2 = Vector2(position)
@@ -109,5 +112,5 @@ class Player(sprite.Sprite):
         self.map._tiles[self.destination.x][self.destination.y + 1] = Scaffolding(self.tile_below.texture)
             
     def facing(self, direction: str) -> None:
-        self.image = transform.scale(image.load(f"Images/Player/Drill_{direction}.png"), (32, 32)).convert_alpha()
-        self.tip = transform.scale(image.load(f"Images/Player/DrillTip_{direction}.png"), (32, 32)).convert_alpha()
+        self.image = transform.scale(image.load(MODULE_PATH / "Images" / "Player" / f"Drill_{direction}.png"), (32, 32)).convert_alpha()
+        self.tip = transform.scale(image.load(MODULE_PATH / "Images" / "Player" / f"DrillTip_{direction}.png"), (32, 32)).convert_alpha()

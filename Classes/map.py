@@ -1,15 +1,15 @@
+from random import choice, randint
 from time import sleep
-from typing import Callable, Union, Dict, List, TYPE_CHECKING
-from random import randint, choice
+from typing import TYPE_CHECKING, Callable, Dict, List, Union
 
 import opensimplex
 import pygame.display
 from pygame import Color, Surface, display
 from pygame.math import Vector2
 
-from Classes.player import Player
-from Classes.tile import Tile, Ore, Background, Air, Cave, Scaffolding
-from Classes.prop import Prop
+from .player import Player
+from .prop import Prop
+from .tile import Air, Background, Cave, Ore, Scaffolding, Tile
 
 
 class Map:
@@ -42,9 +42,6 @@ class Map:
         # Récupère le nombre de tuiles qui peut être afficher en x et en y.
         self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 8,
                                        self.display_surface.get_size()[1] // 32 // 2 + 8)
-
-        # Initialise une lightmap
-        self.lightmap: Surface = Surface(self.display_surface.get_size())
 
     def get_tile(self, position: Vector2) -> Tile:
         """
@@ -90,8 +87,7 @@ class Map:
         """
 
         # Créer une entrée dans le dictionnaire.
-        if position.x not in self._tiles:
-            self._tiles[position.x] = {}
+        self._tiles[position.x] = self._tiles.get(position.x, {})
 
         # Récupère le biome.
         hardness = 0
