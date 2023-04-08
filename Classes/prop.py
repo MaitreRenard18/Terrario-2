@@ -1,11 +1,12 @@
-from typing import Dict, List, TYPE_CHECKING
-from csv import reader
 import os
+from csv import reader
+from typing import TYPE_CHECKING, Dict, List
 
 import pygame
 from pygame import Vector2
 
-from Classes.tile import Tile, Scaffolding
+from Classes.tile import Scaffolding, Tile
+
 if TYPE_CHECKING:
     from Classes.map import Map
 
@@ -21,7 +22,7 @@ for file in os.listdir(_props_path):
 
 
 class Prop:
-    large_hit_box: bool = True
+    large_hit_box: bool = False
 
     def __init__(self, map: "Map", position: Vector2, prop_name: str) -> None:
         self.map = map
