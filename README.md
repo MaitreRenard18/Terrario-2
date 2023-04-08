@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="Images/UI/Logo.png" alt="Terrario 2 Logo" width="50%">
+  <img src="src/terrario/Images/UI/Logo.png" alt="Terrario 2 Logo" width="50%">
 </p>
 
 [![license](https://img.shields.io/github/license/MaitreRenard18/Terrario-2.svg)](https://github.com/MaitreRenard18/Terrario-2/blob/master/LICENSE)
@@ -20,6 +20,6 @@ Ci-dessous la commande pour installer ces modules :
 Pour lancer le jeu, exécuter tout simplement Terrario.pyw.
 
 # Captures d’écran :
-![Forêt](Images/Screenshots/Forest.png)
-![Desert](Images/Screenshots/Desert.png)
-![Biome neige](Images/Screenshots/Snowy_biome.png)
+![Forêt](src/terrario/Images/Screenshots/Forest.png)
+![Desert](src/terrario/Images/Screenshots/Desert.png)
+![Biome neige](src/terrario/Images/Screenshots/Snowy_biome.png)
