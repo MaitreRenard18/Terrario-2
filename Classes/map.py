@@ -40,8 +40,8 @@ class Map:
         self.biome_blend: int = 3
 
         # Récupère le nombre de tuiles qui peut être afficher en x et en y.
-        self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 8,
-                                       self.display_surface.get_size()[1] // 32 // 2 + 8)
+        self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 1,
+                                       self.display_surface.get_size()[1] // 32 // 2 + 1)
 
     def get_tile(self, position: Vector2) -> Tile:
         """
@@ -190,7 +190,7 @@ class Map:
         # Parcours chaques tuiles visibles à l'écran et les met à jour.
         props_to_render = []
         for x in range(round(self.player.position.x) - self.render_distance[0], round(self.player.position.x) + self.render_distance[0]):
-            for y in range(round(self.player.position.y) - self.render_distance[1], round(self.player.position.y) + self.render_distance[1]):
+            for y in range(round(self.player.position.y) - self.render_distance[1], round(self.player.position.y) + self.render_distance[1] + 12):
                 offset_vec = Vector2(x, y) * 32 - offset
 
                 tile = self.get_tile(Vector2(x, y))
