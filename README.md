@@ -10,10 +10,10 @@ Terrario 2 est la suite du mondialement connu [Terrario](https://github.com/Mait
 # Prérequis :
 Il faudra installer le module python Pygame version 2.1.1 minimum et Opensimplex pour que le jeu fonctionne.
 
-Ci-dessous la commande pour installer ces modules :
+Ci-dessous la commande pour installer le module `terrario` et ses dépendances :
 
 ```bash
-  $ pip install -r Requirements.txt
+  $ pip install .
 ```
 
 # Comment jouer ?
