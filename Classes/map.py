@@ -40,8 +40,8 @@ class Map:
         self.biome_blend: int = 3
 
         # Récupère le nombre de tuiles qui peut être afficher en x et en y.
-        self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 4,
-                                       self.display_surface.get_size()[1] // 32 // 2 + 2)
+        self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 1,
+                                       self.display_surface.get_size()[1] // 32 // 2 + 3)
 
     def get_tile(self, position: Vector2) -> Tile:
         """
@@ -188,20 +188,19 @@ class Map:
         offset.y = self.player.rect.centery - self.display_surface.get_height() / 2
 
         # Parcours chaques tuiles visibles à l'écran et les met à jour.
-        props_to_render = []
         for x in range(round(self.player.position.x) - self.render_distance[0], round(self.player.position.x) + self.render_distance[0]):
-            for y in range(round(self.player.position.y) - self.render_distance[1], round(self.player.position.y) + self.render_distance[1] + 10):
+            for y in range(round(self.player.position.y) - self.render_distance[1], round(self.player.position.y) + self.render_distance[1]):
                 offset_vec = Vector2(x, y) * 32 - offset
 
                 tile = self.get_tile(Vector2(x, y))
                 tile.update(offset_vec)
-                if x in self.props and y in self.props[x]:
-                    prop = self.props[x][y]
-                    props_to_render.append(prop)
 
-        # Fait le rendu des props
-        for prop in props_to_render:
-            prop.update(prop.position * 32 - offset)
+        # Parcours les props visibles à l'écran et les met à jour.
+        for x in range(round(self.player.position.x) - self.render_distance[0], round(self.player.position.x) + self.render_distance[0] + 10):
+            for y in range(round(self.player.position.y) - self.render_distance[1], round(self.player.position.y) + self.render_distance[1] + 10):
+                if self.props.get(x, None) is not None and self.props[x].get(y, None) is not None:
+                    self.props[x][y].update(self.props[x][y].position * 32 - offset)
+
         # Détermine la position du joueur sur l'écran.
         offset_rect = self.player.rect.copy()
         offset_rect.center -= offset
