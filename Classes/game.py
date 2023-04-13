@@ -2,6 +2,8 @@ import sys
 
 import pygame
 
+from .map import Map
+
 
 class Game:
     def __init__(self):
@@ -14,7 +16,6 @@ class Game:
         self.screen = pygame.display.set_mode(flags=flags)
         self.clock = pygame.time.Clock()
 
-        from .map import Map
         self.map = Map()
 
         self.run()
