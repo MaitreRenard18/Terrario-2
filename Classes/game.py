@@ -3,6 +3,7 @@ import sys
 import pygame
 
 from .map import Map
+from .saving import get_saves, save, load
 
 
 class Game:
@@ -16,7 +17,11 @@ class Game:
         self.screen = pygame.display.set_mode(flags=flags)
         self.clock = pygame.time.Clock()
 
-        self.map = Map()
+        self.save_name = "World"
+        if self.save_name in get_saves():
+            self.map = load(self.save_name)
+        else:
+            self.map = Map()
 
         self.run()
 
@@ -35,6 +40,7 @@ class Game:
                     max_fps = 120 if max_fps == 60 else 60 if max_fps == 30 else 30
 
                 if event.type == pygame.QUIT:
+                    save(self.save_name, self.map)
                     pygame.quit()
                     sys.exit()
 

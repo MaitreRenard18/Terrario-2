@@ -1,4 +1,4 @@
-from random import choice, randint
+from random import choice, randint, seed
 from time import sleep
 from typing import TYPE_CHECKING, Callable, Dict, List, Union
 
@@ -32,7 +32,9 @@ class Map:
         self.props: Dict[int, Dict[int, Prop]] = {}
 
         # Initialise les valeurs utilisées lors de la génération de la carte.
-        opensimplex.seed(randint(0, 2**16))
+        self.seed = randint(0, 2**16)
+        opensimplex.seed(self.seed)
+        seed(self.seed)
 
         self.scale: float = 0.1
         self.cave_size: float = 0.5
@@ -216,6 +218,17 @@ class Map:
             self.player.climb()
 
         self.player.update()
+
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        del state["display_surface"]
+        del state["player"]
+        return state
+    
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        self.display_surface = display.get_surface()
+        self.player = Player(Vector2(0, -1), self)
 
 
 # Déclaration des biomes et des décors associés à chaque biome.

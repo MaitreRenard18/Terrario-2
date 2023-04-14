@@ -46,6 +46,15 @@ class Tile:
         surface.blit(overlay, (0, 0))
         return surface
 
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        state["texture"] = pygame.image.tobytes(self.texture, "RGBA")
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        self.texture = pygame.image.frombytes(state["texture"], (32, 32), "RGBA")
+
 
 class Air(Tile):
     def __init__(self) -> None:
@@ -108,6 +117,17 @@ class Ore(Tile):
         self.hardness = float("inf")
 
         return self.ore_type
+
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        state["texture"] = pygame.image.tobytes(self.texture, "RGBA")
+        state["mined_texture"] = pygame.image.tobytes(self.mined_texture, "RGBA")
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        self.texture = pygame.image.frombytes(state["texture"], (32, 32), "RGBA")
+        self.mined_texture = pygame.image.frombytes(state["mined_texture"], (32, 32), "RGBA")
 
 
 class PropTile(Tile):
