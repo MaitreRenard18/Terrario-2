@@ -4,18 +4,8 @@ from typing import Dict, Union
 import pygame
 from pygame import Color, Surface, Vector2
 
-from pathlib import Path
-MODULE_PATH = Path(__file__).parent.parent
-
-textures: Dict[str, Surface] = {}
-_textures_path = MODULE_PATH / "Images" / "Tiles"
-for file in os.listdir(_textures_path):
-    if file.endswith(".png"):
-        file_name = file.replace(".png", "").lower()
-
-        path = os.path.join(_textures_path, file)
-        image = pygame.transform.scale(pygame.image.load(path), (32, 32))
-        textures[file_name] = image
+from Classes.textures import import_textures
+textures = import_textures("Tiles", (32, 32))
 
 
 class Tile:
