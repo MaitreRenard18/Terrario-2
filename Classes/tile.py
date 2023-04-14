@@ -8,6 +8,7 @@ from pathlib import Path
 MODULE_PATH = Path(__file__).parent.parent
 
 textures: Dict[str, Surface] = {}
+
 _textures_path = MODULE_PATH / "Images" / "Tiles"
 for file in os.listdir(_textures_path):
     if file.endswith(".png"):
@@ -132,7 +133,7 @@ class Ore(Tile):
 
 class PropTile(Tile):
     def __init__(self, texture: Union[Surface, str], background_texture: Union[Surface, str, None] = None) -> None:
-        
+
         surface = pygame.Surface((32, 32), pygame.SRCALPHA, depth=32)
 
         if background_texture is not None:

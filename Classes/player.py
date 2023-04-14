@@ -114,3 +114,14 @@ class Player(sprite.Sprite):
     def facing(self, direction: str) -> None:
         self.image = transform.scale(image.load(MODULE_PATH / "Images" / "Player" / f"Drill_{direction}.png"), (32, 32)).convert_alpha()
         self.tip = transform.scale(image.load(MODULE_PATH / "Images" / "Player" / f"DrillTip_{direction}.png"), (32, 32)).convert_alpha()
+
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        del state["image"]
+        del state["tip"]
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        self.image: Surface = transform.scale(image.load(MODULE_PATH / "Images" / "Player" / "Drill_right.png"), (32, 32)).convert_alpha()
+        self.tip: Surface = transform.scale(image.load(MODULE_PATH / "Images" / "Player" / "DrillTip_right.png"), (32, 32)).convert_alpha()

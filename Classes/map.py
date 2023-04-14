@@ -222,13 +222,14 @@ class Map:
     def __getstate__(self):
         state = self.__dict__.copy()
         del state["display_surface"]
-        del state["player"]
         return state
     
     def __setstate__(self, state):
         self.__dict__.update(state)
         self.display_surface = display.get_surface()
-        self.player = Player(Vector2(0, -1), self)
+
+        opensimplex.seed(self.seed)
+        seed(self.seed)
 
 
 # Déclaration des biomes et des décors associés à chaque biome.
