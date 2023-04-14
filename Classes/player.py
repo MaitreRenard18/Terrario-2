@@ -7,7 +7,6 @@ from Classes.textures import import_textures
 textures = import_textures("Player", (32, 32))
 ores_textures = import_textures("Ores", (96, 96))
 ui_textures = import_textures("UI", (942, 642))
-font = pygame.font.Font('prstart.ttf', 27)
 
 
 class Player(sprite.Sprite):
