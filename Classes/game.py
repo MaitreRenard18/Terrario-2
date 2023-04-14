@@ -41,7 +41,7 @@ class Game:
             self.map.update()
 
             if show_stats:
-                font = pygame.font.SysFont("Arial Bold", 48)
+                font = pygame.font.SysFont("prstart.ttf", 32)
 
                 fps = font.render(f"FPS: {round(self.clock.get_fps())}", True, pygame.Color(255, 255, 255))
                 pygame.display.get_surface().blit(fps, (2, 0))
