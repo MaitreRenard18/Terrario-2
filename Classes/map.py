@@ -202,17 +202,18 @@ class Map:
         # Fait le rendu des props
         for prop in props_to_render:
             prop.update(prop.position * 32 - offset)
+       
         # Détermine la position du joueur sur l'écran.
         offset_rect = self.player.rect.copy()
         offset_rect.center -= offset
 
-        self.player.facing(self.player.move["direction"])
+        self.player.facing()
 
         # Met à jour le joueur.
         self.display_surface.blit(self.player.image, offset_rect)
-        self.display_surface.blit(self.player.tip, (offset_rect.x + self.player.move["tip_tile"][0] * 32, offset_rect.y + self.player.move["tip_tile"][1] * 32))
+        self.display_surface.blit(self.player.tip, (offset_rect.x + self.player.tip_tile.x * 32, offset_rect.y + self.player.tip_tile.y * 32))
 
-        if self.player.move["direction"] == "up":
+        if self.player.direction == "up":
             self.player.climb()
 
         self.player.update()
