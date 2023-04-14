@@ -117,25 +117,25 @@ class Player(sprite.Sprite):
             else:
                 self.displayed = False
 
-            if keys[pygame.K_UP]:
+            if keys[pygame.K_UP] or keys[pygame.K_z]:
                 self.tip_tile.x, self.tip_tile.y =  0, -1
                 self.direction = "up"
                 self.tile_pos.y -= 1
                 return
 
-            if keys[pygame.K_DOWN]:
+            if keys[pygame.K_DOWN] or keys[pygame.K_s]:
                 self.tip_tile.x, self.tip_tile.y =  0, 1
                 self.direction = "down"
                 self.tile_pos.y += 1
                 return
 
-            if keys[pygame.K_RIGHT]:
+            if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
                 self.tip_tile.x, self.tip_tile.y = 1, 0
                 self.direction = "right"
                 self.tile_pos.x += 1
                 return
 
-            if keys[pygame.K_LEFT]:
+            if keys[pygame.K_LEFT] or keys[pygame.K_q]:
                 self.tip_tile.x, self.tip_tile.y = -1, 0
                 self.direction = "left"
                 self.tile_pos.x -= 1
