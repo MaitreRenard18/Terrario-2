@@ -99,7 +99,7 @@ class Background(Air):
 
     def __getstate__(self):
         state = self.__dict__.copy()
-        del state["texture"]
+        state["texture"] = tobytes(self.texture, "RGBA")
         state["_base_texture"] = tobytes(self._base_texture, "RGBA")
         state["key"] = _textures_names.get(self._base_texture, None)
         return state
@@ -152,7 +152,8 @@ class Ore(Tile):
 
 class Scaffolding(Tile):
     def __init__(self, texture: Union[Surface, str]) -> None:
-        texture = texture.copy().convert_alpha()
+        self._base_texture: Surface = textures[texture] if isinstance(texture, str) else texture
+        texture = self._base_texture.copy().convert_alpha()
         texture.set_colorkey((0, 0, 0))
 
         scaffolding_texture = textures["scaffolding"]
@@ -162,3 +163,23 @@ class Scaffolding(Tile):
         surface.blit(scaffolding_texture, (0, 0))
 
         super().__init__(texture=surface, hardness=float("inf"))
+
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        state["texture"] = tobytes(self.texture, "RGBA")
+        state["_base_texture"] = tobytes(self._base_texture, "RGBA")
+        state["key"] = _textures_names.get(self._base_texture, None)
+        return state
+
+    def __setstate__(self, state):
+        if state["key"] in textures:
+            state["_base_texture"] = textures[state["key"]]
+        else:
+            state["_base_texture"] = frombytes(state["texture"], (32, 32), "RGBA")
+        self.__dict__.update(state)
+
+        scaffolding_texture = textures["scaffolding"]
+        surface = pygame.Surface((32, 32), pygame.SRCALPHA, depth=32)
+        surface.blit(textures[self._base_texture] if isinstance(self._base_texture, str) else self._base_texture, (0, 0))
+        surface.blit(scaffolding_texture, (0, 0))
+        self.texture = surface
