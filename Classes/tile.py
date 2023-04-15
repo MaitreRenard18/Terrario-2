@@ -1,9 +1,8 @@
-import os
-from typing import Dict, Union
+from typing import Union
 
 import pygame
 from pygame import Color, Surface, Vector2
-from pygame.image import tobytes, frombytes
+from pygame.image import tostring, fromstring
 
 from .textures import import_textures
 
@@ -42,7 +41,7 @@ class Tile:
 
     def __getstate__(self):
         state = self.__dict__.copy()
-        state["texture"] = tobytes(self.texture, "RGBA")
+        state["texture"] = tostring(self.texture, "RGBA")
         state["key"] = _textures_names.get(self.texture, None)
         return state
 
@@ -50,7 +49,7 @@ class Tile:
         if state["key"] in textures:
             state["texture"] = textures[state["key"]]
         else:
-            state["texture"] = frombytes(state["texture"], (32, 32), "RGBA")
+            state["texture"] = fromstring(state["texture"], (32, 32), "RGBA")
 
         self.__dict__.update(state)
 
@@ -88,8 +87,8 @@ class Background(Air):
 
     def __getstate__(self):
         state = self.__dict__.copy()
-        state["texture"] = tobytes(self.texture, "RGBA")
-        state["_base_texture"] = tobytes(self._base_texture, "RGBA")
+        state["texture"] = tostring(self.texture, "RGBA")
+        state["_base_texture"] = tostring(self._base_texture, "RGBA")
         state["key"] = _textures_names.get(self._base_texture, None)
         return state
 
@@ -97,7 +96,7 @@ class Background(Air):
         if state["key"] in textures:
             state["_base_texture"] = textures[state["key"]]
         else:
-            state["_base_texture"] = frombytes(state["texture"], (32, 32), "RGBA")
+            state["_base_texture"] = fromstring(state["texture"], (32, 32), "RGBA")
         self.__dict__.update(state)
 
         overlay = Surface((32, 32)).convert_alpha()
@@ -129,14 +128,14 @@ class Ore(Tile):
 
     def __getstate__(self):
         state = self.__dict__.copy()
-        state["texture"] = pygame.image.tobytes(self.texture, "RGBA")
-        state["mined_texture"] = tobytes(self.mined_texture, "RGBA")
+        state["texture"] = pygame.image.tostring(self.texture, "RGBA")
+        state["mined_texture"] = tostring(self.mined_texture, "RGBA")
         return state
 
     def __setstate__(self, state):
         self.__dict__.update(state)
-        self.texture = pygame.image.frombytes(state["texture"], (32, 32), "RGBA")
-        self.mined_texture = frombytes(state["mined_texture"], (32, 32), "RGBA")
+        self.texture = pygame.image.fromstring(state["texture"], (32, 32), "RGBA")
+        self.mined_texture = fromstring(state["mined_texture"], (32, 32), "RGBA")
 
 
 class Scaffolding(Tile):
@@ -155,8 +154,8 @@ class Scaffolding(Tile):
 
     def __getstate__(self):
         state = self.__dict__.copy()
-        state["texture"] = tobytes(self.texture, "RGBA")
-        state["_base_texture"] = tobytes(self._base_texture, "RGBA")
+        state["texture"] = tostring(self.texture, "RGBA")
+        state["_base_texture"] = tostring(self._base_texture, "RGBA")
         state["key"] = _textures_names.get(self._base_texture, None)
         return state
 
@@ -164,7 +163,7 @@ class Scaffolding(Tile):
         if state["key"] in textures:
             state["_base_texture"] = textures[state["key"]]
         else:
-            state["_base_texture"] = frombytes(state["texture"], (32, 32), "RGBA")
+            state["_base_texture"] = fromstring(state["texture"], (32, 32), "RGBA")
         self.__dict__.update(state)
 
         scaffolding_texture = textures["scaffolding"]
