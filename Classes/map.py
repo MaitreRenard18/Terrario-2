@@ -2,6 +2,7 @@ from random import choice, randint, seed
 from typing import Dict, List, Union
 
 import opensimplex
+import pygame.image
 from pygame import Color, Surface, display
 from pygame.math import Vector2
 
@@ -150,11 +151,11 @@ class Map:
 
                 if not self.get_tile(position - Vector2(0, 1)).can_collide:
                     # Génération des props
-                    if biome in props and randint(1, 4) == 1:
+                    if biome in props and randint(1, 8) == 1:
                         if position.x not in self.props:
                             self.props[position.x] = {}
 
-                        self.props[position.x][position.y] = Prop(self, position - (0, 1), choice(props[biome]))
+                        self.props[position.x][position.y] = Prop(self, position, choice(props[biome]))
 
                     # Génération de la tuile supérieure
                     if "floor_tile" in tile_palette:
@@ -218,6 +219,7 @@ class Map:
 
         self.player.update()
 
+
     def __getstate__(self):
         state = self.__dict__.copy()
         del state["display_surface"]
@@ -276,7 +278,7 @@ tile_palettes: Dict[str, Dict[str, str]] = {
     },
 
     "shroom_cave": {
-        "primary_tile": "stone",
+        "primary_tile": "dark_stone",
         "floor_tile": "mycelium",
     }
 }
@@ -286,10 +288,11 @@ props: Dict[str, List[str]] = {
     "desert": ["cactus_1", "cactus_2", "cactus_3", "dead_weed", "dead_weed", "dead_weed"],
     "snowy_forest": ["fir_1", "fir_2", "snowman", "snowy_weed"],
 
-    # "cave": [],
+    "cave": ["stalagmite_1", "stalagmite_2", "stalagmite_3"],
+    "sand_cave": ["cactus_1", "cactus_2", "dead_weed", "dead_weed"],
 
-    # "lush_cave": [],
-    # "shroom_cave": [],
+    "lush_cave": ["oak_tree_1", "oak_tree_2", "oak_tree_3", "weed", "weed", "tulip"],
+    "shroom_cave": ["red_mushroom", "brown_mushroom", "giant_red_mushroom"],
 }
 
 ores: Dict[str, List[str]] = {
