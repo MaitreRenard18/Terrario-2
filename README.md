@@ -11,7 +11,7 @@ Terrario 2 est la suite du mondialement connu [Terrario](https://github.com/Mait
 # Comment jouer ?
 Il vous suffit simplement d'exécuter les commandes suivantes :
 ```bash
-  $ pip install terrario # Pour insaller le jeu.
+  $ pip install terrario # Pour installer le jeu.
   $ terrario # Pour le lancer.
 ```
 
