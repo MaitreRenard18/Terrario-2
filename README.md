@@ -19,7 +19,7 @@ Ou alors vous pouvez également installer Terrario manuellement, en installant l
 ```bash
   $ pip install -r Requirements.txt
 ```
-et en lancant "Terrario.pyw".
+et en ouvrant "Terrario.pyw".
 
 # Captures d’écran :
 ![Forêt](Images/Screenshots/Forest.png)
