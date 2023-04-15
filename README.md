@@ -11,16 +11,11 @@ Terrario 2 est la suite du mondialement connu [Terrario](https://github.com/Mait
 # Comment jouer ?
 Il vous suffit simplement d'exécuter les commandes suivantes :
 ```bash
-  $ pip install terrario
+  $ pip install terrario # Pour insaller le jeu.
+  $ terrario # Pour le lancer.
 ```
-puis
-```bash
-  $ terrario
-```
-pour executer le jeu.
 
-
-Ou alors, manuellement, en installant le module python Pygame version 2.1.1 minimum et Opensimplex en exécutant la commande suivante :
+Ou alors vous pouvez également installer Terrario manuellement, en installant le module python Pygame version 2.1.1 minimum et Opensimplex en exécutant la commande suivante :
 ```bash
   $ pip install -r Requirements.txt
 ```
