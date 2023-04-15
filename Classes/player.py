@@ -8,6 +8,9 @@ textures = import_textures("Player", (32, 32))
 ores_textures = import_textures("Ores", (96, 96))
 ui_textures = import_textures("UI", (942, 642))
 
+pygame.font.init()
+font = pygame.font.Font("prstart.ttf", 27)
+
 
 class Player(sprite.Sprite):
 
@@ -154,6 +157,8 @@ class Player(sprite.Sprite):
                 self.direction = "left"
                 self.tile_pos.x -= 1
                 return
+            
+        self.fall()
             
     def __getstate__(self):
         state = self.__dict__.copy()
