@@ -31,4 +31,4 @@ et en ouvrant "Terrario.pyw".
 # Captures d’écran :
 ![Forêt](Images/Screenshots/Forest.png)
 ![Desert](Images/Screenshots/Desert.png)
-![Biome neige](Images/Screenshots/Snowy_biome.png)
+![Biome neige](Images/Screenshots/Snow.png)
