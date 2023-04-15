@@ -40,8 +40,6 @@ class Player(sprite.Sprite):
 
         # Initialise l'inventaire du joueur et un booléon qui détermine si il est affiché.
         self.inventory = {}
-        for c in ores_textures:
-            self.inventory[c] = 0
         self.displayed: bool = False
         self.display_surface = display.get_surface()
 
@@ -53,10 +51,10 @@ class Player(sprite.Sprite):
 
         if ore is None:
             return
-        if ore in self.inventory:
-            self.inventory[ore] += 1
-        else:
+        if ore not in self.inventory:
             self.inventory[ore] = 1
+        else:
+            self.inventory[ore] += 1
 
     def facing(self) -> None:
         self.image = textures[f"drill_{self.direction}"]
@@ -87,7 +85,8 @@ class Player(sprite.Sprite):
             self.speed = 0.2
 
     def display_inventory(self):
-        self.display_surface.blit(ui_textures["inventory"], ((self.display_surface.get_width() - ui_textures["inventory"].get_width()) // 2, 0))
+        inv_pos = (self.display_surface.get_width() - ui_textures["inventory"].get_width()) // 2
+        self.display_surface.blit(ui_textures["inventory"], (inv_pos, 0))
         return
 
     def update(self) -> None:
