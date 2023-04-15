@@ -7,6 +7,9 @@ from .map import Map
 from pathlib import Path
 MODULE_PATH = Path(__file__).parent.parent
 
+if "Saves" not in os.listdir(MODULE_PATH):
+    os.mkdir(MODULE_PATH / "Saves")
+
 _saves_path = MODULE_PATH / "saves"
 
 
