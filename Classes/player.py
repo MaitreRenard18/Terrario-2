@@ -159,10 +159,12 @@ class Player(sprite.Sprite):
         state = self.__dict__.copy()
         state["position"] = Vector2(round(self.position.x), round(self.position.y))
         del state["image"]
+        del state["display_surface"]
         del state["tip"]
         return state
 
     def __setstate__(self, state):
         self.__dict__.update(state)
-        self.image: Surface = transform.scale(image.load(MODULE_PATH / "Images" / "Player" / "Drill_right.png"), (32, 32)).convert_alpha()
-        self.tip: Surface = transform.scale(image.load(MODULE_PATH / "Images" / "Player" / "DrillTip_right.png"), (32, 32)).convert_alpha()
+        self.image: Surface = textures[f"drill_{self.direction}"]
+        self.tip: Surface = textures[f"drilltip_{self.direction}"]
+        self.display_surface = display.get_surface()

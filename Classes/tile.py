@@ -4,9 +4,12 @@ from typing import Dict, Union
 import pygame
 from pygame import Color, Surface, Vector2
 from pygame.image import tobytes, frombytes
+
 from .textures import import_textures
 
+
 textures = import_textures("Tiles", (32, 32))
+_textures_names = {v: k for k, v in textures.items()}
 
 
 class Tile:
