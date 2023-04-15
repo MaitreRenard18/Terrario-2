@@ -1,7 +1,7 @@
 import pygame
 from pygame import Rect, Surface, Vector2, display, key, sprite
 
-from Classes.tile import Scaffolding, Tile, Ore
+from Classes.tile import Scaffolding, Tile
 from Classes.textures import import_textures
 
 textures = import_textures("Player", (32, 32))
