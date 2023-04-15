@@ -87,7 +87,22 @@ class Player(sprite.Sprite):
     def display_inventory(self):
         inv_pos = (self.display_surface.get_width() - ui_textures["inventory"].get_width()) // 2
         self.display_surface.blit(ui_textures["inventory"], (inv_pos, 0))
-        return
+
+        element, ligne = 0, 0
+        for c in self.inventory:
+            if element == 5:
+                element = 0
+                ligne += 1
+
+            element_gap = element * 180
+            ligne_gap = ligne * 180
+            self.display_surface.blit(ores_textures[c], (inv_pos + 48 + element_gap, 107 + ligne_gap))
+
+            text = font.render(str(self.inventory[c]), 1, (0,0,0))
+            text_pos = (inv_pos + 153 + element_gap, 214 + ligne_gap)
+            text_rect = text.get_rect(center = (text_pos))
+            self.display_surface.blit(text, text_rect)
+            element += 1
 
     def update(self) -> None:
 
