@@ -1,9 +1,7 @@
 from random import choice, randint, seed
-from time import sleep
-from typing import TYPE_CHECKING, Callable, Dict, List, Union
+from typing import Dict, List, Union
 
 import opensimplex
-import pygame.display
 from pygame import Color, Surface, display
 from pygame.math import Vector2
 
