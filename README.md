@@ -8,19 +8,27 @@
 # Présentation du projet :
 Terrario 2 est la suite du mondialement connu [Terrario](https://github.com/MaitreRenard18/Terrario).
 
-# Prérequis :
-Il faudra installer le module python Pygame version 2.1.1 minimum et Opensimplex pour que le jeu fonctionne.
+# Comment jouer ?
+Il vous suffit simplement d'exécuter les commandes suivantes :
+```bash
+  $ pip install terrario # Pour installer le jeu.
+  $ terrario # Pour le lancer.
+```
 
-Ci-dessous la commande pour installer ces modules :
-
+Ou alors vous pouvez également installer Terrario manuellement, en installant le module python Pygame version 2.1.1 minimum et Opensimplex en exécutant la commande suivante :
 ```bash
   $ pip install -r Requirements.txt
 ```
+et en ouvrant "Terrario.pyw".
 
-# Comment jouer ?
-Pour lancer le jeu, exécuter tout simplement Terrario.pyw.
+# Fonctionnalités :
+- Un monde infini généré de manière procedurale.
+- Différents enivironements.
+- Un sytème de sauvegarde.
+- Un inventaire.
+- Des améliorations pour le joueur.
 
 # Captures d’écran :
 ![Forêt](Images/Screenshots/Forest.png)
 ![Desert](Images/Screenshots/Desert.png)
-![Biome neige](Images/Screenshots/Snowy_biome.png)
+![Biome neige](Images/Screenshots/Snow.png)
