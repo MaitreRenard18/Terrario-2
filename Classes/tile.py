@@ -3,8 +3,9 @@ from typing import Dict, Union
 
 import pygame
 from pygame import Color, Surface, Vector2
+from pygame.image import tobytes, frombytes
+from .textures import import_textures
 
-from Classes.textures import import_textures
 textures = import_textures("Tiles", (32, 32))
 
 
@@ -36,6 +37,20 @@ class Tile:
         surface.blit(overlay, (0, 0))
         return surface
 
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        state["texture"] = tobytes(self.texture, "RGBA")
+        state["key"] = _textures_names.get(self.texture, None)
+        return state
+
+    def __setstate__(self, state):
+        if state["key"] in textures:
+            state["texture"] = textures[state["key"]]
+        else:
+            state["texture"] = frombytes(state["texture"], (32, 32), "RGBA")
+
+        self.__dict__.update(state)
+
 
 class Air(Tile):
     def __init__(self) -> None:
@@ -49,36 +64,46 @@ class Air(Tile):
 
 
 class Background(Air):
-    def __init__(self, texture: Union[Surface, str], depth: float = 0.5) -> None:
+    def __init__(self, texture: Union[Surface, str], color: Color, depth: float = 0.5) -> None:
         super().__init__()
 
+        self.color: Color = color
         self.depth: float = depth
 
-        self.texture: Surface = textures[texture] if isinstance(texture, str) else texture
+        self._base_texture: Surface = textures[texture] if isinstance(texture, str) else texture
         overlay = Surface((32, 32)).convert_alpha()
-        overlay.fill(Color(77, 165, 217, int(255 * depth)))
+        color.a = int(255 * depth)
+        overlay.fill(color)
         surface = Surface((32, 32))
-        surface.blit(self.texture, (0, 0))
+        surface.blit(self._base_texture, (0, 0))
         surface.blit(overlay, (0, 0))
-        self.texture = surface.convert()
+        self.texture: Surface = surface.convert()
 
     def update(self, position: Vector2) -> None:
         display = pygame.display.get_surface()
         display.blit(self.texture, position)
 
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        state["texture"] = tobytes(self.texture, "RGBA")
+        state["_base_texture"] = tobytes(self._base_texture, "RGBA")
+        state["key"] = _textures_names.get(self._base_texture, None)
+        return state
 
-class Cave(Tile):
-    def __init__(self, texture: Union[Surface, str], depth: float = 0.5) -> None:
-        super().__init__(texture=texture, hardness=float("inf"), can_collide=False)
-        self.depth: float = depth
+    def __setstate__(self, state):
+        if state["key"] in textures:
+            state["_base_texture"] = textures[state["key"]]
+        else:
+            state["_base_texture"] = frombytes(state["texture"], (32, 32), "RGBA")
+        self.__dict__.update(state)
 
         overlay = Surface((32, 32)).convert_alpha()
-        overlay.fill(Color(0, 0, 0, int(255 * depth)))
-
+        self.color.a = int(255 * self.depth)
+        overlay.fill(self.color)
         surface = Surface((32, 32))
-        surface.blit(self.texture, (0, 0))
+        surface.blit(self._base_texture, (0, 0))
         surface.blit(overlay, (0, 0))
-        self.texture = surface
+        self.texture: Surface = surface.convert()
 
 
 class Ore(Tile):
@@ -99,25 +124,22 @@ class Ore(Tile):
 
         return self.ore_type
 
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        state["texture"] = pygame.image.tobytes(self.texture, "RGBA")
+        state["mined_texture"] = tobytes(self.mined_texture, "RGBA")
+        return state
 
-class PropTile(Tile):
-    def __init__(self, texture: Union[Surface, str], background_texture: Union[Surface, str, None] = None) -> None:
-        
-        surface = pygame.Surface((32, 32), pygame.SRCALPHA, depth=32)
-
-        if background_texture is not None:
-            background_texture = textures[background_texture] if isinstance(background_texture, str) else background_texture
-            surface.blit(background_texture, (0, 0))
-
-        texture = textures[texture] if isinstance(texture, str) else texture
-        surface.blit(texture, (0, 0))
-
-        super().__init__(texture=surface, hardness=float("inf"), can_collide=False)
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        self.texture = pygame.image.frombytes(state["texture"], (32, 32), "RGBA")
+        self.mined_texture = frombytes(state["mined_texture"], (32, 32), "RGBA")
 
 
 class Scaffolding(Tile):
     def __init__(self, texture: Union[Surface, str]) -> None:
-        texture = texture.copy().convert_alpha()
+        self._base_texture: Surface = textures[texture] if isinstance(texture, str) else texture
+        texture = self._base_texture.copy().convert_alpha()
         texture.set_colorkey((0, 0, 0))
 
         scaffolding_texture = textures["scaffolding"]
@@ -128,5 +150,22 @@ class Scaffolding(Tile):
 
         super().__init__(texture=surface, hardness=float("inf"))
 
-    def destroy(self) -> None:
-        pass
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        state["texture"] = tobytes(self.texture, "RGBA")
+        state["_base_texture"] = tobytes(self._base_texture, "RGBA")
+        state["key"] = _textures_names.get(self._base_texture, None)
+        return state
+
+    def __setstate__(self, state):
+        if state["key"] in textures:
+            state["_base_texture"] = textures[state["key"]]
+        else:
+            state["_base_texture"] = frombytes(state["texture"], (32, 32), "RGBA")
+        self.__dict__.update(state)
+
+        scaffolding_texture = textures["scaffolding"]
+        surface = pygame.Surface((32, 32), pygame.SRCALPHA, depth=32)
+        surface.blit(textures[self._base_texture] if isinstance(self._base_texture, str) else self._base_texture, (0, 0))
+        surface.blit(scaffolding_texture, (0, 0))
+        self.texture = surface

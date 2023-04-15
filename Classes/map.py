@@ -1,4 +1,4 @@
-from random import choice, randint
+from random import choice, randint, seed
 from time import sleep
 from typing import TYPE_CHECKING, Callable, Dict, List, Union
 
@@ -9,7 +9,7 @@ from pygame.math import Vector2
 
 from .player import Player
 from .prop import Prop
-from .tile import Air, Background, Cave, Ore, Scaffolding, Tile
+from .tile import Air, Background, Ore, Tile
 
 
 class Map:
@@ -32,7 +32,9 @@ class Map:
         self.props: Dict[int, Dict[int, Prop]] = {}
 
         # Initialise les valeurs utilisées lors de la génération de la carte.
-        opensimplex.seed(randint(0, 2**16))
+        self.seed = randint(0, 2**16)
+        opensimplex.seed(self.seed)
+        seed(self.seed)
 
         self.scale: float = 0.1
         self.cave_size: float = 0.5
@@ -41,7 +43,7 @@ class Map:
 
         # Récupère le nombre de tuiles qui peut être afficher en x et en y.
         self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 4,
-                                       self.display_surface.get_size()[1] // 32 // 2 + 2)
+                                       self.display_surface.get_size()[1] // 32 // 2 + 3)
 
     def get_tile(self, position: Vector2) -> Tile:
         """
@@ -127,13 +129,13 @@ class Map:
                 noise_value = round(opensimplex.noise2(-position.x * self.scale * 0.25, 0) * 8) - 6
                 if position.y == noise_value:
                     if "floor_tile" in tile_palette:
-                        self._tiles[position.x][position.y] = Background(tile_palette["floor_tile"])
+                        self._tiles[position.x][position.y] = Background(tile_palette["floor_tile"], Color(77, 165, 217))
 
                     else:
-                        self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"])
+                        self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"], Color(77, 165, 217))
 
                 elif position.y > noise_value:
-                    self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"])
+                    self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"], Color(77, 165, 217))
 
                 else:
                     self._tiles[position.x][position.y] = Air()
@@ -166,11 +168,11 @@ class Map:
             else:
                 depth = (1 + opensimplex.noise2(position.x * self.scale, position.y * self.scale)) / 3
                 if depth < 0.4:
-                    self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], 0.35)
+                    self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"], Color(0, 0, 0), 0.35)
                 elif depth < 0.5:
-                    self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], 0.45)
+                    self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"], Color(0, 0, 0), 0.45)
                 else:
-                    self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], 0.5)
+                    self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"], Color(0, 0, 0), 0.5)
 
         return self._tiles[position.x][position.y]
 
@@ -217,6 +219,18 @@ class Map:
             self.player.climb()
 
         self.player.update()
+
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        del state["display_surface"]
+        return state
+    
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        self.display_surface = display.get_surface()
+
+        opensimplex.seed(self.seed)
+        seed(self.seed)
 
 
 # Déclaration des biomes et des décors associés à chaque biome.
