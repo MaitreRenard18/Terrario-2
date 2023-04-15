@@ -9,7 +9,7 @@ from pygame.math import Vector2
 
 from .player import Player
 from .prop import Prop
-from .tile import Air, Background, Cave, Ore, Scaffolding, Tile
+from .tile import Air, Background, Ore, Tile
 
 
 class Map:
@@ -129,13 +129,13 @@ class Map:
                 noise_value = round(opensimplex.noise2(-position.x * self.scale * 0.25, 0) * 8) - 6
                 if position.y == noise_value:
                     if "floor_tile" in tile_palette:
-                        self._tiles[position.x][position.y] = Background(tile_palette["floor_tile"])
+                        self._tiles[position.x][position.y] = Background(tile_palette["floor_tile"], Color(77, 165, 217))
 
                     else:
-                        self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"])
+                        self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"], Color(77, 165, 217))
 
                 elif position.y > noise_value:
-                    self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"])
+                    self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"], Color(77, 165, 217))
 
                 else:
                     self._tiles[position.x][position.y] = Air()
@@ -168,11 +168,11 @@ class Map:
             else:
                 depth = (1 + opensimplex.noise2(position.x * self.scale, position.y * self.scale)) / 3
                 if depth < 0.4:
-                    self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], 0.35)
+                    self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"], Color(0, 0, 0), 0.35)
                 elif depth < 0.5:
-                    self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], 0.45)
+                    self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"], Color(0, 0, 0), 0.45)
                 else:
-                    self._tiles[position.x][position.y] = Cave(tile_palette["primary_tile"], 0.5)
+                    self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"], Color(0, 0, 0), 0.5)
 
         return self._tiles[position.x][position.y]
 
