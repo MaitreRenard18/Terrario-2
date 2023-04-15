@@ -19,6 +19,7 @@ puis
 ```
 pour executer le jeu.
 
+
 Ou alors, manuellement, en installant le module python Pygame version 2.1.1 minimum et Opensimplex en exécutant la commande suivante :
 ```bash
   $ pip install -r Requirements.txt
