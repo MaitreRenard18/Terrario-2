@@ -2,7 +2,7 @@
   <img src="Images/UI/Logo.png" alt="Terrario 2 Logo" width="50%">
 </p>
 
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/terrario)](https://pypi.org/project/terrario/)
+[![python version](https://img.shields.io/pypi/pyversions/terrario)](https://pypi.org/project/terrario/)
 [![license](https://img.shields.io/github/license/MaitreRenard18/Terrario-2.svg)](https://github.com/MaitreRenard18/Terrario-2/blob/master/LICENSE)
 
 # Présentation du projet :
