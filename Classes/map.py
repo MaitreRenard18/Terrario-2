@@ -43,7 +43,7 @@ class Map:
 
         # Récupère le nombre de tuiles qui peut être afficher en x et en y.
         self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 4,
-                                       self.display_surface.get_size()[1] // 32 // 2 + 2)
+                                       self.display_surface.get_size()[1] // 32 // 2 + 3)
 
     def get_tile(self, position: Vector2) -> Tile:
         """
