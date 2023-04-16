@@ -115,13 +115,13 @@ class Map:
 
                 # Génération de la tuile supérieure
                 if "floor_tile" in tile_palette:
-                    self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], 0)
+                    self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], hardness)
 
                 else:
-                    self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], 0)
+                    self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], hardness)
 
             elif position.y > noise_value:
-                self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], 0)
+                self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], hardness)
 
             else:
                 # Génération de l'arrière-plan
