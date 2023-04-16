@@ -31,7 +31,7 @@ class Map:
         self.props: Dict[int, Dict[int, Prop]] = {}
 
         # Initialise les valeurs utilisées lors de la génération de la carte.
-        self.seed = randint(0, 2**16)
+        self.seed = randint(0, 2 ** 16)
         opensimplex.seed(self.seed)
         seed(self.seed)
 
@@ -99,10 +99,10 @@ class Map:
                 noise_value = opensimplex.noise2((position.x + randint(0, self.biome_blend)) * self.biome_size, 0) + 1
                 biome = biomes[k][int(noise_value // number_range)]
                 break
-        
+
         hardness = len(biomes) - hardness
         tile_palette = tile_palettes[biome] if biome in tile_palettes else tile_palettes["cave"]
-        
+
         # Génération de la tuile si elle se trouve à la surface.
         if position.y - randint(0, self.biome_blend) < 16:
             noise_value = round(opensimplex.noise2(position.x * self.scale * 0.25, 0) * 6)
@@ -119,7 +119,7 @@ class Map:
 
                 else:
                     self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], 0)
-            
+
             elif position.y > noise_value:
                 self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], 0)
 
@@ -128,10 +128,12 @@ class Map:
                 noise_value = round(opensimplex.noise2(-position.x * self.scale * 0.25, 0) * 8) - 6
                 if position.y == noise_value:
                     if "floor_tile" in tile_palette:
-                        self._tiles[position.x][position.y] = Background(tile_palette["floor_tile"], Color(77, 165, 217))
+                        self._tiles[position.x][position.y] = Background(tile_palette["floor_tile"],
+                                                                         Color(77, 165, 217))
 
                     else:
-                        self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"], Color(77, 165, 217))
+                        self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"],
+                                                                         Color(77, 165, 217))
 
                 elif position.y > noise_value:
                     self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"], Color(77, 165, 217))
@@ -141,10 +143,15 @@ class Map:
 
         # Génération de la tuile si elle se trouve sous terre.
         else:
-            noise_value = opensimplex.noise2(position.x * self.scale, position.y * self.scale)
+            if biome in biomes_scale:
+                noise_value = opensimplex.noise2(position.x * biomes_scale[biome], position.y * biomes_scale[biome])
+            else:
+                noise_value = opensimplex.noise2(position.x * self.scale, position.y * self.scale)
+
             if noise_value < (self.cave_size * 2) - 1:
                 if randint(0, 32) == 0 and "ore" in tile_palette:
-                    self._tiles[position.x][position.y] = Ore(tile_palette["primary_tile"], tile_palette["ore"], hardness)
+                    self._tiles[position.x][position.y] = Ore(tile_palette["primary_tile"], tile_palette["ore"],
+                                                              hardness)
 
                 else:
                     self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], hardness)
@@ -160,12 +167,17 @@ class Map:
                     # Génération de la tuile supérieure
                     if "floor_tile" in tile_palette:
                         self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], hardness)
-                
+
                 if "ceiling_tile" in tile_palette and not self.get_tile(position + Vector2(0, 1)).can_collide:
                     self._tiles[position.x][position.y] = Tile(tile_palette["ceiling_tile"], hardness)
 
             else:
-                depth = (1 + opensimplex.noise2(position.x * self.scale, position.y * self.scale)) / 3
+                if biome in biomes_scale:
+                    depth = (1 + opensimplex.noise2(position.x * biomes_scale[biome],
+                                                    position.y * biomes_scale[biome])) / 3
+                else:
+                    depth = (1 + opensimplex.noise2(position.x * self.scale, position.y * self.scale)) / 3
+
                 if depth < 0.4:
                     self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"], Color(0, 0, 0), 0.35)
                 elif depth < 0.5:
@@ -177,7 +189,7 @@ class Map:
 
     def update(self) -> None:
         """
-        Affiche la carte sur l'écran et s'occupe de mettre à jour les différentes tuiles, ainsi que le joueur. 
+        Affiche la carte sur l'écran et s'occupe de mettre à jour les différentes tuiles, ainsi que le joueur.
         """
 
         # Affiche le ciel.
@@ -190,8 +202,10 @@ class Map:
 
         # Parcours chaques tuiles visibles à l'écran et les met à jour.
         props_to_render = []
-        for x in range(round(self.player.position.x) - self.render_distance[0], round(self.player.position.x) + self.render_distance[0]):
-            for y in range(round(self.player.position.y) - self.render_distance[1], round(self.player.position.y) + self.render_distance[1] + 10):
+        for x in range(round(self.player.position.x) - self.render_distance[0],
+                       round(self.player.position.x) + self.render_distance[0]):
+            for y in range(round(self.player.position.y) - self.render_distance[1],
+                           round(self.player.position.y) + self.render_distance[1] + 10):
                 offset_vec = Vector2(x, y) * 32 - offset
 
                 tile = self.get_tile(Vector2(x, y))
@@ -203,7 +217,7 @@ class Map:
         # Fait le rendu des props
         for prop in props_to_render:
             prop.update(prop.position * 32 - offset)
-       
+
         # Détermine la position du joueur sur l'écran.
         offset_rect = self.player.rect.copy()
         offset_rect.center -= offset
@@ -212,19 +226,19 @@ class Map:
 
         # Met à jour le joueur.
         self.display_surface.blit(self.player.image, offset_rect)
-        self.display_surface.blit(self.player.tip, (offset_rect.x + self.player.tip_tile.x * 32, offset_rect.y + self.player.tip_tile.y * 32))
+        self.display_surface.blit(self.player.tip, (
+        offset_rect.x + self.player.tip_tile.x * 32, offset_rect.y + self.player.tip_tile.y * 32))
 
         if self.player.direction == "up":
             self.player.climb()
 
         self.player.update()
 
-
     def __getstate__(self):
         state = self.__dict__.copy()
         del state["display_surface"]
         return state
-    
+
     def __setstate__(self, state):
         self.__dict__.update(state)
         self.display_surface = display.get_surface()
@@ -235,8 +249,8 @@ class Map:
 
 # Déclaration des biomes et des décors associés à chaque biome.
 biomes: Dict[Union[float, int], List[str]] = {
-    # 512: ["hell"],
-    # 256: ["crystal_cave", "haunted_cave"],
+    512: ["hell"],
+    256: ["haunted_cave"],
     64: ["lush_cave", "shroom_cave"],
     16: ["sand_cave", "cave", "ice_cave"],
     float("-inf"): ["desert", "forest", "snowy_forest"]
@@ -280,7 +294,25 @@ tile_palettes: Dict[str, Dict[str, str]] = {
     "shroom_cave": {
         "primary_tile": "dark_stone",
         "floor_tile": "mycelium",
+    },
+
+    "haunted_cave": {
+        "primary_tile": "shale",
+        "ore": "soul"
+    },
+
+    "hell": {
+        "primary_tile": "hellstone",
     }
+}
+
+biomes_scale: Dict[str, float] = {
+    "shroom_cave": 0.075,
+    "lush_cave": 0.075,
+
+    "haunted_cave": 0.125,
+
+    "hell": 0.05
 }
 
 props: Dict[str, List[str]] = {
@@ -293,10 +325,8 @@ props: Dict[str, List[str]] = {
 
     "lush_cave": ["oak_tree_1", "oak_tree_2", "oak_tree_3", "weed", "weed", "tulip"],
     "shroom_cave": ["red_mushroom", "brown_mushroom", "giant_red_mushroom"],
-}
 
-ores: Dict[str, List[str]] = {
-    "forest": [],
-    "desert": [],
-    "snowy_forest": []
+    "haunted_cave": ["tombstone_1", "tombstone_2", "lamp"],
+
+    "hell": ["fire"]
 }
