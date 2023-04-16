@@ -85,6 +85,7 @@ props: Dict[str, List[str]] = {
 
     "cave": ["stalagmite_1", "stalagmite_2", "stalagmite_3"],
     "sand_cave": ["cactus_1", "cactus_2", "dead_weed", "dead_weed"],
+    "ice_cave": ["ice_stalagmite_1", "ice_stalagmite_2", "ice_stalagmite_3"],
 
     "lush_cave": ["oak_tree_1", "oak_tree_2", "oak_tree_3", "weed", "weed", "tulip"],
     "shroom_cave": ["red_mushroom", "brown_mushroom", "giant_red_mushroom"],
