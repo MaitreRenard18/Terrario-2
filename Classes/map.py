@@ -10,7 +10,92 @@ from .player import Player
 from .prop import Prop
 from .tile import Air, Background, Ore, Tile
 
+# Déclaration des biomes et des décors associés à chaque biome.
+biomes: Dict[Union[float, int], List[str]] = {
+    512: ["hell"],
+    256: ["haunted_cave"],
+    64: ["lush_cave", "shroom_cave"],
+    16: ["sand_cave", "cave", "ice_cave"],
+    float("-inf"): ["desert", "forest", "snowy_forest"]
+}
 
+tile_palettes: Dict[str, Dict[str, str]] = {
+    "forest": {
+        "primary_tile": "dirt",
+        "floor_tile": "grass"
+    },
+
+    "desert": {
+        "primary_tile": "sand"
+    },
+
+    "snowy_forest": {
+        "primary_tile": "snowy_dirt",
+        "floor_tile": "snowy_grass"
+    },
+
+    "cave": {
+        "primary_tile": "loess",
+        "ore": "iron"
+    },
+
+    "sand_cave": {
+        "primary_tile": "sandstone",
+        "ore": "gold"
+    },
+
+    "ice_cave": {
+        "primary_tile": "ice",
+        "ore": "coal"
+    },
+
+    "lush_cave": {
+        "primary_tile": "stone",
+        "floor_tile": "mossy_stone",
+    },
+
+    "shroom_cave": {
+        "primary_tile": "dark_stone",
+        "floor_tile": "mycelium",
+    },
+
+    "haunted_cave": {
+        "primary_tile": "shale",
+        "ore": "soul"
+    },
+
+    "hell": {
+        "primary_tile": "hellstone",
+    }
+}
+
+biomes_scale: Dict[str, float] = {
+    "shroom_cave": 0.075,
+    "lush_cave": 0.075,
+
+    "haunted_cave": 0.125,
+
+    "hell": 0.05
+}
+
+props: Dict[str, List[str]] = {
+    "forest": ["oak_tree_1", "oak_tree_2", "oak_tree_3", "weed", "weed", "tulip"],
+    "desert": ["cactus_1", "cactus_2", "cactus_3", "cactus_4", "dead_weed", "dead_weed", "dead_weed"],
+    "snowy_forest": ["fir_1", "fir_2", "snowman", "snowy_weed"],
+
+    "cave": ["stalagmite_1", "stalagmite_2", "stalagmite_3"],
+    "sand_cave": ["cactus_1", "cactus_2", "dead_weed", "dead_weed"],
+
+    "lush_cave": ["oak_tree_1", "oak_tree_2", "oak_tree_3", "weed", "weed", "tulip"],
+    "shroom_cave": ["red_mushroom", "brown_mushroom", "giant_red_mushroom"],
+
+    "haunted_cave": ["tombstone_1", "tombstone_2", "lamp", "skull", "pile_of_skulls"],
+
+    "hell": ["fire", "skull", "pile_of_skulls"]
+}
+
+
+# Déclaration de la classe Map
 class Map:
     """
     Class qui représente une carte 2D générée procéduralement composée de grottes
@@ -226,8 +311,8 @@ class Map:
 
         # Met à jour le joueur.
         self.display_surface.blit(self.player.image, offset_rect)
-        self.display_surface.blit(self.player.tip, (
-        offset_rect.x + self.player.tip_tile.x * 32, offset_rect.y + self.player.tip_tile.y * 32))
+        self.display_surface.blit(self.player.tip, (offset_rect.x + self.player.tip_tile.x * 32,
+                                                    offset_rect.y + self.player.tip_tile.y * 32))
 
         if self.player.direction == "up":
             self.player.climb()
@@ -245,88 +330,3 @@ class Map:
 
         opensimplex.seed(self.seed)
         seed(self.seed)
-
-
-# Déclaration des biomes et des décors associés à chaque biome.
-biomes: Dict[Union[float, int], List[str]] = {
-    512: ["hell"],
-    256: ["haunted_cave"],
-    64: ["lush_cave", "shroom_cave"],
-    16: ["sand_cave", "cave", "ice_cave"],
-    float("-inf"): ["desert", "forest", "snowy_forest"]
-}
-
-tile_palettes: Dict[str, Dict[str, str]] = {
-    "forest": {
-        "primary_tile": "dirt",
-        "floor_tile": "grass"
-    },
-
-    "desert": {
-        "primary_tile": "sand"
-    },
-
-    "snowy_forest": {
-        "primary_tile": "snowy_dirt",
-        "floor_tile": "snowy_grass"
-    },
-
-    "cave": {
-        "primary_tile": "loess",
-        "ore": "iron"
-    },
-
-    "sand_cave": {
-        "primary_tile": "sandstone",
-        "ore": "gold"
-    },
-
-    "ice_cave": {
-        "primary_tile": "ice",
-        "ore": "coal"
-    },
-
-    "lush_cave": {
-        "primary_tile": "stone",
-        "floor_tile": "mossy_stone",
-    },
-
-    "shroom_cave": {
-        "primary_tile": "dark_stone",
-        "floor_tile": "mycelium",
-    },
-
-    "haunted_cave": {
-        "primary_tile": "shale",
-        "ore": "soul"
-    },
-
-    "hell": {
-        "primary_tile": "hellstone",
-    }
-}
-
-biomes_scale: Dict[str, float] = {
-    "shroom_cave": 0.075,
-    "lush_cave": 0.075,
-
-    "haunted_cave": 0.125,
-
-    "hell": 0.05
-}
-
-props: Dict[str, List[str]] = {
-    "forest": ["oak_tree_1", "oak_tree_2", "oak_tree_3", "weed", "weed", "tulip"],
-    "desert": ["cactus_1", "cactus_2", "cactus_3", "dead_weed", "dead_weed", "dead_weed"],
-    "snowy_forest": ["fir_1", "fir_2", "snowman", "snowy_weed"],
-
-    "cave": ["stalagmite_1", "stalagmite_2", "stalagmite_3"],
-    "sand_cave": ["cactus_1", "cactus_2", "dead_weed", "dead_weed"],
-
-    "lush_cave": ["oak_tree_1", "oak_tree_2", "oak_tree_3", "weed", "weed", "tulip"],
-    "shroom_cave": ["red_mushroom", "brown_mushroom", "giant_red_mushroom"],
-
-    "haunted_cave": ["tombstone_1", "tombstone_2", "lamp"],
-
-    "hell": ["fire"]
-}

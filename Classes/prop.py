@@ -44,7 +44,7 @@ class Prop:
 
     def fall(self) -> None:
         tile_below = self.map.get_tile(self.tile_pos)
-        if not tile_below.can_collide and not isinstance(tile_below, Scaffolding):
+        if not tile_below.can_collide or isinstance(tile_below, Scaffolding):
             if not self.falling:
                 self.falling = True
                 self.speed = 0
