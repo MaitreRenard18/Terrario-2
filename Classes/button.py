@@ -1,11 +1,8 @@
 import pygame
 
 from Classes.textures import import_textures
-from Classes.map import Map
-from Classes.player import Player
 
 screen = pygame.display.set_mode()
-textures = import_textures("Buttons", (200, 70))
 
 class Button():
     def __init__(self, rect, image, anim, text, text_size, func):
@@ -49,9 +46,3 @@ class Button():
         if self.hovered:
             screen.blit(self.anim, self.rect)
         self.render_text()
-
-
-def upgrade():
-    level += 1
-
-buttons = [Button(textures["but"].get_rect(center=(500,500)), textures["but"], textures["but_pointed"], "aaa", 40, upgrade)]
