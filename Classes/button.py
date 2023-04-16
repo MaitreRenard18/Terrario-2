@@ -1,0 +1,57 @@
+import pygame
+
+from Classes.textures import import_textures
+from Classes.map import Map
+from Classes.player import Player
+
+screen = pygame.display.set_mode()
+textures = import_textures("Buttons", (200, 70))
+
+class Button():
+    def __init__(self, rect, image, anim, text, text_size, func):
+        self.rect = rect
+        self.image = image
+        self.anim = anim
+        self.text = text
+        self.text_size = text_size
+        self.func = func
+        self.hovered = False
+
+    def render_text(self):
+        if self.text != "":
+            police = pygame.font.Font('prstart.ttf', self.text_size)
+            text = police.render(self.text,1,(255,255,255))
+            text_shadow = police.render(self.text,1,(50,50,50))
+            pos = (self.rect.center[0] - text.get_rect()[2] / 2, self.rect.center[1] - text.get_rect()[3] / 2)
+            screen.blit(text_shadow, (pos[0] + 5, pos[1] + 5))
+            screen.blit(text, pos)
+
+    def check_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            self.on_click(event)
+        self.is_hovered()
+        self.update()
+
+    def on_click(self, event):
+        if self.rect.collidepoint(event.pos):
+            self.func()
+
+    def is_hovered(self):
+        if self.rect.collidepoint(pygame.mouse.get_pos()):
+            if not self.hovered:
+                self.hovered = True
+        else:
+            self.hovered = False
+
+    def update(self):
+        if not self.hovered:
+            screen.blit(self.image, self.rect)
+        if self.hovered:
+            screen.blit(self.anim, self.rect)
+        self.render_text()
+
+
+def upgrade():
+    level += 1
+
+buttons = [Button(textures["but"].get_rect(center=(500,500)), textures["but"], textures["but_pointed"], "aaa", 40, upgrade)]
