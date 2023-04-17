@@ -23,12 +23,12 @@ class Tile:
         display.blit(self.texture, position)
 
     def destroy(self) -> Union[str, None]:
-        if self.hardness == float("inf"):
+        if self.hardness == float("-inf"):
             return
 
         self.texture = self._generate_mined_texture()
         self.can_collide = False
-        self.hardness = float("inf")
+        self.hardness = float("-inf")
     
     def _generate_mined_texture(self) -> Surface:
         overlay = Surface((32, 32)).convert_alpha()
@@ -60,7 +60,7 @@ class Tile:
 
 class Air(Tile):
     def __init__(self) -> None:
-        super().__init__(texture="air", hardness=float("inf"), can_collide=False)
+        super().__init__(texture="air", hardness=float("-inf"), can_collide=False)
 
     def update(self, position: Vector2) -> None:
         pass
@@ -123,14 +123,14 @@ class Ore(Tile):
         self.mined_texture: Surface = textures[stone_type]
 
     def destroy(self) -> Union[str, None]:
-        if self.hardness == float("inf"):
+        if self.hardness == float("-inf"):
             return
 
         self.texture = self.mined_texture
         self.texture = self._generate_mined_texture()
 
         self.can_collide = False
-        self.hardness = float("inf")
+        self.hardness = float("-inf")
 
         return self.ore_type
 
@@ -158,7 +158,7 @@ class Scaffolding(Tile):
         surface.blit(textures[texture] if isinstance(texture, str) else texture, (0, 0))
         surface.blit(scaffolding_texture, (0, 0))
 
-        super().__init__(texture=surface, hardness=float("inf"))
+        super().__init__(texture=surface, hardness=float("-inf"))
 
     def __getstate__(self):
         state = self.__dict__.copy()
