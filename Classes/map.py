@@ -103,7 +103,7 @@ class Map:
     et de différents biomes en fonction de la profondeur.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, world_seed: int = None) -> None:
         """
         Initialise une Map.
         """
@@ -117,7 +117,10 @@ class Map:
         self.props: Dict[int, Dict[int, Prop]] = {}
 
         # Initialise les valeurs utilisées lors de la génération de la carte.
-        self.seed = randint(0, 2 ** 16)
+        if world_seed is None:
+            self.seed = randint(0, 2 ** 16)
+        else:
+            self.seed = world_seed
         opensimplex.seed(self.seed)
         seed(self.seed)
 

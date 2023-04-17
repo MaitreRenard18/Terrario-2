@@ -41,8 +41,12 @@ class Tile:
 
     def __getstate__(self):
         state = self.__dict__.copy()
-        state["texture"] = tostring(self.texture, "RGBA")
         state["key"] = _textures_names.get(self.texture, None)
+        if state["key"] is None:
+            state["texture"] = tostring(self.texture, "RGBA")
+        else:
+            del state["texture"]
+
         return state
 
     def __setstate__(self, state):
@@ -87,9 +91,13 @@ class Background(Air):
 
     def __getstate__(self):
         state = self.__dict__.copy()
-        state["texture"] = tostring(self.texture, "RGBA")
-        state["_base_texture"] = tostring(self._base_texture, "RGBA")
+        del state["texture"]
         state["key"] = _textures_names.get(self._base_texture, None)
+        if state["key"] is None:
+            state["_base_texture"] = tostring(self._base_texture, "RGBA")
+        else:
+            del state["_base_texture"]
+
         return state
 
     def __setstate__(self, state):
@@ -154,7 +162,7 @@ class Scaffolding(Tile):
 
     def __getstate__(self):
         state = self.__dict__.copy()
-        state["texture"] = tostring(self.texture, "RGBA")
+        del state["texture"]
         state["_base_texture"] = tostring(self._base_texture, "RGBA")
         state["key"] = _textures_names.get(self._base_texture, None)
         return state

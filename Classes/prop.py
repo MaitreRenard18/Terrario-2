@@ -65,6 +65,15 @@ class Prop:
             self.falling = False
             self.speed = 0.2
 
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        del state["tiles"]
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        self.tiles = _get_prop(self.prop_name)
+
 
 def _get_prop(prop_name: str) -> Dict[int, Dict[int, Tile]]:
     prop = {}

@@ -4,6 +4,7 @@ import pygame
 
 from .map import Map
 from .saving import get_saves, save, load
+from .tests import test_saving
 
 
 class Game:
