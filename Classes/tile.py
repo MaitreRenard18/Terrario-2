@@ -171,7 +171,7 @@ class Scaffolding(Tile):
         if state["key"] in textures:
             state["_base_texture"] = textures[state["key"]]
         else:
-            state["_base_texture"] = fromstring(state["texture"], (32, 32), "RGBA")
+            state["_base_texture"] = fromstring(state["_base_texture"], (32, 32), "RGBA")
         self.__dict__.update(state)
 
         scaffolding_texture = textures["scaffolding"]
