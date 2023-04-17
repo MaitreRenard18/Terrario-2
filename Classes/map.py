@@ -12,9 +12,10 @@ from .tile import Air, Background, Ore, Tile
 
 # Déclaration des biomes et des décors associés à chaque biome.
 biomes: Dict[Union[float, int], List[str]] = {
-    512: ["hell"],
-    256: ["haunted_cave", "crystal_cave"],
-    64: ["lush_cave", "shroom_cave"],
+    816: ["hell"],
+    616: ["haunted_cave"],
+    416: ["crystal_cave"],
+    216: ["lush_cave", "shroom_cave"],
     16: ["sand_cave", "cave", "ice_cave"],
     float("-inf"): ["desert", "forest", "snowy_forest"]
 }
@@ -78,8 +79,9 @@ biomes_scale: Dict[str, float] = {
     "shroom_cave": 0.075,
     "lush_cave": 0.075,
 
-    "haunted_cave": 0.125,
     "crystal_cave": 0.085,
+
+    "haunted_cave": 0.125,
 
     "hell": 0.05
 }
@@ -98,8 +100,9 @@ props: Dict[str, List[str]] = {
         "red_mushroom", "brown_mushroom", "red_mushroom", "brown_mushroom", "giant_red_mushroom", "giant_brown_mushroom"
     ],
 
-    "haunted_cave": ["tombstone_1", "tombstone_2", "lamp", "skull", "pile_of_skulls"],
     "crystal_cave": ["crystal_1", "crystal_2", "crystal_3", "crystal_4", "amethyst"],
+
+    "haunted_cave": ["tombstone_1", "tombstone_2", "lamp", "skull", "pile_of_skulls"],
 
     "hell": ["fire", "skull", "pile_of_skulls"]
 }
