@@ -1,8 +1,8 @@
 import pygame
 from pygame import Rect, Surface, Vector2, display, key, sprite
 
-from Classes.tile import Scaffolding, Tile
-from Classes.textures import import_textures
+from .tile import Scaffolding, Tile
+from .textures import import_textures
 
 textures = import_textures("Player", (32, 32))
 ores_textures = import_textures("Ores", (96, 96))
@@ -11,6 +11,7 @@ ui_textures = import_textures("UI", (942, 642))
 pygame.font.init()
 font = pygame.font.Font("prstart.ttf", 27)
 
+requierements_upgrade = {1: {"iron": 50, "gold": 50, "coal": 25},}
 
 class Player(sprite.Sprite):
 
@@ -26,7 +27,8 @@ class Player(sprite.Sprite):
         self.tile_pos: Vector2 = Vector2(position)
         self.tile_below: Tile = None
 
-        # Initialise la vitesse du joueur et un booléen qui détermine si le joueur tombe.
+        # Initialise le niveau, la vitesse du joueur et un booléen qui détermine si le joueur tombe.
+        self.level = 2
         self.speed: float = 0.2
         self.falling: bool = False
 
@@ -58,6 +60,22 @@ class Player(sprite.Sprite):
             self.inventory[ore] = 1
         else:
             self.inventory[ore] += 1
+
+    def breakable(self) -> bool:
+        tile = self.map.get_tile(self.tile_pos)
+        if tile.hardness > self.level:
+            self.tile_pos -= self.tip_tile
+            return False
+        else:
+            return True
+        
+    def upgrade(self):
+        for c in requierements_upgrade.values():
+            for keys, values in c.items():
+                if not keys in self.inventory:
+                    return
+                if self.inventory[keys] >= values:
+                    self.level += 1
 
     def facing(self) -> None:
         self.image = textures[f"drill_{self.direction}"]
@@ -119,7 +137,10 @@ class Player(sprite.Sprite):
         
         if not self.falling:
 
-            self.mine()
+            if self.breakable():
+                self.mine()
+            else:
+                return
 
             if self.position != self.tile_pos:
                 self.position += self.tip_tile * self.speed
