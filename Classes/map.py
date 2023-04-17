@@ -79,7 +79,7 @@ biomes_scale: Dict[str, float] = {
     "shroom_cave": 0.075,
     "lush_cave": 0.075,
 
-    "crystal_cave": 0.085,
+    "crystal_cave": 0.065,
 
     "haunted_cave": 0.125,
 
