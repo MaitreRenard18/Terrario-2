@@ -13,7 +13,7 @@ from .tile import Air, Background, Ore, Tile
 # Déclaration des biomes et des décors associés à chaque biome.
 biomes: Dict[Union[float, int], List[str]] = {
     512: ["hell"],
-    256: ["haunted_cave"],
+    256: ["haunted_cave", "crystal_cave"],
     64: ["lush_cave", "shroom_cave"],
     16: ["sand_cave", "cave", "ice_cave"],
     float("-inf"): ["desert", "forest", "snowy_forest"]
@@ -64,6 +64,11 @@ tile_palettes: Dict[str, Dict[str, str]] = {
         "ore": "soul"
     },
 
+    "crystal_cave": {
+        "primary_tile": "calcite",
+        "ore": "ruby"
+    },
+
     "hell": {
         "primary_tile": "hellstone",
     }
@@ -74,6 +79,7 @@ biomes_scale: Dict[str, float] = {
     "lush_cave": 0.075,
 
     "haunted_cave": 0.125,
+    "crystal_cave": 0.085,
 
     "hell": 0.05
 }
@@ -88,11 +94,21 @@ props: Dict[str, List[str]] = {
     "ice_cave": ["ice_stalagmite_1", "ice_stalagmite_2", "ice_stalagmite_3"],
 
     "lush_cave": ["oak_tree_1", "oak_tree_2", "oak_tree_3", "weed", "weed", "tulip"],
-    "shroom_cave": ["red_mushroom", "brown_mushroom", "giant_red_mushroom"],
+    "shroom_cave": [
+        "red_mushroom", "brown_mushroom", "red_mushroom", "brown_mushroom", "giant_red_mushroom", "giant_brown_mushroom"
+    ],
 
     "haunted_cave": ["tombstone_1", "tombstone_2", "lamp", "skull", "pile_of_skulls"],
+    "crystal_cave": ["crystal_1", "crystal_2", "crystal_3", "crystal_4", "amethyst"],
 
     "hell": ["fire", "skull", "pile_of_skulls"]
+}
+
+props_density: Dict[str, int] = {
+    "shroom_cave": 4,
+
+    "haunted_cave": 6,
+    "crystal_cave": 2
 }
 
 
@@ -247,7 +263,12 @@ class Map:
 
                 if not self.get_tile(position - Vector2(0, 1)).can_collide:
                     # Génération des props
-                    if biome in props and randint(1, 8) == 1:
+
+                    density = 8
+                    if biome in props_density:
+                        density = props_density[biome]
+
+                    if biome in props and randint(1, density) == 1:
                         if position.x not in self.props:
                             self.props[position.x] = {}
 
