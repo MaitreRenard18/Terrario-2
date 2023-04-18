@@ -73,12 +73,22 @@ class Player(sprite.Sprite):
             return True
         
     def upgrade(self):
+        requires = []
         for c in requierements_upgrade.values():
             for keys, values in c.items():
                 if not keys in self.inventory or self.inventory[keys] < values:
+                    requires.append(False)
                     return
                 if self.inventory[keys] >= values:
-                    self.level += 1
+                    requires.append(True)
+
+        if False in requires:
+            pass
+        else:
+            for c in requierements_upgrade.values():
+                for keys, values in c.items():
+                    self.inventory[keys] -= values
+            self.level += 1
 
     def facing(self) -> None:
         self.image = textures[f"drill_{self.direction}"]
