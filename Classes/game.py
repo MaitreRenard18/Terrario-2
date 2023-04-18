@@ -2,10 +2,12 @@ import sys
 
 import pygame
 
-from .button import Button, textures
 from .map import Map
+from .button import Button
 from .saving import get_saves, save, load
+from .textures import import_textures
 
+button_textures = import_textures("Buttons", (300, 90))
 
 class Game:
     def __init__(self):
@@ -31,6 +33,7 @@ class Game:
 
         show_stats = False
         max_fps = 30
+        upgrade_button = Button(button_textures["up_button"].get_rect(center=(1080,383)), button_textures["up_button"], button_textures["up_button_hovered"], "Upgrade", 32, self.map.player.upgrade)
 
         while True:
             for event in pygame.event.get():
@@ -46,6 +49,9 @@ class Game:
                     sys.exit()
 
             self.map.update()
+
+            if self.map.player.up_displayed:
+                upgrade_button.check_event(event)
 
             if show_stats:
                 font = pygame.font.Font("prstart.ttf", 32)
