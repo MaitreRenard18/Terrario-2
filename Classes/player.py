@@ -6,12 +6,13 @@ from .textures import import_textures
 
 textures = import_textures("Player", (32, 32))
 ores_textures = import_textures("Ores", (96, 96))
-ui_textures = import_textures("UI", (942, 642))
+inv_texture = import_textures("UI/inventory.png", (942, 642))
+upgrade_texture = import_textures("UI/upgrade_window.png", (840, 390))
 
 pygame.font.init()
 font = pygame.font.Font("prstart.ttf", 27)
 
-requierements_upgrade = {1: {"iron": 50, "gold": 50, "coal": 25},}
+requierements_upgrade = {"silver": {"iron": 50, "gold": 50, "coal": 25},}
 
 class Player(sprite.Sprite):
 
@@ -29,6 +30,7 @@ class Player(sprite.Sprite):
 
         # Initialise le niveau, la vitesse du joueur et un booléen qui détermine si le joueur tombe.
         self.level = 2
+        self.rarity = "stone"
         self.speed: float = 0.2
         self.falling: bool = False
 
@@ -38,14 +40,15 @@ class Player(sprite.Sprite):
 
         # Initialise l'image du joueur et de la pointe.
         self.image: Surface = textures[f"drill_{self.direction}"]
-        self.tip: Surface = textures[f"drilltip_{self.direction}"]
+        self.tip: Surface = textures[f"drilltip_{self.rarity}_{self.direction}"]
 
         self.rect: Rect = self.image.get_rect()
         self.rect.topleft: tuple = self.position * 32
 
         # Initialise l'inventaire du joueur et un booléon qui détermine si il est affiché.
         self.inventory = {}
-        self.displayed: bool = False
+        self.inv_displayed: bool = False
+        self.up_displayed: bool = False
         self.display_surface = display.get_surface()
 
         self.map = map
@@ -72,14 +75,14 @@ class Player(sprite.Sprite):
     def upgrade(self):
         for c in requierements_upgrade.values():
             for keys, values in c.items():
-                if not keys in self.inventory:
+                if not keys in self.inventory or self.inventory[keys] < values:
                     return
                 if self.inventory[keys] >= values:
                     self.level += 1
 
     def facing(self) -> None:
         self.image = textures[f"drill_{self.direction}"]
-        self.tip = textures[f"drilltip_{self.direction}"]
+        self.tip = textures[f"drilltip_{self.rarity}_{self.direction}"]
 
     def climb(self) -> None:
         self.tile_below = self.map.get_tile(self.tile_pos + (0, 1))
@@ -106,8 +109,8 @@ class Player(sprite.Sprite):
             self.speed = 0.2
 
     def display_inventory(self):
-        inv_pos = (self.display_surface.get_width() - ui_textures["inventory"].get_width()) // 2
-        self.display_surface.blit(ui_textures["inventory"], (inv_pos, 0))
+        inv_pos = (self.display_surface.get_width() - inv_texture.get_width()) // 2
+        self.display_surface.blit(inv_texture, (inv_pos, 0))
 
         element, ligne = 0, 0
         for c in self.inventory:
@@ -118,19 +121,36 @@ class Player(sprite.Sprite):
             element_gap = element * 180
             ligne_gap = ligne * 180
             self.display_surface.blit(ores_textures[c], (inv_pos + 48 + element_gap, 107 + ligne_gap))
-
             text = font.render(str(self.inventory[c]), 1, (0,0,0))
             text_pos = (inv_pos + 153 + element_gap, 214 + ligne_gap)
             text_rect = text.get_rect(center = (text_pos))
             self.display_surface.blit(text, text_rect)
             element += 1
 
+    def display_upgrade(self):
+        up_pos = (self.display_surface.get_width() - upgrade_texture.get_width()) // 2
+        self.display_surface.blit(upgrade_texture, (up_pos, 0))
+
+        element = 0
+        for c in requierements_upgrade.values():
+            for keys, values in c.items():
+                element_gap = element * 180
+                self.display_surface.blit(ores_textures[keys], (up_pos + 306 + element_gap, 170))
+                text = font.render(str(values), 1, (0,0,0))
+                text_pos = (up_pos + 412 + element_gap, 274)
+                text_rect = text.get_rect(center = (text_pos))
+                self.display_surface.blit(text, text_rect)
+                element += 1
+
     def update(self) -> None:
 
         self.rect.topleft = self.position * 32
 
-        if self.displayed:
+        if self.inv_displayed:
             self.display_inventory()
+        
+        if self.up_displayed and not self.inv_displayed:
+            self.display_upgrade()
         
         if self.position == self.tile_pos and not self.falling:
             self.fall()
@@ -150,10 +170,16 @@ class Player(sprite.Sprite):
             
             keys = key.get_pressed()
             if keys[pygame.K_e]:
-                self.displayed = True
+                self.inv_displayed = True
                 return
             else:
-                self.displayed = False
+                self.inv_displayed = False
+
+            if keys[pygame.K_a]:
+                self.up_displayed = True
+                return
+            else:
+                self.up_displayed = False
 
             if keys[pygame.K_UP] or keys[pygame.K_z]:
                 self.tip_tile.x, self.tip_tile.y =  0, -1
@@ -192,5 +218,5 @@ class Player(sprite.Sprite):
     def __setstate__(self, state):
         self.__dict__.update(state)
         self.image: Surface = textures[f"drill_{self.direction}"]
-        self.tip: Surface = textures[f"drilltip_{self.direction}"]
+        self.tip: Surface = textures[f"drilltip_{self.rarity}_{self.direction}"]
         self.display_surface = display.get_surface()
