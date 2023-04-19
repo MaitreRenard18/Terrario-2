@@ -4,10 +4,10 @@ import pygame
 from pygame import Color, Surface, Vector2
 from pygame.image import tostring, fromstring
 
-from .textures import import_textures
+from .textures import load_textures
 
 
-textures = import_textures("Tiles", (32, 32))
+textures = load_textures("Tiles", (32, 32))
 _textures_names = {v: k for k, v in textures.items()}
 
 
