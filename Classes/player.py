@@ -160,8 +160,6 @@ class Player(sprite.Sprite):
 
     def update(self) -> None:
 
-        print(self.level)
-
         self.rect.topleft = self.position * 32
 
         if self.inv_displayed and not self.up_displayed:
