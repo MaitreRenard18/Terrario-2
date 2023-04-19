@@ -2,9 +2,12 @@
   <img src="Images/UI/Logo.png" alt="Terrario 2 Logo" width="50%">
 </div>
 
+
 <div align="center">
-  <a href="">![python version](https://img.shields.io/pypi/pyversions/terrario?style=for-the-badge)](https://pypi.org/project/terrario/)</a>
-  <a href="">![license](https://img.shields.io/github/license/MaitreRenard18/Terrario-2.svg?style=for-the-badge)](https://github.com/MaitreRenard18/Terrario-2/blob/master/LICENSE)</a>
+    
+[![python version](https://img.shields.io/pypi/pyversions/terrario?style=for-the-badge)](https://pypi.org/project/terrario/)
+[![license](https://img.shields.io/github/license/MaitreRenard18/Terrario-2.svg?style=for-the-badge)](https://github.com/MaitreRenard18/Terrario-2/blob/master/LICENSE)
+
 </div>
 
 # Présentation du projet :
@@ -21,10 +24,10 @@ Ou alors, vous pouvez également installer Terrario manuellement, en installant 
 ```bash
   $ pip install -r Requirements.txt
 ```
-et en ouvrant "Terrario.pyw".
+Et en ouvrant "Terrario.pyw".
 
 # Fonctionnalités :
-- Un monde infini généré de manière procedurale.
+- Un monde infini généré de manière procedural.
 - Différents environments.
 - Un système de sauvegarde.
 - Un inventaire.
