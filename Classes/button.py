@@ -1,9 +1,9 @@
 import pygame
 
-from Classes.textures import import_textures
+from textures import load_textures
 
 screen = pygame.display.set_mode()
-textures = import_textures("Buttons", (200, 70))
+textures = load_textures("Button", (200, 70))
 
 class Button():
     def __init__(self, rect, image, anim, text, text_size, func):
