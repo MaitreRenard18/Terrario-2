@@ -1,6 +1,6 @@
-<p align="center">
+<div align="center">
   <img src="Images/UI/Logo.png" alt="Terrario 2 Logo" width="50%">
-</p>
+</div>
 
 <div align="center">
     <img alt="python version" src="https://img.shields.io/pypi/pyversions/terrario?style=for-the-badge">
