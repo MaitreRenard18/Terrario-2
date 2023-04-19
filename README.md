@@ -1,11 +1,11 @@
-<p align="center">
+<div align="center">
   <img src="Images/UI/Logo.png" alt="Terrario 2 Logo" width="50%">
-</p>
+</div>
 
-<p align="center">
+<div align="center">
   [![python version](https://img.shields.io/pypi/pyversions/terrario?style=for-the-badge)](https://pypi.org/project/terrario/)
   [![license](https://img.shields.io/github/license/MaitreRenard18/Terrario-2.svg?style=for-the-badge)](https://github.com/MaitreRenard18/Terrario-2/blob/master/LICENSE)
-</p>
+</div>
 
 # Présentation du projet :
 Terrario 2 est la suite du mondialement connu [Terrario](https://github.com/MaitreRenard18/Terrario).
