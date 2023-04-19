@@ -3,8 +3,8 @@
 </div>
 
 <div align="center">
-  [![python version](https://img.shields.io/pypi/pyversions/terrario?style=for-the-badge)](https://pypi.org/project/terrario/)
-  [![license](https://img.shields.io/github/license/MaitreRenard18/Terrario-2.svg?style=for-the-badge)](https://github.com/MaitreRenard18/Terrario-2/blob/master/LICENSE)
+  <img src=[![python version](https://img.shields.io/pypi/pyversions/terrario?style=for-the-badge)](https://pypi.org/project/terrario/)>
+  <img src[![license](https://img.shields.io/github/license/MaitreRenard18/Terrario-2.svg?style=for-the-badge)](https://github.com/MaitreRenard18/Terrario-2/blob/master/LICENSE)>
 </div>
 
 # Présentation du projet :
