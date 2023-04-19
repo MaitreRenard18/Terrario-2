@@ -365,9 +365,6 @@ class Map:
         self.display_surface.blit(self.player.tip, (offset_rect.x + self.player.tip_tile.x * 32,
                                                     offset_rect.y + self.player.tip_tile.y * 32))
 
-        if self.player.direction == "up":
-            self.player.climb()
-
         self.player.update()
 
     def __getstate__(self):
