@@ -133,7 +133,7 @@ class Map:
         # Initialise le joueur et le dictionnaire contenant les tuiles.
         self.player: Player = Player(Vector2(0, -1), self)
         self._tiles: Dict[int, Dict[int, Tile]] = {}
-        self.props: Dict[int, Dict[int, Prop]] = {}
+        self.props: Dict[int, Dict[int, List[Prop]]] = {}
 
         # Initialise les valeurs utilisées lors de la génération de la carte.
         if world_seed is None:
@@ -219,7 +219,8 @@ class Map:
                 if biome in props and randint(1, 5) == 1:
                     if self.get_prop(position - (1, 0)) is None and self.get_prop(position + (1, 0)) is None:
                         self.props[position.x] = self.props.get(position.x, {})
-                        self.props[position.x][position.y] = Prop(self, position, choice(props[biome]))
+                        self.props[position.x][position.y] = self.props[position.x].get(position.y, [])
+                        self.props[position.x][position.y].append(Prop(self, position, choice(props[biome])))
 
                 # Génération de la tuile supérieure
                 if "floor_tile" in tile_palette:
@@ -272,10 +273,9 @@ class Map:
                         density = props_density[biome]
 
                     if biome in props and randint(1, density) == 1:
-                        if position.x not in self.props:
-                            self.props[position.x] = {}
-
-                        self.props[position.x][position.y] = Prop(self, position, choice(props[biome]))
+                        self.props[position.x] = self.props.get(position.x, {})
+                        self.props[position.x][position.y] = self.props[position.x].get(position.y, [])
+                        self.props[position.x][position.y].append(Prop(self, position, choice(props[biome])))
 
                     # Génération de la tuile supérieure
                     if "floor_tile" in tile_palette:
@@ -328,8 +328,9 @@ class Map:
                     props_to_render.append(prop)
 
         # Fait le rendu des props
-        for prop in props_to_render:
-            prop.update(prop.position * 32 - offset)
+        for prop_list in props_to_render:
+            for prop in prop_list:
+                prop.update(prop.position * 32 - offset)
 
         # Détermine la position du joueur sur l'écran.
         offset_rect = self.player.rect.copy()

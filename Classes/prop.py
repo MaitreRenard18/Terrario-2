@@ -58,8 +58,13 @@ class Prop:
             if self.position.y >= self.tile_pos.y + 1:
                 self.tile_pos.y += 1
                 self.position.y = self.tile_pos.y
-                self.map.props[self.position.x].pop(self.position.y - 1)
-                self.map.props[self.position.x][self.position.y] = self
+
+                index = self.map.props[self.position.x][self.position.y-1].index(self)
+                self.map.props[self.position.x][self.position.y-1].pop(index)
+
+                self.map.props[self.position.x] = self.map.props.get(self.position.x, {})
+                self.map.props[self.position.x][self.position.y] = self.map.props[self.position.x].get(self.position.y, [])
+                self.map.props[self.position.x][self.position.y].append(self)
 
         else:
             self.falling = False

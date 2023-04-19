@@ -12,7 +12,8 @@ upgrade_texture = import_textures("UI/upgrade_window.png", (840, 390))
 pygame.font.init()
 font = pygame.font.Font("prstart.ttf", 27)
 
-requierements_upgrade = {"silver": {"iron": 50, "gold": 50, "coal": 25},}
+requierements_upgrade = {"silver": {"iron": 50, "gold": 50, "coal": 25}, }
+
 
 class Player(sprite.Sprite):
 
@@ -71,7 +72,7 @@ class Player(sprite.Sprite):
             return False
         else:
             return True
-        
+
     def upgrade(self):
         for c in requierements_upgrade.values():
             for keys, values in c.items():
@@ -121,9 +122,9 @@ class Player(sprite.Sprite):
             element_gap = element * 180
             ligne_gap = ligne * 180
             self.display_surface.blit(ores_textures[c], (inv_pos + 48 + element_gap, 107 + ligne_gap))
-            text = font.render(str(self.inventory[c]), 1, (0,0,0))
+            text = font.render(str(self.inventory[c]), 1, (0, 0, 0))
             text_pos = (inv_pos + 153 + element_gap, 214 + ligne_gap)
-            text_rect = text.get_rect(center = (text_pos))
+            text_rect = text.get_rect(center=(text_pos))
             self.display_surface.blit(text, text_rect)
             element += 1
 
@@ -136,9 +137,9 @@ class Player(sprite.Sprite):
             for keys, values in c.items():
                 element_gap = element * 180
                 self.display_surface.blit(ores_textures[keys], (up_pos + 306 + element_gap, 170))
-                text = font.render(str(values), 1, (0,0,0))
+                text = font.render(str(values), 1, (0, 0, 0))
                 text_pos = (up_pos + 412 + element_gap, 274)
-                text_rect = text.get_rect(center = (text_pos))
+                text_rect = text.get_rect(center=(text_pos))
                 self.display_surface.blit(text, text_rect)
                 element += 1
 
@@ -148,13 +149,13 @@ class Player(sprite.Sprite):
 
         if self.inv_displayed:
             self.display_inventory()
-        
+
         if self.up_displayed and not self.inv_displayed:
             self.display_upgrade()
-        
+
         if self.position == self.tile_pos and not self.falling:
             self.fall()
-        
+
         if not self.falling:
 
             if self.breakable():
@@ -167,7 +168,7 @@ class Player(sprite.Sprite):
                 self.position.x = round(self.position.x, 1)
                 self.position.y = round(self.position.y, 1)
                 return
-            
+
             keys = key.get_pressed()
             if keys[pygame.K_e]:
                 self.inv_displayed = True
@@ -182,13 +183,13 @@ class Player(sprite.Sprite):
                 self.up_displayed = False
 
             if keys[pygame.K_UP] or keys[pygame.K_z]:
-                self.tip_tile.x, self.tip_tile.y =  0, -1
+                self.tip_tile.x, self.tip_tile.y = 0, -1
                 self.direction = "up"
                 self.tile_pos.y -= 1
                 return
 
             if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-                self.tip_tile.x, self.tip_tile.y =  0, 1
+                self.tip_tile.x, self.tip_tile.y = 0, 1
                 self.direction = "down"
                 self.tile_pos.y += 1
                 return
@@ -204,9 +205,9 @@ class Player(sprite.Sprite):
                 self.direction = "left"
                 self.tile_pos.x -= 1
                 return
-            
+
         self.fall()
-            
+
     def __getstate__(self):
         state = self.__dict__.copy()
         state["position"] = Vector2(round(self.position.x), round(self.position.y))
