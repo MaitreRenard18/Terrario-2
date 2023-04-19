@@ -130,16 +130,13 @@ class Map:
         # Récupère la surface d'affichage
         self.display_surface: Surface = display.get_surface()
 
-        # Initialise le joueur et le dictionnaire contenant les tuiles.
+        # Initialise le joueur et le dictionnaire contenant les tuiles et le dictionnaire contenant les props.
         self.player: Player = Player(Vector2(0, -1), self)
         self._tiles: Dict[int, Dict[int, Tile]] = {}
         self.props: Dict[int, Dict[int, List[Prop]]] = {}
 
         # Initialise les valeurs utilisées lors de la génération de la carte.
-        if world_seed is None:
-            self.seed = randint(0, 2 ** 16)
-        else:
-            self.seed = world_seed
+        self.seed = randint(0, 2 ** 16) if world_seed is None else world_seed
         opensimplex.seed(self.seed)
         seed(self.seed)
 
@@ -152,42 +149,70 @@ class Map:
         self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 4,
                                        self.display_surface.get_size()[1] // 32 // 2 + 3)
 
-    def get_tile(self, position: Vector2) -> Tile:
+    def get_tile(self, position: Union[Vector2, tuple]) -> Tile:
         """
         Prend en paramètre un Vector2 et retourne la tuile se trouvant à cette position. 
         Si la tuile n'existe pas, en génère une nouvelle.
         """
 
-        position.x, position.y = int(position.x), int(position.y)
-        self._tiles[position.x] = self._tiles.get(position.x, {})
+        x, y = (int(position.x), int(position.y)) if isinstance(position, Vector2) else (position[0], position[1])
+        self._tiles[x] = self._tiles.get(x, {})
 
-        tile = self._tiles[position.x].get(position.y, None)
+        tile = self._tiles[x].get(y, None)
         if tile is None:
-            tile = self._generate_tile(position)
+            tile = self._generate_tile(Vector2(x, y))
 
         return tile
 
-    def get_prop(self, position: Vector2) -> Union[Prop, None]:
-        """
-        Prend en paramètre un Vector2 et retourne le prop se trouvant à cette position.
-        Si le prop n'existe pas, retourne None.
-        """
-
-        position.x, position.y = int(position.x), int(position.y)
-        return self.props.get(position.x, {}).get(position.y, None)
-
-    def set_tile(self, tile: Tile, position: Vector2) -> Tile:
+    def set_tile(self, tile: Union[Tile, tuple], position: Vector2) -> Tile:
         """
         Prend en paramètre une Tuile et un Vector2, et change la tuile
         se trouvant à cette position par la tuile passée en paramètre.
         Retourne la tuile passée en paramètre.
         """
 
-        position.x, position.y = int(position.x), int(position.y)
-        self._tiles[position.x] = self._tiles.get(position.x, {})
-        self._tiles[position.x][position.y] = tile
+        x, y = (int(position.x), int(position.y)) if isinstance(position, Vector2) else (position[0], position[1])
+        self._tiles[x] = self._tiles.get(x, {})
+        self._tiles[x][y] = tile
 
         return tile
+
+    def get_prop(self, position: Union[Vector2, tuple]) -> Union[List[Prop], None]:
+        """
+        Prend en paramètre un Vector2 et retourne les props se trouvant à cette position.
+        Retourne None s'il n'y a pas de prop à cette position.
+        """
+
+        x, y = (int(position.x), int(position.y)) if isinstance(position, Vector2) else (position[0], position[1])
+        return self.props.get(x, {}).get(y, None)
+
+    def add_prop(self, prop: Prop, position: Union[Vector2, tuple]) -> Prop:
+        """
+        Prend en paramètre un Prop et un Vector2, et rajoute le prop
+        à la position passée un paramètre.
+        Retourne la tuile passée en paramètre.
+        """
+
+        x, y = (int(position.x), int(position.y)) if isinstance(position, Vector2) else (position[0], position[1])
+        self.props[x] = self.props.get(x, {})
+        self.props[x][y] = self.props[x].get(y, [])
+        self.props[x][y].append(prop)
+
+        return prop
+
+    def remove_prop(self, prop: Prop, position: Union[Vector2, tuple]) -> Prop:
+        """
+        Prend en paramètre un Prop et un Vector2, et enlève le prop passé en paramètre se trouvant
+        à la position passée un paramètre.
+        Retourne la tuile passée en paramètre.
+        """
+
+        x, y = (int(position.x), int(position.y)) if isinstance(position, Vector2) else (position[0], position[1])
+        self.props[x] = self.props.get(x, {})
+        self.props[x][y] = self.props[x].get(y, [])
+        self.props[x][y].pop(self.props[x][y].index(prop))
+
+        return prop
 
     def _generate_tile(self, position: Vector2) -> Tile:
         """
@@ -265,9 +290,8 @@ class Map:
                 else:
                     self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], hardness)
 
-                if not self.get_tile(position - Vector2(0, 1)).can_collide:
+                if not self.get_tile(position - (0, 1)).can_collide:
                     # Génération des props
-
                     density = 8
                     if biome in props_density:
                         density = props_density[biome]
@@ -280,9 +304,6 @@ class Map:
                     # Génération de la tuile supérieure
                     if "floor_tile" in tile_palette:
                         self._tiles[position.x][position.y] = Tile(tile_palette["floor_tile"], hardness)
-
-                if "ceiling_tile" in tile_palette and not self.get_tile(position + Vector2(0, 1)).can_collide:
-                    self._tiles[position.x][position.y] = Tile(tile_palette["ceiling_tile"], hardness)
 
             else:
                 if biome in biomes_scale:
@@ -321,9 +342,10 @@ class Map:
                            round(self.player.position.y) + self.render_distance[1] + 10):
                 offset_vec = Vector2(x, y) * 32 - offset
 
-                tile = self.get_tile(Vector2(x, y))
+                tile = self.get_tile((x, y))
                 tile.update(offset_vec)
-                if x in self.props and y in self.props[x]:
+
+                if self.get_prop((x, y)) is not None:
                     prop = self.props[x][y]
                     props_to_render.append(prop)
 
@@ -349,11 +371,20 @@ class Map:
         self.player.update()
 
     def __getstate__(self):
+        """
+        Renvoie un dictionnaire représentant l'état de l'objet pour la sérialisation.
+        Le dictionnaire renvoyé contient toutes les tuiles et les props.
+        """
+
         state = self.__dict__.copy()
         del state["display_surface"]
         return state
 
     def __setstate__(self, state):
+        """
+        Restaure l'état de l'objet à partir du dictionnaire "state".
+        """
+
         self.__dict__.update(state)
         self.display_surface = display.get_surface()
 
