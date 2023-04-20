@@ -5,6 +5,7 @@ import pygame
 from .map import Map
 from .saving import get_saves, save, load
 
+
 class Game:
     def __init__(self):
         """Initialise la fenêtre Pygame et les différentes instances nécessaires au jeu."""

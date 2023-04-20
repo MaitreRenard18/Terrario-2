@@ -363,16 +363,28 @@ class Map:
         # Met à jour le joueur.
         self.display_surface.blit(self.player.image, offset_rect)
         self.display_surface.blit(self.player.tip_image, (offset_rect.x + self.player.tip_position.x * 32,
-                                                    offset_rect.y + self.player.tip_position.y * 32))
+                                                          offset_rect.y + self.player.tip_position.y * 32))
 
         self.player.update()
+
+    def get_thumbnail(self) -> Surface:
+        """Retourne une surface au format 1:1 de ce qui est actuellement affiché sur l'écran."""
+
+        if self.display_surface.get_width() > self.display_surface.get_height():
+            return self.display_surface.subsurface((
+                self.display_surface.get_width() // 2 - self.display_surface.get_height() // 2, 0,
+                self.display_surface.get_height(), self.display_surface.get_height()))
+
+        else:
+            return self.display_surface.subsurface((
+                0, self.display_surface.get_height() // 2 - self.display_surface.get_width() // 2,
+                self.display_surface.get_width(), self.display_surface.get_width()))
 
     def __getstate__(self):
         """
         Renvoie un dictionnaire représentant l'état de l'objet pour la sérialisation.
         Le dictionnaire renvoyé contient toutes les tuiles et les props.
         """
-
         state = self.__dict__.copy()
         del state["display_surface"]
         return state

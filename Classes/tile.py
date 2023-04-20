@@ -5,10 +5,10 @@ import pygame
 from pygame import Color, Surface, Vector2
 from pygame.image import tostring, fromstring
 
-from .textures import import_textures, import_animated_textures
+from .textures import load_textures, load_animated_textures
 
 
-textures = import_textures("Tiles", (32, 32))
+textures = load_textures("Tiles", (32, 32))
 _textures_names = {v: k for k, v in textures.items()}
 
 
@@ -187,7 +187,7 @@ class AnimatedTile(Tile):
         self.texture_name: str = texture_name
         self.speed = speed
 
-        self.frames = import_animated_textures(f"Tiles/{texture_name}.png", (32, 32))
+        self.frames = load_animated_textures(f"Tiles/{texture_name}.png", (32, 32))
         super().__init__(self.frames[0], 0)
 
     def update(self, position: Vector2) -> None:
@@ -197,5 +197,5 @@ class AnimatedTile(Tile):
 
     def __setstate__(self, state):
         self.__dict__.update()
-        self.frames = import_animated_textures(f"Tiles/{self.texture_name}.png", (32, 32))
+        self.frames = load_animated_textures(f"Tiles/{self.texture_name}.png", (32, 32))
         self.texture = self.frames[0]

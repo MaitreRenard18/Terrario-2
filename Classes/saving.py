@@ -2,6 +2,8 @@ from typing import List
 import pickle
 import os
 
+import pygame.image
+
 from .map import Map
 
 from pathlib import Path
@@ -19,6 +21,8 @@ def get_saves() -> List[str]:
 
 def save(file_name, map: Map) -> None:
     with open(_saves_path / file_name, "wb") as file:
+        thumbnail = map.get_thumbnail()
+        pygame.image.save_extended(thumbnail, _saves_path / f"{file_name}.png")
         pickle.dump(map, file)
 
 
