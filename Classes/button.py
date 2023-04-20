@@ -3,13 +3,14 @@ import pygame
 screen = pygame.display.set_mode()
 
 class Button():
-    def __init__(self, rect, image, anim, text, text_size, func):
+    def __init__(self, rect, image, anim, text, text_size, func, parameter = None):
         self.rect = rect
         self.image = image
         self.anim = anim
         self.text = text
         self.text_size = text_size
         self.func = func
+        self.parameter = parameter
         self.hovered = False
 
     def render_text(self):
@@ -29,7 +30,10 @@ class Button():
 
     def on_click(self, event):
         if self.rect.collidepoint(event.pos):
-            self.func()
+            if self.parameter is None:
+                self.func()
+            else:
+                self.func(self.parameter)
 
     def is_hovered(self):
         if self.rect.collidepoint(pygame.mouse.get_pos()):
