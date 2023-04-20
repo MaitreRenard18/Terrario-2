@@ -362,11 +362,8 @@ class Map:
 
         # Met à jour le joueur.
         self.display_surface.blit(self.player.image, offset_rect)
-        self.display_surface.blit(self.player.tip, (offset_rect.x + self.player.tip_tile.x * 32,
-                                                    offset_rect.y + self.player.tip_tile.y * 32))
-
-        if self.player.direction == "up":
-            self.player.climb()
+        self.display_surface.blit(self.player.tip_image, (offset_rect.x + self.player.tip_position.x * 32,
+                                                    offset_rect.y + self.player.tip_position.y * 32))
 
         self.player.update()
 
