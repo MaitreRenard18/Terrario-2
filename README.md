@@ -27,8 +27,8 @@ Ou alors, vous pouvez également installer Terrario manuellement, en installant 
 Et en ouvrant "Terrario.pyw".
 
 # Fonctionnalités :
-- Un monde infini généré de manière procedural.
-- Différents environments.
+- Un monde infini généré de manière procédurale.
+- Différents environnements.
 - Un système de sauvegarde.
 - Un inventaire.
 - Des améliorations pour le joueur.
