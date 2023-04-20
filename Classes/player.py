@@ -51,7 +51,8 @@ class Player(sprite.Sprite):
 
         # Initialise l'inventaire du joueur, un bouton et un booléen qui déterminent si il est affiché.
         self.inventory: Dict[str, int] = {}
-        self.upgrade_button: Button = Button(button_textures["up_button"].get_rect(center=(1080,383)), button_textures["up_button"], button_textures["up_button_hovered"], "Upgrade", 32, self.upgrade)
+        self.upgrade_button: Button = Button(button_textures["up_button"].get_rect(center=(1080,383)), button_textures["up_button"], 
+                                             button_textures["button_hovered"], "Upgrade", 32, self.upgrade)
         self.display_button: bool = False
 
         # Récupère l'image du joueur et de la pointe.
@@ -265,13 +266,13 @@ class Player(sprite.Sprite):
                 return
         else: 
             self.fall()
-            
+        
     def __getstate__(self):
         state = self.__dict__.copy()
         state["position"] = Vector2(round(self.position.x), round(self.position.y))
         del state["image"]
         del state["display_surface"]
-        del state["tip_image"]
+        del state["tip"]
         return state
 
     def __setstate__(self, state):
