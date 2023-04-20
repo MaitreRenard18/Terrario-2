@@ -271,7 +271,7 @@ class Player(sprite.Sprite):
         state["position"] = Vector2(round(self.position.x), round(self.position.y))
         del state["image"]
         del state["display_surface"]
-        del state["tip"]
+        del state["tip_image"]
         return state
 
     def __setstate__(self, state):
