@@ -8,7 +8,7 @@ from pathlib import Path
 MODULE_PATH = Path(__file__).parent.parent
 
 
-def import_textures(path: str, size: Union[Vector2, tuple]):
+def load_textures(path: str, size: Union[Vector2, tuple]):
     _textures_path = MODULE_PATH / "Images" / path
 
     if path.endswith(".png"):
@@ -27,7 +27,7 @@ def import_textures(path: str, size: Union[Vector2, tuple]):
     return textures
 
 
-def import_animated_textures(path: str, size: Union[Vector2, tuple]):
+def load_animated_textures(path: str, size: Union[Vector2, tuple]):
     _textures_path = MODULE_PATH / "Images" / path
 
     x, y = (size.x, size.y) if isinstance(size, Vector2) else (size[0], size[1])
