@@ -2,6 +2,7 @@ import sys
 
 import pygame
 
+from .menu import Menu
 from .map import Map
 from .saving import get_saves, save, load
 
@@ -17,11 +18,8 @@ class Game:
         self.screen = pygame.display.set_mode(flags=flags)
         self.clock = pygame.time.Clock()
 
-        self.save_name = "World"
-        if self.save_name in get_saves():
-            self.map = load(self.save_name)
-        else:
-            self.map = Map()
+        self.map = Map()
+        self.menu = Menu(self.map)
 
         self.run()
 
@@ -43,11 +41,23 @@ class Game:
                     save(self.save_name, self.map)
                     pygame.quit()
                     sys.exit()
+               
+            if self.menu.displayed:
+                self.menu.display_background()
 
-            self.map.update()
+                if self.menu.main:
+                    self.menu.play_button.check_event(event)
+                else:
+                    for c in self.menu.world_buttons:
+                        self.menu.world_buttons[c].check_event(event)
+
+            else:
+                self.map.update()
             
-            if self.map.player.display_button:
-                self.map.player.upgrade_button.check_event(event)
+                if self.map.player.display_button:
+                    self.map.player.upgrade_button.check_event(event)
+
+            self.menu.quit_button.check_event(event)
 
             if show_stats:
                 font = pygame.font.Font("prstart.ttf", 32)
