@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Dict, List
 import pygame
 from pygame import Vector2
 
-from Classes.tile import Scaffolding, Tile
+from Classes.tile import Scaffolding, Tile, AnimatedTile
 
 if TYPE_CHECKING:
     from Classes.map import Map
@@ -34,11 +34,9 @@ class Prop:
         self.falling: bool = False
 
     def update(self, position: Vector2) -> None:
-        display = pygame.display.get_surface()
-
         for x, row in self.tiles.items():
             for y, tile in row.items():
-                display.blit(tile.texture, position + Vector2(x, -y) * 32)
+                tile.update(position + Vector2(x, -y) * 32)
 
         self.fall()
 
@@ -83,8 +81,10 @@ class Prop:
 def _get_prop(prop_name: str) -> Dict[int, Dict[int, Tile]]:
     prop = {}
     if not csvs.get(prop_name, False):
-        prop = {0: {1: Tile(prop_name, float("inf"), False)}}
-        return prop
+        if prop_name == "fire":
+            return {0: {1: AnimatedTile("Fire", 12)}}
+        else:
+            return {0: {1: Tile(prop_name, float("inf"), False)}}
 
     center = len(csvs[prop_name][-1]) // 2
     for y, row in enumerate(csvs[prop_name]):

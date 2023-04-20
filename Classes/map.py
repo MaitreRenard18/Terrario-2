@@ -8,7 +8,7 @@ from pygame.math import Vector2
 
 from .player import Player
 from .prop import Prop
-from .tile import Air, Background, Ore, Tile
+from .tile import Air, Background, Ore, Tile, AnimatedTile
 
 # Déclaration des biomes et des décors associés à chaque biome.
 biomes: Dict[Union[float, int], List[str]] = {

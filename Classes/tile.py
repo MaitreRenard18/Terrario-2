@@ -1,10 +1,11 @@
 from typing import Union
+from time import time
 
 import pygame
 from pygame import Color, Surface, Vector2
 from pygame.image import tostring, fromstring
 
-from .textures import import_textures
+from .textures import import_textures, import_animated_textures
 
 
 textures = import_textures("Tiles", (32, 32))
@@ -179,3 +180,22 @@ class Scaffolding(Tile):
         surface.blit(textures[self._base_texture] if isinstance(self._base_texture, str) else self._base_texture, (0, 0))
         surface.blit(scaffolding_texture, (0, 0))
         self.texture = surface
+
+
+class AnimatedTile(Tile):
+    def __init__(self, texture_name: str, speed: float = 1) -> None:
+        self.texture_name: str = texture_name
+        self.speed = speed
+
+        self.frames = import_animated_textures(f"Tiles/{texture_name}.png", (32, 32))
+        super().__init__(self.frames[0], 0)
+
+    def update(self, position: Vector2) -> None:
+        self.texture = self.frames[int((time() * self.speed) % len(self.frames))]
+        display = pygame.display.get_surface()
+        display.blit(self.texture, position)
+
+    def __setstate__(self, state):
+        self.__dict__.update()
+        self.frames = import_animated_textures(f"Tiles/{self.texture_name}.png", (32, 32))
+        self.texture = self.frames[0]
