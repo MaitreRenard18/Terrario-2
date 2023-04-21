@@ -16,7 +16,7 @@ if "Thumbnails" not in os.listdir(MODULE_PATH / "Images"):
     os.mkdir(MODULE_PATH / "Images/Thumbnails")
  
 _saves_path = MODULE_PATH / "saves"
-_thumbnail_path = MODULE_PATH / "images" / "thumbnail"
+_thumbnail_path = MODULE_PATH / "images" / "thumbnails"
 
 
 def get_saves() -> List[str]:
