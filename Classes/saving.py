@@ -12,6 +12,9 @@ MODULE_PATH = Path(__file__).parent.parent
 if "Saves" not in os.listdir(MODULE_PATH):
     os.mkdir(MODULE_PATH / "Saves")
 
+if "Thumbnails" not in os.listdir(MODULE_PATH / "Images"):
+    os.mkdir(MODULE_PATH / "Images/Thumbnails")
+
 _saves_path = MODULE_PATH / "saves"
 
 
@@ -22,7 +25,7 @@ def get_saves() -> List[str]:
 def save(file_name, map: Map) -> None:
     with open(_saves_path / file_name, "wb") as file:
         thumbnail = map.get_thumbnail()
-        pygame.image.save_extended(thumbnail, _saves_path / f"{file_name}.png")
+        pygame.image.save_extended(thumbnail, MODULE_PATH / "Images/Thumbnails" / f"{file_name}.png")
         pickle.dump(map, file)
 
 
