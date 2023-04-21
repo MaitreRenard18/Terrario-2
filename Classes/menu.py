@@ -26,7 +26,7 @@ class Menu():
         self.main: bool = True
 
         self.save_number = len(get_saves()) + 1
-        self.save_name = "World" + str(self.save_number)
+        self.save_name = "World " + str(self.save_number)
 
         self.screen: Surface = display.get_surface()
         self.background: Surface = choice(list(background_textures.values()))
@@ -43,13 +43,9 @@ class Menu():
                             "cancel_button": Button(button_textures["p_button"].get_rect(center = (self.screen.get_width() // 2 + 200, self.screen.get_height() // 2 + 400)),
                                             button_textures["p_button"], button_textures["button_hovered"], "Cancel", 32, self.play),}
         
-        element = -1
-        for world in get_saves():
-            self.world_buttons[str(world) + "_button"] = Button(
-                button_textures["p_button"].get_rect(center = (self.screen.get_width() // 2, self.screen.get_height() // 2 + element * 150)),
-                button_textures["p_button"], button_textures["button_hovered"], world, 32, self.launch_world, world)
-            element += 1
+        self.saves_buttons = {}
 
+        self.update_world_buttons()
 
     def display_background(self) -> None:
         
@@ -67,7 +63,16 @@ class Menu():
 
     def launch_world(self, world) -> None:
         self.displayed = False
+        self.save_name = world
         load(world)
 
     def create_new_world(self) -> None:
-        save(self.save_name, self.map)
+        self.displayed = False
+    
+    def update_world_buttons(self) -> None:
+        element = -1
+        for world in get_saves():
+            self.saves_buttons[str(world) + "_button"] = Button(
+                button_textures["p_button"].get_rect(center = (self.screen.get_width() // 2, self.screen.get_height() // 2 + element * 150)),
+                button_textures["p_button"], button_textures["button_hovered"], world, 32, self.launch_world, world)
+            element += 1
