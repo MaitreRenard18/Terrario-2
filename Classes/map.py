@@ -8,7 +8,7 @@ from pygame.math import Vector2
 
 from .player import Player
 from .prop import Prop
-from .tile import Air, Background, Ore, Tile, AnimatedTile
+from .tile import Air, Background, Ore, Tile, Void
 
 # Déclaration des biomes et des décors associés à chaque biome.
 biomes: Dict[Union[float, int], List[str]] = {
@@ -241,7 +241,8 @@ class Map:
         tile_palette = tile_palettes[biome] if biome in tile_palettes else tile_palettes["cave"]
 
         # Génération de la tuile si elle se trouve à la surface.
-        if position.y - randint(0, self.biome_blend) < 16:
+        random_biome_blend_value = randint(0, self.biome_blend)
+        if position.y - random_biome_blend_value < 16:
             noise_value = round(opensimplex.noise2(position.x * self.scale * 0.25, 0) * 6)
             if position.y == noise_value:
                 # Génération des props
@@ -285,7 +286,7 @@ class Map:
                     self._tiles[position.x][position.y] = Air()
 
         # Génération de la tuile si elle se trouve sous terre.
-        else:
+        elif position.y - random_biome_blend_value < 1016:
             if biome in biomes_scale:
                 noise_value = opensimplex.noise2(position.x * biomes_scale[biome], position.y * biomes_scale[biome])
             else:
@@ -327,6 +328,12 @@ class Map:
                     self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"], Color(0, 0, 0), 0.45)
                 else:
                     self._tiles[position.x][position.y] = Background(tile_palette["primary_tile"], Color(0, 0, 0), 0.5)
+
+        elif position.y - random_biome_blend_value < 1024:
+            self._tiles[position.x][position.y] = Tile("bedrock", hardness + 1)
+
+        else:
+            self._tiles[position.x][position.y] = Void()
 
         return self._tiles[position.x][position.y]
 

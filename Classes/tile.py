@@ -70,6 +70,15 @@ class Air(Tile):
         pass
 
 
+class Void(Tile):
+    def __init__(self):
+        super().__init__(texture="air", hardness=float("-inf"), can_collide=False)
+
+    def update(self, position: Vector2) -> None:
+        display = pygame.display.get_surface()
+        display.fill((0, 0, 0), (position.x, position.y, 32, 32))
+
+
 class Background(Air):
     def __init__(self, texture: Union[Surface, str], color: Color, depth: float = 0.5) -> None:
         super().__init__()
