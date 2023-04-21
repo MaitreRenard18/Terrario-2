@@ -21,12 +21,13 @@ font = pygame.font.Font("prstart.ttf", 27)
 
 # Déclaration des ressources requises pour augmenter le niveau du joueur.
 requirements_upgrade: Dict[int, Dict[str, int]] = {
-    1: {"rock": 10},
+    1: {"rock": 5},
     2: {"iron": 10, "gold": 10, "coal": 10},
     3: {"uranium": 20, "copper": 20},
-    4: {"ruby": 25},
-    5: {"soul": 25},
-    6: {"dark_crystal": 25},
+    4: {"ruby": 30},
+    5: {"soul": 40},
+    6: {"dark_crystal": 50},
+    7: {}
 }
 
 
@@ -140,6 +141,9 @@ class Player(sprite.Sprite):
         Les ressources nécessaires pour l'amélioration sont enlevées de l'inventaire.
         """
 
+        if self.level == 7:
+            return
+
         for keys, values in requirements_upgrade[self.level].items():
             if not keys in self.inventory or self.inventory[keys] < values:
                 text = font.render(("Vous n'avez pas assez de ressources"), True, "BLACK")
@@ -151,6 +155,7 @@ class Player(sprite.Sprite):
         for keys, values in requirements_upgrade[self.level].items():
             self.inventory[keys] -= values
         self.level += 1
+        sleep(0.1)
 
     def display_inventory(self) -> None:
         """
