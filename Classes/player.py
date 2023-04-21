@@ -50,7 +50,7 @@ class Player(sprite.Sprite):
         self.direction: str = "right"
 
         # Initialise le niveau, la vitesse du joueur et un booléen qui détermine si le joueur tombe.
-        self.level: int = 2
+        self.level: int = 1
         self.speed: float = 0.2
         self.falling: bool = False
 
