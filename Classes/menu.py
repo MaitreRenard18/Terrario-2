@@ -57,14 +57,15 @@ class Menu():
         sleep(0.1)
 
     def quit(self) -> None:
-        save(self.save_name, self.map)
+        if not self.displayed:
+            save(self.save_name, self.map)
         pygame.quit()
         sys.exit()
 
     def launch_world(self, world) -> None:
         self.displayed = False
         self.save_name = world
-        load(world)
+        self.map = load(self.save_name)
 
     def create_new_world(self) -> None:
         self.displayed = False
