@@ -21,8 +21,13 @@ font = pygame.font.Font("prstart.ttf", 27)
 
 # Déclaration des ressources requises pour augmenter le niveau du joueur.
 requirements_upgrade: Dict[str, Dict[str, int]] = {
-    1: {"rock": 1},
-    2: {"iron": 25, "gold": 25, "coal": 10},}
+    1: {"rock": 10},
+    2: {"iron": 10, "gold": 10, "coal": 10},
+    3: {"uranium": 20, "copper": 20},
+    4: {"ruby": 25}
+    5: {"soul": 25}
+    6: {"dark_crystal": 25}
+}
 
 
 # Déclaration de la classe Player.
