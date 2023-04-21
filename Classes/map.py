@@ -23,7 +23,8 @@ biomes: Dict[Union[float, int], List[str]] = {
 tile_palettes: Dict[str, Dict[str, str]] = {
     "forest": {
         "primary_tile": "dirt",
-        "floor_tile": "grass"
+        "floor_tile": "grass",
+        "ore": "rock"
     },
 
     "desert": {
@@ -53,11 +54,13 @@ tile_palettes: Dict[str, Dict[str, str]] = {
     "lush_cave": {
         "primary_tile": "stone",
         "floor_tile": "mossy_stone",
+        "ore": "uranium"
     },
 
     "shroom_cave": {
         "primary_tile": "dark_stone",
         "floor_tile": "mycelium",
+        "ore": "copper"
     },
 
     "haunted_cave": {
@@ -72,6 +75,7 @@ tile_palettes: Dict[str, Dict[str, str]] = {
 
     "hell": {
         "primary_tile": "hellstone",
+        "ore": "dark_crystal"
     }
 }
 
@@ -255,7 +259,12 @@ class Map:
                     self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], hardness)
 
             elif position.y > noise_value:
-                self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], hardness)
+                if randint(0, 32) == 0 and "ore" in tile_palette:
+                    self._tiles[position.x][position.y] = Ore(tile_palette["primary_tile"], tile_palette["ore"],
+                                                              hardness)
+
+                else:
+                    self._tiles[position.x][position.y] = Tile(tile_palette["primary_tile"], hardness)
 
             else:
                 # Génération de l'arrière-plan
