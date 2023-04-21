@@ -12,8 +12,10 @@ from .saving import get_saves, save, load
 from .textures import load_textures
 
 background_textures = load_textures("Screenshots", (1920, 1080))
+thumbnails_textures = load_textures("Thumbnail", (125, 125))
 logo_texture = load_textures("UI/logo.png", (970, 116))
 button_textures: Dict[str, Surface] = load_textures("Button", (360, 108))
+world_button_textures: Dict[str, Surface] = load_textures("Button", (450, 135))
 x_mark_textures: Dict[str, Surface] = load_textures("Button", (56, 56))
 
 class Menu():
@@ -52,6 +54,14 @@ class Menu():
         self.screen.blit(self.background, (0,0))
         self.screen.blit(self.logo, ((self.screen.get_width() - self.logo.get_width()) // 2, 100))
 
+        if not self.main:
+            element = -1
+            for world in get_saves():
+                if len(thumbnails_textures) >= 1:
+                    self.screen.blit(thumbnails_textures[str(world).lower()], ((self.screen.get_width() - thumbnails_textures[str(world).lower()].get_width()) // 2 - 156, 
+                                                                               (self.screen.get_height() - thumbnails_textures[str(world).lower()].get_height()) // 2 + 146 * element))
+                    element += 1
+
     def play(self) -> None:
         self.main = not self.main
         sleep(0.1)
@@ -74,6 +84,6 @@ class Menu():
         element = -1
         for world in get_saves():
             self.saves_buttons[str(world) + "_button"] = Button(
-                button_textures["p_button"].get_rect(center = (self.screen.get_width() // 2, self.screen.get_height() // 2 + element * 150)),
-                button_textures["p_button"], button_textures["button_hovered"], world, 32, self.launch_world, world)
+                world_button_textures["world_button"].get_rect(center = (self.screen.get_width() // 2, self.screen.get_height() // 2 + element * 150)),
+                world_button_textures["world_button"], world_button_textures["world_button_hovered"], "    " + world, 32, self.launch_world, world)
             element += 1
