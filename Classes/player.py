@@ -24,9 +24,9 @@ requirements_upgrade: Dict[int, Dict[str, int]] = {
     1: {"rock": 10},
     2: {"iron": 10, "gold": 10, "coal": 10},
     3: {"uranium": 20, "copper": 20},
-    4: {"ruby": 25}
-    5: {"soul": 25}
-    6: {"dark_crystal": 25}
+    4: {"ruby": 25},
+    5: {"soul": 25},
+    6: {"dark_crystal": 25},
 }
 
 
