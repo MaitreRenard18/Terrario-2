@@ -12,7 +12,7 @@ from .saving import get_saves, save, load
 from .textures import load_textures
 
 background_textures = load_textures("Screenshots", (1920, 1080))
-thumbnails_textures = load_textures("Thumbnail", (125, 125))
+thumbnails_textures = load_textures("Thumbnails", (125, 125))
 logo_texture = load_textures("UI/logo.png", (970, 116))
 button_textures: Dict[str, Surface] = load_textures("Button", (360, 108))
 world_button_textures: Dict[str, Surface] = load_textures("Button", (450, 135))
