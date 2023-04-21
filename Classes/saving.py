@@ -12,6 +12,9 @@ MODULE_PATH = Path(__file__).parent.parent
 if "Saves" not in os.listdir(MODULE_PATH):
     os.mkdir(MODULE_PATH / "Saves")
 
+if "Thumbnails" not in os.listdir(MODULE_PATH / "Images"):
+    os.mkdir(MODULE_PATH / "Images/Thumbnails")
+ 
 _saves_path = MODULE_PATH / "saves"
 _thumbnail_path = MODULE_PATH / "images" / "thumbnail"
 
