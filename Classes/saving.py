@@ -16,7 +16,7 @@ _saves_path = MODULE_PATH / "saves"
 
 
 def get_saves() -> List[str]:
-    return os.listdir(_saves_path)
+    return [file for file in os.listdir(_saves_path) if not file.endswith(".png")]
 
 
 def save(file_name, map: Map) -> None:
