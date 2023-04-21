@@ -4,7 +4,6 @@ import pygame
 
 from .menu import Menu
 from .map import Map
-from .saving import get_saves, save, load
 
 
 class Game:
@@ -30,6 +29,7 @@ class Game:
         max_fps = 30
 
         while True:
+
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_F1:
                     show_stats = not show_stats
@@ -38,7 +38,6 @@ class Game:
                     max_fps = 120 if max_fps == 60 else 60 if max_fps == 30 else 30
 
                 if event.type == pygame.QUIT:
-                    save(self.save_name, self.map)
                     pygame.quit()
                     sys.exit()
                
@@ -48,15 +47,17 @@ class Game:
                 if self.menu.main:
                     self.menu.play_button.check_event(event)
                 else:
-                    for c in self.menu.world_buttons:
-                        self.menu.world_buttons[c].check_event(event)
+                    for c in self.menu.saves_buttons:
+                        self.menu.saves_buttons[c].check_event(event)
+                    for k in self.menu.world_buttons:
+                        self.menu.world_buttons[k].check_event(event)
 
             else:
-                self.map.update()
+                self.menu.map.update()
             
                 if self.map.player.display_button:
                     self.map.player.upgrade_button.check_event(event)
-
+            
             self.menu.quit_button.check_event(event)
 
             if show_stats:
