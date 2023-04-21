@@ -78,6 +78,8 @@ class Menu():
         self.map = load(self.save_name)
 
     def create_new_world(self) -> None:
+        if self.save_number > 3:
+            return
         self.displayed = False
     
     def update_world_buttons(self) -> None:
