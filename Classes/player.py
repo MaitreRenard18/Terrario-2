@@ -14,6 +14,9 @@ ores_textures: Dict[str, Surface] = load_textures("Ores", (96, 96))
 button_textures: Dict[str, Surface] = load_textures("Button", (300, 90))
 inventory_texture: Surface = load_textures("UI/inventory.png", (942, 642))
 craft_interface_texture: Surface = load_textures("UI/craft_interface.png", (840, 390))
+drilltip_textures: Dict[str, Surface] = {}
+for level in range(1, 7):
+    drilltip_textures["drilltip_right_" + str(level)] = load_textures("Player/drilltip_right_" + str(level) + ".png", (192, 192))
 
 # Initialise la police d'écriture utilisée pour l'inventaire et l'interface de craft.
 pygame.font.init()
@@ -32,7 +35,7 @@ requirements_upgrade: Dict[int, Dict[str, int]] = {
 
 
 # Déclaration de la classe Player.
-class Player:
+class Player(sprite.Sprite):
     """
     Class qui représente un joueur qui se situe au milieu de l'écran.
     """
@@ -186,6 +189,7 @@ class Player:
 
         craft_interface_position = (self.display_surface.get_width() - craft_interface_texture.get_width()) // 2
         self.display_surface.blit(craft_interface_texture, (craft_interface_position, 0))
+        self.display_surface.blit(drilltip_textures[f"drilltip_right_{str(self.level + 1)}"], (592, 113))
 
         element = 0
         for keys, values in requirements_upgrade[self.level].items():
@@ -200,13 +204,8 @@ class Player:
         Met à jour le joueur s'il se déplace où tombe.
         Permet d'afficher les interfaces de l'inventaire ou de craft.
         """
-        self.rect.topleft = self.position * 32
 
-        # Téléporte le joueur s'il est sous la carte
-        if self.position.y > 2200:
-            self.position.y = -128
-            self.relative_position.y = -128
-            return
+        self.rect.topleft = self.position * 32
 
         # Vérifie si la tile en dessous du joueur est solide.
         if self.position == self.relative_position:
