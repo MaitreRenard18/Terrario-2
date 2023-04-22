@@ -5,16 +5,15 @@ import pygame
 from pygame import Color, Surface, Vector2
 from pygame.image import tostring, fromstring
 
-from .textures import load_textures, load_animated_textures
+from .textures import tiles_textures, load_animated_textures
 
 
-textures = load_textures("Tiles", (32, 32))
-_textures_names = {v: k for k, v in textures.items()}
+_textures_names = {v: k for k, v in tiles_textures.items()}
 
 
 class Tile:
     def __init__(self, texture: Union[Surface, str], hardness: Union[int, float], can_collide: bool = True) -> None:
-        self.texture: Surface = textures[texture] if isinstance(texture, str) else texture
+        self.texture: Surface = tiles_textures[texture] if isinstance(texture, str) else texture
 
         self.can_collide: bool = can_collide
         self.hardness: int = hardness
@@ -51,8 +50,8 @@ class Tile:
         return state
 
     def __setstate__(self, state):
-        if state["key"] in textures:
-            state["texture"] = textures[state["key"]]
+        if state["key"] in tiles_textures:
+            state["texture"] = tiles_textures[state["key"]]
         else:
             state["texture"] = fromstring(state["texture"], (32, 32), "RGBA")
 
@@ -86,7 +85,7 @@ class Background(Air):
         self.color: Color = color
         self.depth: float = depth
 
-        self._base_texture: Surface = textures[texture] if isinstance(texture, str) else texture
+        self._base_texture: Surface = tiles_textures[texture] if isinstance(texture, str) else texture
         overlay = Surface((32, 32)).convert_alpha()
         color.a = int(255 * depth)
         overlay.fill(color)
@@ -111,8 +110,8 @@ class Background(Air):
         return state
 
     def __setstate__(self, state):
-        if state["key"] in textures:
-            state["_base_texture"] = textures[state["key"]]
+        if state["key"] in tiles_textures:
+            state["_base_texture"] = tiles_textures[state["key"]]
         else:
             state["_base_texture"] = fromstring(state["texture"], (32, 32), "RGBA")
         self.__dict__.update(state)
@@ -128,9 +127,9 @@ class Background(Air):
 
 class Ore(Tile):
     def __init__(self, stone_type: str, ore_type: str, hardness: float):
-        super().__init__(texture=textures[f"{ore_type}_ore"], hardness=hardness)
+        super().__init__(texture=tiles_textures[f"{ore_type}_ore"], hardness=hardness)
         self.ore_type: str = ore_type
-        self.mined_texture: Surface = textures[stone_type]
+        self.mined_texture: Surface = tiles_textures[stone_type]
 
     def destroy(self) -> Union[str, None]:
         if self.hardness == float("-inf"):
@@ -158,14 +157,14 @@ class Ore(Tile):
 
 class Scaffolding(Tile):
     def __init__(self, texture: Union[Surface, str]) -> None:
-        self._base_texture: Surface = textures[texture] if isinstance(texture, str) else texture
+        self._base_texture: Surface = tiles_textures[texture] if isinstance(texture, str) else texture
         texture = self._base_texture.copy().convert_alpha()
         texture.set_colorkey((0, 0, 0))
 
-        scaffolding_texture = textures["scaffolding"]
+        scaffolding_texture = tiles_textures["scaffolding"]
 
         surface = pygame.Surface((32, 32), pygame.SRCALPHA, depth=32)
-        surface.blit(textures[texture] if isinstance(texture, str) else texture, (0, 0))
+        surface.blit(tiles_textures[texture] if isinstance(texture, str) else texture, (0, 0))
         surface.blit(scaffolding_texture, (0, 0))
 
         super().__init__(texture=surface, hardness=float("-inf"))
@@ -178,15 +177,15 @@ class Scaffolding(Tile):
         return state
 
     def __setstate__(self, state):
-        if state["key"] in textures:
-            state["_base_texture"] = textures[state["key"]]
+        if state["key"] in tiles_textures:
+            state["_base_texture"] = tiles_textures[state["key"]]
         else:
             state["_base_texture"] = fromstring(state["_base_texture"], (32, 32), "RGBA")
         self.__dict__.update(state)
 
-        scaffolding_texture = textures["scaffolding"]
+        scaffolding_texture = tiles_textures["scaffolding"]
         surface = pygame.Surface((32, 32), pygame.SRCALPHA, depth=32)
-        surface.blit(textures[self._base_texture] if isinstance(self._base_texture, str) else self._base_texture, (0, 0))
+        surface.blit(tiles_textures[self._base_texture] if isinstance(self._base_texture, str) else self._base_texture, (0, 0))
         surface.blit(scaffolding_texture, (0, 0))
         self.texture = surface
 
