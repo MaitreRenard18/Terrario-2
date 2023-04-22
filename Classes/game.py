@@ -4,6 +4,7 @@ import pygame
 
 from .menu import Menu
 from .map import Map
+from .saving import save
 
 
 class Game:
@@ -41,27 +42,33 @@ class Game:
                     print(self.map.player.level)
 
                 if event.type == pygame.QUIT:
+                    if not self.menu.displayed:
+                        save(self.save_name, self.map)
                     pygame.quit()
                     sys.exit()
                
             if self.menu.displayed:
-                self.menu.display_background()
+                self.menu.update()
 
                 if self.menu.main:
                     self.menu.play_button.check_event(event)
                 else:
                     for c in self.menu.saves_buttons:
                         self.menu.saves_buttons[c].check_event(event)
+                        if self.menu.delete:
+                            self.menu.delete = False
+                            break
                     for k in self.menu.world_buttons:
                         self.menu.world_buttons[k].check_event(event)
 
             else:
-                self.menu.map.update()
+                self.map.update()
             
                 if self.map.player.display_button:
                     self.map.player.upgrade_button.check_event(event)
             
             self.menu.quit_button.check_event(event)
+            self.map = self.menu.map
 
             if show_stats:
                 font = pygame.font.Font("prstart.ttf", 32)
