@@ -29,13 +29,16 @@ class Game:
         max_fps = 30
 
         while True:
-
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_F1:
                     show_stats = not show_stats
 
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_F2:
                     max_fps = 120 if max_fps == 60 else 60 if max_fps == 30 else 30
+
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_F3:
+                    self.map.player.level = (self.map.player.level % 7) + 1
+                    print(self.map.player.level)
 
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -66,9 +69,12 @@ class Game:
                 fps = font.render(f"FPS: {round(self.clock.get_fps())}", True, pygame.Color(255, 255, 255))
                 pygame.display.get_surface().blit(fps, (2, 0))
 
-                y = font.render(f"Position: {int(self.map.player.position.x)}, {int(self.map.player.position.y)}",
+                position = font.render(f"Position: {self.menu.map.player.position}",
                                 True, pygame.Color(255, 255, 255))
-                pygame.display.get_surface().blit(y, (2, 32))
+                pygame.display.get_surface().blit(position, (2, 32))
+
+                level = font.render(f"Drill level: {self.menu.map.player.level}", True, pygame.Color(255, 255, 255))
+                pygame.display.get_surface().blit(level, (2, 64))
 
             pygame.display.update()
             self.clock.tick(max_fps)

@@ -32,7 +32,7 @@ requirements_upgrade: Dict[int, Dict[str, int]] = {
 
 
 # Déclaration de la classe Player.
-class Player(sprite.Sprite):
+class Player:
     """
     Class qui représente un joueur qui se situe au milieu de l'écran.
     """
@@ -200,8 +200,13 @@ class Player(sprite.Sprite):
         Met à jour le joueur s'il se déplace où tombe.
         Permet d'afficher les interfaces de l'inventaire ou de craft.
         """
-
         self.rect.topleft = self.position * 32
+
+        # Téléporte le joueur s'il est sous la carte
+        if self.position.y > 2200:
+            self.position.y = -128
+            self.relative_position.y = -128
+            return
 
         # Vérifie si la tile en dessous du joueur est solide.
         if self.position == self.relative_position:
