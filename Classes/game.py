@@ -48,27 +48,15 @@ class Game:
                     sys.exit()
                
             if self.menu.displayed:
-                self.menu.update()
-
-                if self.menu.main:
-                    self.menu.play_button.check_event(event)
-                else:
-                    for c in self.menu.saves_buttons:
-                        self.menu.saves_buttons[c].check_event(event)
-                        if self.menu.delete:
-                            self.menu.delete = False
-                            break
-                    for k in self.menu.world_buttons:
-                        self.menu.world_buttons[k].check_event(event)
-
+                self.menu.update(event)
             else:
+                self.map = self.menu.map
                 self.map.update()
             
                 if self.map.player.display_button:
                     self.map.player.upgrade_button.check_event(event)
             
             self.menu.quit_button.check_event(event)
-            self.map = self.menu.map
 
             if show_stats:
                 font = pygame.font.Font("prstart.ttf", 32)
