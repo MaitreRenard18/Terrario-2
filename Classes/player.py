@@ -7,22 +7,7 @@ from pygame import Rect, Surface, Vector2, display, key, sprite
 from .tile import Scaffolding, Tile
 from .button import Button
 from .textures import player_textures, ores_textures, inventory_texture, craft_interface_texture, button_textures, drilltip_textures, logo_texture
-
-
-# Initialise la police d'écriture utilisée pour l'inventaire et l'interface de craft.
-pygame.font.init()
-font = pygame.font.Font("prstart.ttf", 27)
-
-# Déclaration des ressources requises pour augmenter le niveau du joueur.
-requirements_upgrade: Dict[int, Dict[str, int]] = {
-    1: {"rock": 5},
-    2: {"iron": 10, "gold": 10, "coal": 10},
-    3: {"uranium": 20, "copper": 20},
-    4: {"ruby": 30},
-    5: {"soul": 40},
-    6: {"dark_crystal": 50},
-    7: {}
-}
+from .constants import font, requirements_upgrade
 
 
 # Déclaration de la classe Player.
