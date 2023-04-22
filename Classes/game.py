@@ -59,7 +59,6 @@ class Game:
             self.menu.quit_button.check_event(event)
 
             if show_stats:
-                font = pygame.font.Font("prstart.ttf", 32)
 
                 fps = font.render(f"FPS: {round(self.clock.get_fps())}", True, pygame.Color(255, 255, 255))
                 pygame.display.get_surface().blit(fps, (2, 0))
