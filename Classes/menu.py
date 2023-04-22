@@ -93,18 +93,6 @@ class Menu():
 
         self.save_number = len(get_saves()) + 1
 
-        if self.main:
-            self.play_button.check_event(event)
-        else:
-            for save in self.saves_buttons:
-                self.saves_buttons[save].check_event(event)
-                if self.delete:
-                    self.delete = False
-                    break
-                
-            for button in self.world_buttons:
-                self.world_buttons[button].check_event(event)
-
         if not self.main:
             element = -1
             for world in get_saves():
@@ -121,3 +109,15 @@ class Menu():
                                                                                (self.screen.get_height() - thumbnails_textures[str(world).lower()].get_height()) // 2 + 146 * element))
                     
                     element += 1
+
+            for save in self.saves_buttons:
+                self.saves_buttons[save].check_event(event)
+                if self.delete:
+                    self.delete = False
+                    break
+                
+            for button in self.world_buttons:
+                self.world_buttons[button].check_event(event)
+
+        else:
+            self.play_button.check_event(event)
