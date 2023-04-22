@@ -1,6 +1,6 @@
 import pygame
 
-screen = pygame.display.set_mode()
+from .constants import screen
 
 class Button():
     def __init__(self, rect, image, anim, text, text_size, func, parameter = None):
