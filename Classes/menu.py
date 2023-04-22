@@ -1,5 +1,4 @@
 from random import choice
-from typing import Dict
 from time import sleep
 
 import sys
@@ -13,6 +12,7 @@ from pygame import Surface, display
 from .button import Button
 from .saving import get_saves, save, load
 from .textures import background_textures, thumbnails_textures, logo_texture, button_textures, world_textures, delete_textures, x_mark_textures
+from .constants import screen
 
 MODULE_PATH = Path(__file__).parent.parent
 
@@ -30,19 +30,18 @@ class Menu():
         self.save_name = "World " + str(self.save_number)
         self.delete = False
 
-        self.screen: Surface = display.get_surface()
         self.background: Surface = choice(list(background_textures.values()))
         self.logo: Surface = logo_texture
 
-        self.play_button =  Button(button_textures["p_button"].get_rect(center = (self.screen.get_width() // 2, self.screen.get_height() // 2)),
+        self.play_button =  Button(button_textures["p_button"].get_rect(center = (screen.get_width() // 2, screen.get_height() // 2)),
                                     button_textures["p_button"], button_textures["button_hovered"], "Play", 48, self.play)
         
-        self.quit_button = Button(x_mark_textures["x_mark"].get_rect(center = (self.screen.get_width() - 40, 40)),
+        self.quit_button = Button(x_mark_textures["x_mark"].get_rect(center = (screen.get_width() - 40, 40)),
                                     x_mark_textures["x_mark"], x_mark_textures["x_mark_hovered"], "", 0, self.quit)
         
-        self.world_buttons = {"create_world_button": Button(button_textures["p_button"].get_rect(center = (self.screen.get_width() // 2 - 200, self.screen.get_height() // 2 + 400)),
+        self.world_buttons = {"create_world_button": Button(button_textures["p_button"].get_rect(center = (screen.get_width() // 2 - 200, screen.get_height() // 2 + 400)),
                                             button_textures["p_button"], button_textures["button_hovered"], "New world", 32, self.create_new_world),
-                            "cancel_button": Button(button_textures["p_button"].get_rect(center = (self.screen.get_width() // 2 + 200, self.screen.get_height() // 2 + 400)),
+                            "cancel_button": Button(button_textures["p_button"].get_rect(center = (screen.get_width() // 2 + 200, screen.get_height() // 2 + 400)),
                                             button_textures["p_button"], button_textures["button_hovered"], "Cancel", 32, self.play),}
         
         self.saves_buttons = {}
@@ -76,8 +75,8 @@ class Menu():
         sleep(0.1)
 
     def update(self, event) -> None:
-        self.screen.blit(self.background, (0,0))
-        self.screen.blit(self.logo, ((self.screen.get_width() - self.logo.get_width()) // 2, 100))
+        screen.blit(self.background, (0,0))
+        screen.blit(self.logo, ((screen.get_width() - self.logo.get_width()) // 2, 100))
 
         self.save_number = len(get_saves()) + 1
 
@@ -86,15 +85,15 @@ class Menu():
             for world in get_saves():
                 if str(world) + "_button" not in self.saves_buttons:
                     self.saves_buttons[str(world) + "_button"] = Button(
-                        world_textures["world_button"].get_rect(center = (self.screen.get_width() // 2, self.screen.get_height() // 2 + element * 150)),
+                        world_textures["world_button"].get_rect(center = (screen.get_width() // 2, screen.get_height() // 2 + element * 150)),
                         world_textures["world_button"], world_textures["world_button_hovered"], "    " + world, 32, self.launch_world, world)
                     self.saves_buttons[str(world) + "_delete_button"] = Button(
-                        delete_textures["delete_button"].get_rect(center = (self.screen.get_width() // 2 + 300, self.screen.get_height() // 2 + element * 150)),
+                        delete_textures["delete_button"].get_rect(center = (screen.get_width() // 2 + 300, screen.get_height() // 2 + element * 150)),
                         delete_textures["delete_button"], delete_textures["delete_button_hovered"], "", 0, self.delete_save, world)
             
                 if len(thumbnails_textures) >= 1:
-                    self.screen.blit(thumbnails_textures[str(world).lower()], ((self.screen.get_width() - thumbnails_textures[str(world).lower()].get_width()) // 2 - 156, 
-                                                                               (self.screen.get_height() - thumbnails_textures[str(world).lower()].get_height()) // 2 + 146 * element))
+                    screen.blit(thumbnails_textures[str(world).lower()], ((screen.get_width() - thumbnails_textures[str(world).lower()].get_width()) // 2 - 156, 
+                                                                               (screen.get_height() - thumbnails_textures[str(world).lower()].get_height()) // 2 + 146 * element))
                     
                     element += 1
 
