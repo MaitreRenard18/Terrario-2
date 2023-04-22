@@ -347,7 +347,7 @@ class Map:
         """
 
         # Affiche le ciel.
-        self.display_surface.fill(Color(77, 165, 217))
+        self.display_surface.fill((77, 165, 217))
 
         # Permet de décaler les tuiles en fonction du joueur pour que celui-ci soit au centre de l'écran.
         offset = Vector2()
@@ -365,14 +365,12 @@ class Map:
                 tile = self.get_tile((x, y))
                 tile.update(offset_vec)
 
-                if self.get_prop((x, y)) is not None:
-                    prop = self.props[x][y]
-                    props_to_render.append(prop)
+                if x in self.props and y in self.props[x]:
+                    props_to_render += self.props[x][y]
 
         # Fait le rendu des props
-        for prop_list in props_to_render:
-            for prop in prop_list:
-                prop.update(prop.position * 32 - offset)
+        for prop in props_to_render:
+            prop.update(prop.position * 32 - offset)
 
         # Détermine la position du joueur sur l'écran.
         offset_rect = self.player.rect.copy()

@@ -70,5 +70,5 @@ class Game:
                 level = font.render(f"Drill level: {self.menu.map.player.level}", True, pygame.Color(255, 255, 255))
                 pygame.display.get_surface().blit(level, (2, 64))
 
-            pygame.display.update()
+            pygame.display.flip()
             self.clock.tick(max_fps)

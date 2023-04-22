@@ -16,7 +16,8 @@ inventory_texture: Surface = load_textures("UI/inventory.png", (942, 462))
 craft_interface_texture: Surface = load_textures("UI/craft_interface.png", (840, 390))
 drilltip_textures: Dict[str, Surface] = {}
 for level in range(1, 9):
-    drilltip_textures["drilltip_right_" + str(level)] = load_textures("Player/drilltip_right_" + str(level) + ".png", (192, 192))
+    drilltip_textures["drilltip_right_" + str(level)] = load_textures("Player/drilltip_right_" + str(level) + ".png",
+                                                                      (192, 192))
 logo = load_textures("UI/logo.png", (970, 116))
 
 # Initialise la police d'écriture utilisée pour l'inventaire et l'interface de craft.
@@ -61,7 +62,8 @@ class Player:
 
         # Initialise l'inventaire du joueur, un bouton et un booléen qui déterminent si il est affiché.
         self.inventory: Dict[str, int] = {}
-        self.upgrade_button: Button = Button(button_textures["up_button"].get_rect(center=(1080,383)), button_textures["up_button"], 
+        self.upgrade_button: Button = Button(button_textures["up_button"].get_rect(center=(1080, 383)),
+                                             button_textures["up_button"],
                                              button_textures["button_hovered"], "Upgrade", 32, self.upgrade)
         self.display_button: bool = False
 
@@ -103,7 +105,7 @@ class Player:
             return False
         else:
             return True
-        
+
     def facing(self) -> None:
         """
         Modifie l'image du joueur et de la pointe en fonction de sa direction et de son niveau.
@@ -137,7 +139,7 @@ class Player:
         if self.position.y >= self.relative_position.y + 1:
             self.relative_position.y += 1
             self.position.y = self.relative_position.y
-        
+
     def upgrade(self) -> None:
         """
         Améliore le niveau du joueur si il a les ressources nécessaires.
@@ -180,7 +182,7 @@ class Player:
 
             self.display_surface.blit(ores_textures[c], (inv_pos + 48 + element_gap, 107 + ligne_gap))
             text = font.render(str(self.inventory[c]), True, "BLACK")
-            self.display_surface.blit(text, text.get_rect(center = (inv_pos + 154 + element_gap, 214 + ligne_gap)))
+            self.display_surface.blit(text, text.get_rect(center=(inv_pos + 154 + element_gap, 214 + ligne_gap)))
             element += 1
 
     def display_craft_interface(self) -> None:
@@ -197,7 +199,7 @@ class Player:
             element_gap = element * 180
             self.display_surface.blit(ores_textures[keys], (craft_interface_position + 306 + element_gap, 170))
             text = font.render(str(values), True, "BLACK")
-            self.display_surface.blit(text, text.get_rect(center = (craft_interface_position + 412 + element_gap, 274)))
+            self.display_surface.blit(text, text.get_rect(center=(craft_interface_position + 412 + element_gap, 274)))
             element += 1
 
     def update(self) -> None:
@@ -211,8 +213,8 @@ class Player:
         # Téléporte le joueur s'il est sous la carte
         if self.position.y > 1200:
             text = font.render("Merci d'avoir joué!", True, "WHITE")
-            self.display_surface.blit(text,  text.get_rect(center=(self.display_surface.get_width() // 2,
-                                                                   self.display_surface.get_height() // 2 + 128)))
+            self.display_surface.blit(text, text.get_rect(center=(self.display_surface.get_width() // 2,
+                                                                  self.display_surface.get_height() // 2 + 128)))
             self.display_surface.blit(logo, logo.get_rect(center=(self.display_surface.get_width() // 2,
                                                                   self.display_surface.get_height() // 2 - 256)))
 
@@ -233,16 +235,16 @@ class Player:
                 if self.falling:
                     self.falling = False
                     self.speed = 0.2
-        
+
         if not self.falling:
-            
+
             # Permet au joueur de miner un bloc s'il est cassable.
             if self.breakable():
                 self.mine()
             else:
                 self.relative_position -= self.tip_position
                 return
-            
+
             # Permet au joueur de grimper sur des échafaudages s'il va vers le haut.
             if self.direction == "up":
                 self.climb()
@@ -253,7 +255,7 @@ class Player:
                 self.position.x = round(self.position.x, 1)
                 self.position.y = round(self.position.y, 1)
                 return
-            
+
             # Affiche l'inventaire ou l'interface de craft si le joueur appui sur E ou A.
             keys = key.get_pressed()
             if keys[pygame.K_e]:
@@ -267,16 +269,16 @@ class Player:
                 return
             else:
                 self.display_button = False
-            
+
             # Permet au joueur de se déplacer en appuyant sur les flèches ou les touches : ZQSD
             if keys[pygame.K_UP] or keys[pygame.K_z]:
-                self.tip_position.x, self.tip_position.y =  0, -1
+                self.tip_position.x, self.tip_position.y = 0, -1
                 self.direction = "up"
                 self.relative_position.y -= 1
                 return
 
             if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-                self.tip_position.x, self.tip_position.y =  0, 1
+                self.tip_position.x, self.tip_position.y = 0, 1
                 self.direction = "down"
                 self.relative_position.y += 1
                 return
@@ -292,9 +294,9 @@ class Player:
                 self.direction = "left"
                 self.relative_position.x -= 1
                 return
-        else: 
+        else:
             self.fall()
-        
+
     def __getstate__(self):
         state = self.__dict__.copy()
         state["position"] = Vector2(round(self.position.x), round(self.position.y))
@@ -310,6 +312,7 @@ class Player:
         self.image: Surface = player_textures[f"drill_{self.direction}"]
         self.tip_image: Surface = player_textures[f"drilltip_{self.direction}_{str(self.level)}"]
         self.display_surface = display.get_surface()
-        self.upgrade_button: Button = Button(button_textures["up_button"].get_rect(center=(1080,383)), button_textures["up_button"], 
+        self.upgrade_button: Button = Button(button_textures["up_button"].get_rect(center=(1080, 383)),
+                                             button_textures["up_button"],
                                              button_textures["button_hovered"], "Upgrade", 32, self.upgrade)
         self.display_button: bool = False
