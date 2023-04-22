@@ -4,8 +4,6 @@ import os
 
 import pygame.image
 
-from .map import Map
-
 from pathlib import Path
 MODULE_PATH = Path(__file__).parent.parent
 
@@ -22,7 +20,7 @@ _thumbnail_path = MODULE_PATH / "images" / "thumbnails"
 def get_saves() -> List[str]:
     return [file for file in os.listdir(_saves_path) if not file.endswith(".png")]
 
-
+from .map import Map
 def save(file_name, map: Map) -> None:
     with open(_saves_path / file_name, "wb") as file:
         thumbnail = map.get_thumbnail()
