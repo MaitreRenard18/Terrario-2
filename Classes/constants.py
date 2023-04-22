@@ -1,5 +1,10 @@
 from typing import Dict, List, Union
+from pathlib import Path
 import pygame
+
+
+# Récupère le chemin d'accès des fichiers du jeu.
+MODULE_PATH = Path(__file__).parent.parent
 
 # Récupère la taille de l'écran.
 screen = pygame.display.set_mode()
