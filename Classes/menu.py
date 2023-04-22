@@ -4,17 +4,13 @@ from time import sleep
 import sys
 import os
 
-from pathlib import Path
-
 import pygame
-from pygame import Surface, display
+from pygame import Surface
 
 from .button import Button
 from .saving import get_saves, save, load
 from .textures import background_textures, thumbnails_textures, logo_texture, button_textures, world_textures, delete_textures, x_mark_textures
-from .constants import screen
-
-MODULE_PATH = Path(__file__).parent.parent
+from .constants import screen, MODULE_PATH
 
 
 class Menu():
