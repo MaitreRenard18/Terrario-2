@@ -14,6 +14,7 @@ ores_textures: Dict[str, Surface] = load_textures("Ores", (96, 96))
 button_textures: Dict[str, Surface] = load_textures("Button", (300, 90))
 inventory_texture: Surface = load_textures("UI/inventory.png", (942, 462))
 craft_interface_texture: Surface = load_textures("UI/craft_interface.png", (840, 390))
+logo = load_textures("UI/logo.png", (970, 116))
 
 # Initialise la police d'écriture utilisée pour l'inventaire et l'interface de craft.
 pygame.font.init()
@@ -209,6 +210,8 @@ class Player:
             text = font.render("Merci d'avoir joué!", True, "WHITE")
             self.display_surface.blit(text,  text.get_rect(center=(self.display_surface.get_width() // 2,
                                                                    self.display_surface.get_height() // 2 + 128)))
+            self.display_surface.blit(logo, logo.get_rect(center=(self.display_surface.get_width() // 2,
+                                                                  self.display_surface.get_height() // 2 - 256)))
 
         if self.position.y > 1600:
             self.position.y = -128
