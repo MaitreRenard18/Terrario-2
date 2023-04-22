@@ -6,19 +6,8 @@ from pygame import Rect, Surface, Vector2, display, key, sprite
 
 from .tile import Scaffolding, Tile
 from .button import Button
-from .textures import load_textures
+from .textures import player_textures, ores_textures, inventory_texture, craft_interface_texture, button_textures, drilltip_textures, logo_texture
 
-# Charge les textures concernant le joueur, les minerais, l'inventaire et l'interface de craft.
-player_textures: Dict[str, Surface] = load_textures("Player", (32, 32))
-ores_textures: Dict[str, Surface] = load_textures("Ores", (96, 96))
-button_textures: Dict[str, Surface] = load_textures("Button", (300, 90))
-inventory_texture: Surface = load_textures("UI/inventory.png", (942, 462))
-craft_interface_texture: Surface = load_textures("UI/craft_interface.png", (840, 390))
-drilltip_textures: Dict[str, Surface] = {}
-for level in range(1, 9):
-    drilltip_textures["drilltip_right_" + str(level)] = load_textures("Player/drilltip_right_" + str(level) + ".png",
-                                                                      (192, 192))
-logo: Surface = load_textures("UI/logo.png", (970, 116))
 
 # Initialise la police d'écriture utilisée pour l'inventaire et l'interface de craft.
 pygame.font.init()
@@ -210,14 +199,14 @@ class Player:
 
         self.rect.topleft = self.position * 32
 
-        # Affiche un texte de remerciement si le joueur a fini le jeu.
+        # Téléporte le joueur s'il est sous la carte
         if self.position.y > 1200:
             text = font.render("Merci d'avoir joué!", True, "WHITE")
             self.display_surface.blit(text, text.get_rect(center=(self.display_surface.get_width() // 2,
                                                                   self.display_surface.get_height() // 2 + 128)))
-            self.display_surface.blit(logo, logo.get_rect(center=(self.display_surface.get_width() // 2,
+            self.display_surface.blit(logo_texture, logo_texture.get_rect(center=(self.display_surface.get_width() // 2,
                                                                   self.display_surface.get_height() // 2 - 256)))
-        # Téléporte le joueur s'il est sous la carte.
+
         if self.position.y > 1600:
             self.position.y = -128
             self.relative_position.y = -128
@@ -311,7 +300,7 @@ class Player:
         self.__dict__.update(state)
         self.image: Surface = player_textures[f"drill_{self.direction}"]
         self.tip_image: Surface = player_textures[f"drilltip_{self.direction}_{str(self.level)}"]
-        self.display_surface: Surface = display.get_surface()
+        self.display_surface = display.get_surface()
         self.upgrade_button: Button = Button(button_textures["up_button"].get_rect(center=(1080, 383)),
                                              button_textures["up_button"],
                                              button_textures["button_hovered"], "Upgrade", 32, self.upgrade)
