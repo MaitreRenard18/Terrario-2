@@ -12,21 +12,9 @@ from pygame import Surface, display
 
 from .button import Button
 from .saving import get_saves, save, load
-from .textures import load_textures
+from .textures import background_textures, thumbnails_textures, logo_texture, button_textures, world_textures, delete_textures, x_mark_textures
 
 MODULE_PATH = Path(__file__).parent.parent
-
-background_textures: Dict[str, Surface] = load_textures("Screenshots", (1920, 1080))
-thumbnails_textures: Dict[str, Surface] = load_textures("Thumbnails", (125, 125))
-logo_texture: Surface = load_textures("UI/logo.png", (970, 116))
-button_textures: Dict[str, Surface] = {"p_button": load_textures("Button/p_button.png", (360, 108)), 
-                                       "button_hovered": load_textures("Button/button_hovered.png", (360, 108))}
-world_textures: Dict[str, Surface] = {"world_button": load_textures("Button/world_button.png", (450, 135)),
-                                      "world_button_hovered": load_textures("Button/world_button_hovered.png", (450, 135))}
-delete_textures: Dict[str, Surface] = {"delete_button": load_textures("Button/delete_button.png", (135, 135)),
-                                      "delete_button_hovered": load_textures("Button/delete_button_hovered.png", (135, 135))}
-x_mark_textures: Dict[str, Surface] = {"x_mark": load_textures("Button/x_mark.png", (56, 56)),
-                                      "x_mark_hovered": load_textures("Button/x_mark_hovered.png", (56, 56))}
 
 
 class Menu():
