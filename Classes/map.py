@@ -2,8 +2,7 @@ from random import choice, randint, seed
 from typing import Dict, List, Union
 
 import opensimplex
-import pygame.image
-from pygame import Color, Surface, display
+from pygame import Color, Surface
 from pygame.math import Vector2
 
 from .player import Player
