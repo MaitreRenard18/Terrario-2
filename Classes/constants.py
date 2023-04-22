@@ -1,5 +1,12 @@
 from typing import Dict, List, Union
+import pygame
 
+# Récupère la taille de l'écran.
+screen = pygame.display.set_mode()
+
+# Initialise la police d'écriture utilisée pour l'inventaire et l'interface de craft.
+pygame.font.init()
+font = pygame.font.Font("prstart.ttf", 27)
 
 # Déclaration des biomes et des décors associés à chaque biome.
 biomes: Dict[Union[float, int], List[str]] = {
@@ -107,4 +114,15 @@ props_density: Dict[str, int] = {
 
     "haunted_cave": 6,
     "crystal_cave": 2
+}
+
+# Déclaration des ressources nécessaires pour augmenter le niveau du joueur.
+requirements_upgrade: Dict[int, Dict[str, int]] = {
+    1: {"rock": 5},
+    2: {"iron": 10, "gold": 10, "coal": 10},
+    3: {"uranium": 20, "copper": 20},
+    4: {"ruby": 30},
+    5: {"soul": 40},
+    6: {"dark_crystal": 50},
+    7: {}
 }
