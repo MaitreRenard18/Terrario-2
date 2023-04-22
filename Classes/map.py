@@ -9,7 +9,7 @@ from pygame.math import Vector2
 from .player import Player
 from .prop import Prop
 from .tile import Air, Background, Ore, Tile, Void
-from .constants import biomes, tile_palettes, biomes_scale,props, props_density
+from .constants import screen, biomes, tile_palettes, biomes_scale,props, props_density
 
 
 # Déclaration de la classe Map
@@ -23,9 +23,6 @@ class Map:
         """
         Initialise une Map.
         """
-
-        # Récupère la surface d'affichage
-        self.display_surface: Surface = display.get_surface()
 
         # Initialise le joueur et le dictionnaire contenant les tuiles et le dictionnaire contenant les props.
         self.player: Player = Player(Vector2(0, -1), self)
@@ -43,8 +40,8 @@ class Map:
         self.biome_blend: int = 3
 
         # Récupère le nombre de tuiles qui peut être afficher en x et en y.
-        self.render_distance: tuple = (self.display_surface.get_size()[0] // 32 // 2 + 4,
-                                       self.display_surface.get_size()[1] // 32 // 2 + 3)
+        self.render_distance: tuple = (screen.get_size()[0] // 32 // 2 + 4,
+                                       screen.get_size()[1] // 32 // 2 + 3)
 
     def get_tile(self, position: Union[Vector2, tuple]) -> Tile:
         """
@@ -240,12 +237,12 @@ class Map:
         """
 
         # Affiche le ciel.
-        self.display_surface.fill((77, 165, 217))
+        screen.fill((77, 165, 217))
 
         # Permet de décaler les tuiles en fonction du joueur pour que celui-ci soit au centre de l'écran.
         offset = Vector2()
-        offset.x = self.player.rect.centerx - self.display_surface.get_width() / 2
-        offset.y = self.player.rect.centery - self.display_surface.get_height() / 2
+        offset.x = self.player.rect.centerx - screen.get_width() / 2
+        offset.y = self.player.rect.centery - screen.get_height() / 2
 
         # Parcours chaques tuiles visibles à l'écran et les met à jour.
         props_to_render = []
@@ -272,8 +269,8 @@ class Map:
         self.player.facing()
 
         # Met à jour le joueur.
-        self.display_surface.blit(self.player.image, offset_rect)
-        self.display_surface.blit(self.player.tip_image, (offset_rect.x + self.player.tip_position.x * 32,
+        screen.blit(self.player.image, offset_rect)
+        screen.blit(self.player.tip_image, (offset_rect.x + self.player.tip_position.x * 32,
                                                           offset_rect.y + self.player.tip_position.y * 32))
 
         self.player.update()
@@ -281,15 +278,15 @@ class Map:
     def get_thumbnail(self) -> Surface:
         """Retourne une surface au format 1:1 de ce qui est actuellement affiché sur l'écran."""
 
-        if self.display_surface.get_width() > self.display_surface.get_height():
-            return self.display_surface.subsurface((
-                self.display_surface.get_width() // 2 - self.display_surface.get_height() // 2, 0,
-                self.display_surface.get_height(), self.display_surface.get_height()))
+        if screen.get_width() > screen.get_height():
+            return screen.subsurface((
+                screen.get_width() // 2 - screen.get_height() // 2, 0,
+                screen.get_height(), screen.get_height()))
 
         else:
-            return self.display_surface.subsurface((
-                0, self.display_surface.get_height() // 2 - self.display_surface.get_width() // 2,
-                self.display_surface.get_width(), self.display_surface.get_width()))
+            return screen.subsurface((
+                0, screen.get_height() // 2 - screen.get_width() // 2,
+                screen.get_width(), screen.get_width()))
 
     def __getstate__(self):
         """
@@ -297,7 +294,6 @@ class Map:
         Le dictionnaire renvoyé contient toutes les tuiles et les props.
         """
         state = self.__dict__.copy()
-        del state["display_surface"]
         return state
 
     def __setstate__(self, state):
@@ -306,7 +302,6 @@ class Map:
         """
 
         self.__dict__.update(state)
-        self.display_surface = display.get_surface()
 
         opensimplex.seed(self.seed)
         seed(self.seed)
