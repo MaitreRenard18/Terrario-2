@@ -39,7 +39,6 @@ class Game:
 
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_F3:
                     self.map.player.level = (self.map.player.level % 7) + 1
-                    print(self.map.player.level)
 
                 if event.type == pygame.QUIT:
                     if not self.menu.displayed:

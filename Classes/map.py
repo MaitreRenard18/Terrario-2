@@ -332,12 +332,12 @@ class Map:
         elif position.y - random_biome_blend_value < 1024:
             self._tiles[position.x][position.y] = Tile("bedrock", hardness + 1)
 
-        elif position.y - random_biome_blend_value <= 2048:
+        elif position.y - random_biome_blend_value <= 1500:
             self._tiles[position.x][position.y] = Void()
 
         else:
             self._tiles[position.x][position.y] = Background("air", Color(77, 165, 217),
-                                                             min((position.y - 2048) * 0.05, 1))
+                                                             min((position.y - 1500) * 0.05, 1))
 
         return self._tiles[position.x][position.y]
 

@@ -203,7 +203,12 @@ class Player:
         self.rect.topleft = self.position * 32
 
         # Téléporte le joueur s'il est sous la carte
-        if self.position.y > 2200:
+        if self.position.y > 1200:
+            text = font.render("Merci d'avoir joué!", True, "WHITE")
+            self.display_surface.blit(text,  text.get_rect(center=(self.display_surface.get_width() // 2,
+                                                                   self.display_surface.get_height() // 2 + 128)))
+
+        if self.position.y > 1525:
             self.position.y = -128
             self.relative_position.y = -128
             return

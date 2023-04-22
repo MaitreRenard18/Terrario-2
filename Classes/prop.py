@@ -1,6 +1,6 @@
 import os
 from csv import reader
-from typing import TYPE_CHECKING, Dict, List
+from typing import TYPE_CHECKING, Dict, List, Union
 
 import pygame
 from pygame import Vector2
@@ -28,41 +28,48 @@ class Prop:
         self.tiles: Dict[int, Dict[int, Tile]] = _get_prop(prop_name)
 
         self.position: Vector2 = Vector2(position)
-        self.tile_pos: Vector2 = Vector2(position)
+        self.relative_position: Vector2 = Vector2(position)
 
         self.speed: float = 0.2
         self.falling: bool = False
 
     def update(self, position: Vector2) -> None:
+        if self.position.y > 1525:
+            self._change_position(Vector2(self.position.x, -128))
+
         for x, row in self.tiles.items():
             for y, tile in row.items():
                 tile.update(position + Vector2(x, -y) * 32)
 
-        self.fall()
+        tile_below = self.map.get_tile(self.relative_position)
+        if not tile_below.can_collide or isinstance(tile_below, Scaffolding):
+            self.fall()
+
+    def _change_position(self, position: Union[Vector2, tuple]):
+        x, y = (int(position.x), int(position.y)) if isinstance(position, Vector2) else (position[0], position[1])
+
+        index = self.map.props[self.relative_position.x][self.relative_position.y].index(self)
+        self.map.props[self.relative_position.x][self.relative_position.y].pop(index)
+
+        self.position = Vector2(x, y)
+        self.relative_position = Vector2(x, y)
+
+        self.map.props[x] = self.map.props.get(x, {})
+        self.map.props[x][y] = self.map.props[x].get(y, [])
+        self.map.props[x][y].append(self)
 
     def fall(self) -> None:
-        tile_below = self.map.get_tile(self.tile_pos)
-        if not tile_below.can_collide or isinstance(tile_below, Scaffolding):
-            if not self.falling:
-                self.falling = True
-                self.speed = 0
-                return
+        """
+        Fait tomber le joueur.
+        La vitesse du joueur augmente au fur et à mesure qu'il tombe.
+        La limite de vitesse du joueur est d'une tile.
+        """
+        self.speed += round(0.1, 1)
+        self.position.y += self.speed
+        self.position.y = round(self.position.y, 1)
 
-            self.speed += 0.1
-            self.speed = round(self.speed, 1)
-            self.position.y += self.speed
-            self.position.y = round(self.position.y, 1)
-
-            if self.position.y >= self.tile_pos.y + 1:
-                self.tile_pos.y += 1
-                self.position.y = self.tile_pos.y
-
-                index = self.map.props[self.position.x][self.position.y-1].index(self)
-                self.map.props[self.position.x][self.position.y-1].pop(index)
-
-                self.map.props[self.position.x] = self.map.props.get(self.position.x, {})
-                self.map.props[self.position.x][self.position.y] = self.map.props[self.position.x].get(self.position.y, [])
-                self.map.props[self.position.x][self.position.y].append(self)
+        if self.position.y >= self.relative_position.y + 1:
+            self._change_position(self.relative_position.copy() + (0, 1))
 
         else:
             self.falling = False
