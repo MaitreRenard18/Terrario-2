@@ -7,7 +7,7 @@ from pygame import Rect, Surface, Vector2, display, key, sprite
 from .tile import Scaffolding, Tile
 from .button import Button
 from .textures import player_textures, ores_textures, inventory_texture, craft_interface_texture, button_textures, drilltip_textures, logo_texture
-from .constants import font, requirements_upgrade
+from .constants import screen, font, requirements_upgrade
 
 
 # Déclaration de la classe Player.
@@ -48,7 +48,6 @@ class Player:
         # Récupère le rectangle où l'image du joueur va être affichée et la taille de l'écran.
         self.rect: Rect = self.image.get_rect()
         self.rect.topleft: tuple = self.position * 32
-        self.display_surface: Surface = display.get_surface()
 
         # Récupère la map dans laquelle le joueur se trouve.
         self.map = map
@@ -127,7 +126,7 @@ class Player:
         for keys, values in requirements_upgrade[self.level].items():
             if not keys in self.inventory or self.inventory[keys] < values:
                 text = font.render(("Vous n'avez pas assez de ressources"), True, "BLACK")
-                self.display_surface.blit(text, (500, 400))
+                screen.blit(text, (500, 400))
                 pygame.display.flip()
                 sleep(1.5)
                 return
@@ -142,8 +141,8 @@ class Player:
         Affiche l'inventaire du joueur en fonction des minerais récupérés.
         """
 
-        inv_pos = (self.display_surface.get_width() - inventory_texture.get_width()) // 2
-        self.display_surface.blit(inventory_texture, (inv_pos, 0))
+        inv_pos = (screen.get_width() - inventory_texture.get_width()) // 2
+        screen.blit(inventory_texture, (inv_pos, 0))
 
         element, ligne = 0, 0
         for c in self.inventory:
@@ -154,9 +153,9 @@ class Player:
             element_gap = element * 180
             ligne_gap = ligne * 180
 
-            self.display_surface.blit(ores_textures[c], (inv_pos + 48 + element_gap, 107 + ligne_gap))
+            screen.blit(ores_textures[c], (inv_pos + 48 + element_gap, 107 + ligne_gap))
             text = font.render(str(self.inventory[c]), True, "BLACK")
-            self.display_surface.blit(text, text.get_rect(center=(inv_pos + 154 + element_gap, 214 + ligne_gap)))
+            screen.blit(text, text.get_rect(center=(inv_pos + 154 + element_gap, 214 + ligne_gap)))
             element += 1
 
     def display_craft_interface(self) -> None:
@@ -164,16 +163,16 @@ class Player:
         Affiche l'interface de craft et les minerais requis pour améliorer le niveau du joueur.
         """
 
-        craft_interface_position = (self.display_surface.get_width() - craft_interface_texture.get_width()) // 2
-        self.display_surface.blit(craft_interface_texture, (craft_interface_position, 0))
-        self.display_surface.blit(drilltip_textures[f"drilltip_right_{str(self.level + 1)}"], (592, 113))
+        craft_interface_position = (screen.get_width() - craft_interface_texture.get_width()) // 2
+        screen.blit(craft_interface_texture, (craft_interface_position, 0))
+        screen.blit(drilltip_textures[f"drilltip_right_{str(self.level + 1)}"], (592, 113))
 
         element = 0
         for keys, values in requirements_upgrade[self.level].items():
             element_gap = element * 180
-            self.display_surface.blit(ores_textures[keys], (craft_interface_position + 306 + element_gap, 170))
+            screen.blit(ores_textures[keys], (craft_interface_position + 306 + element_gap, 170))
             text = font.render(str(values), True, "BLACK")
-            self.display_surface.blit(text, text.get_rect(center=(craft_interface_position + 412 + element_gap, 274)))
+            screen.blit(text, text.get_rect(center=(craft_interface_position + 412 + element_gap, 274)))
             element += 1
 
     def update(self) -> None:
@@ -187,10 +186,10 @@ class Player:
         # Téléporte le joueur s'il est sous la carte
         if self.position.y > 1200:
             text = font.render("Merci d'avoir joué!", True, "WHITE")
-            self.display_surface.blit(text, text.get_rect(center=(self.display_surface.get_width() // 2,
-                                                                  self.display_surface.get_height() // 2 + 128)))
-            self.display_surface.blit(logo_texture, logo_texture.get_rect(center=(self.display_surface.get_width() // 2,
-                                                                  self.display_surface.get_height() // 2 - 256)))
+            screen.blit(text, text.get_rect(center=(screen.get_width() // 2,
+                                                                  screen.get_height() // 2 + 128)))
+            screen.blit(logo_texture, logo_texture.get_rect(center=(screen.get_width() // 2,
+                                                                  screen.get_height() // 2 - 256)))
 
         if self.position.y > 1600:
             self.position.y = -128
@@ -275,7 +274,6 @@ class Player:
         state = self.__dict__.copy()
         state["position"] = Vector2(round(self.position.x), round(self.position.y))
         del state["image"]
-        del state["display_surface"]
         del state["tip_image"]
         del state["upgrade_button"]
         del state["display_button"]
@@ -285,7 +283,6 @@ class Player:
         self.__dict__.update(state)
         self.image: Surface = player_textures[f"drill_{self.direction}"]
         self.tip_image: Surface = player_textures[f"drilltip_{self.direction}_{str(self.level)}"]
-        self.display_surface = display.get_surface()
         self.upgrade_button: Button = Button(button_textures["up_button"].get_rect(center=(1080, 383)),
                                              button_textures["up_button"],
                                              button_textures["button_hovered"], "Upgrade", 32, self.upgrade)
