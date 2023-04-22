@@ -2,9 +2,9 @@ from time import sleep
 from typing import Dict
 
 import pygame
-from pygame import Rect, Surface, Vector2, display, key, sprite
+from pygame import Rect, Surface, Vector2, key
 
-from .tile import Scaffolding, Tile
+from .tile import Scaffolding
 from .button import Button
 from .textures import player_textures, ores_textures, inventory_texture, craft_interface_texture, button_textures, drilltip_textures, logo_texture
 from .constants import screen, font, requirements_upgrade
