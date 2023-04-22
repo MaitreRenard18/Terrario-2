@@ -12,7 +12,7 @@ from .textures import load_textures
 player_textures: Dict[str, Surface] = load_textures("Player", (32, 32))
 ores_textures: Dict[str, Surface] = load_textures("Ores", (96, 96))
 button_textures: Dict[str, Surface] = load_textures("Button", (300, 90))
-inventory_texture: Surface = load_textures("UI/inventory.png", (942, 642))
+inventory_texture: Surface = load_textures("UI/inventory.png", (942, 462))
 craft_interface_texture: Surface = load_textures("UI/craft_interface.png", (840, 390))
 drilltip_textures: Dict[str, Surface] = {}
 for level in range(1, 7):
