@@ -18,7 +18,7 @@ drilltip_textures: Dict[str, Surface] = {}
 for level in range(1, 9):
     drilltip_textures["drilltip_right_" + str(level)] = load_textures("Player/drilltip_right_" + str(level) + ".png",
                                                                       (192, 192))
-logo = load_textures("UI/logo.png", (970, 116))
+logo: Surface = load_textures("UI/logo.png", (970, 116))
 
 # Initialise la police d'écriture utilisée pour l'inventaire et l'interface de craft.
 pygame.font.init()
@@ -210,14 +210,14 @@ class Player:
 
         self.rect.topleft = self.position * 32
 
-        # Téléporte le joueur s'il est sous la carte
+        # Affiche un texte de remerciement si le joueur a fini le jeu.
         if self.position.y > 1200:
             text = font.render("Merci d'avoir joué!", True, "WHITE")
             self.display_surface.blit(text, text.get_rect(center=(self.display_surface.get_width() // 2,
                                                                   self.display_surface.get_height() // 2 + 128)))
             self.display_surface.blit(logo, logo.get_rect(center=(self.display_surface.get_width() // 2,
                                                                   self.display_surface.get_height() // 2 - 256)))
-
+        # Téléporte le joueur s'il est sous la carte.
         if self.position.y > 1600:
             self.position.y = -128
             self.relative_position.y = -128
@@ -311,7 +311,7 @@ class Player:
         self.__dict__.update(state)
         self.image: Surface = player_textures[f"drill_{self.direction}"]
         self.tip_image: Surface = player_textures[f"drilltip_{self.direction}_{str(self.level)}"]
-        self.display_surface = display.get_surface()
+        self.display_surface: Surface = display.get_surface()
         self.upgrade_button: Button = Button(button_textures["up_button"].get_rect(center=(1080, 383)),
                                              button_textures["up_button"],
                                              button_textures["button_hovered"], "Upgrade", 32, self.upgrade)
