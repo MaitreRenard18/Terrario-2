@@ -2,10 +2,9 @@ import os
 from typing import Dict, Union
 
 import pygame
-from pygame import Surface, transform, Vector2
+from pygame import Surface, Vector2
 
-from pathlib import Path
-MODULE_PATH = Path(__file__).parent.parent
+from .constants import MODULE_PATH
 
 
 def load_textures(path: str, size: Union[Vector2, tuple]):
