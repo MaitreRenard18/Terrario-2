@@ -2,7 +2,6 @@ import os
 from csv import reader
 from typing import TYPE_CHECKING, Dict, List, Union
 
-import pygame
 from pygame import Vector2
 
 from Classes.tile import Scaffolding, Tile, AnimatedTile
