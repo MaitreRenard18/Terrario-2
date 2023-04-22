@@ -34,7 +34,7 @@ class Prop:
         self.falling: bool = False
 
     def update(self, position: Vector2) -> None:
-        if self.position.y > 1525:
+        if self.position.y > 1600:
             self._change_position(Vector2(self.position.x, -128))
 
         for x, row in self.tiles.items():

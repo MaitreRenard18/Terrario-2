@@ -42,7 +42,7 @@ class Game:
 
                 if event.type == pygame.QUIT:
                     if not self.menu.displayed:
-                        save(self.save_name, self.map)
+                        save(self.menu.save_name, self.map)
                     pygame.quit()
                     sys.exit()
                
