@@ -5,6 +5,7 @@ import pygame
 from .menu import Menu
 from .map import Map
 from .saving import save
+from .constants import font
 
 
 class Game:
