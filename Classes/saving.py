@@ -4,8 +4,7 @@ import os
 
 import pygame.image
 
-from pathlib import Path
-MODULE_PATH = Path(__file__).parent.parent
+from .constants import MODULE_PATH
 
 if "Saves" not in os.listdir(MODULE_PATH):
     os.mkdir(MODULE_PATH / "Saves")
