@@ -14,6 +14,9 @@ ores_textures: Dict[str, Surface] = load_textures("Ores", (96, 96))
 button_textures: Dict[str, Surface] = load_textures("Button", (300, 90))
 inventory_texture: Surface = load_textures("UI/inventory.png", (942, 462))
 craft_interface_texture: Surface = load_textures("UI/craft_interface.png", (840, 390))
+drilltip_textures: Dict[str, Surface] = {}
+for level in range(1, 7):
+    drilltip_textures["drilltip_right_" + str(level)] = load_textures("Player/drilltip_right_" + str(level) + ".png", (192, 192))
 logo = load_textures("UI/logo.png", (970, 116))
 
 # Initialise la police d'écriture utilisée pour l'inventaire et l'interface de craft.
