@@ -8,6 +8,7 @@ from pygame.math import Vector2
 from .player import Player
 from .prop import Prop
 from .tile import Air, Background, Ore, Tile, Void
+from .textures import player_textures
 from .constants import screen, biomes, tile_palettes, biomes_scale,props, props_density
 
 
@@ -271,6 +272,10 @@ class Map:
         screen.blit(self.player.image, offset_rect)
         screen.blit(self.player.tip_image, (offset_rect.x + self.player.tip_position.x * 32,
                                                           offset_rect.y + self.player.tip_position.y * 32))
+        
+        if self.player.falling:
+            screen.blit(player_textures["parachute"], (offset_rect.x + 0 * 32,
+                                                          offset_rect.y - 1 * 32))
 
         self.player.update()
 
