@@ -272,12 +272,20 @@ class Map:
         screen.blit(self.player.image, offset_rect)
         screen.blit(self.player.tip_image, (offset_rect.x + self.player.tip_position.x * 32,
                                                           offset_rect.y + self.player.tip_position.y * 32))
-        
+
         if self.player.falling:
             screen.blit(player_textures["parachute"], (offset_rect.x + 0 * 32,
                                                           offset_rect.y - 1 * 32))
 
         self.player.update()
+
+        # Téléporte le joueur s'il est en dessous de la carte
+        if self.player.position.y > 1600:
+            self.player.position = self.player.position - (0, 1700)
+            self.player.relative_position = self.player.relative_position - (0, 1700)
+
+            for prop in props_to_render:
+                prop.change_position(prop.position - (0, 1700))
 
     def get_thumbnail(self) -> Surface:
         """Retourne une surface au format 1:1 de ce qui est actuellement affiché sur l'écran."""
@@ -297,6 +305,7 @@ class Map:
         Renvoie un dictionnaire représentant l'état de l'objet pour la sérialisation.
         Le dictionnaire renvoyé contient toutes les tuiles et les props.
         """
+
         state = self.__dict__.copy()
         return state
 

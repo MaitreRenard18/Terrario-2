@@ -32,9 +32,6 @@ class Prop:
         self.speed: float = 0.2
 
     def update(self, position: Vector2) -> None:
-        if self.position.y > 1600:
-            self._change_position(Vector2(self.position.x, -128))
-
         for x, row in self.tiles.items():
             for y, tile in row.items():
                 tile.update(position + Vector2(x, -y) * 32)
@@ -45,7 +42,7 @@ class Prop:
         else:
             self.speed = 0.2
 
-    def _change_position(self, position: Union[Vector2, tuple]):
+    def change_position(self, position: Union[Vector2, tuple]):
         x, y = (int(position.x), int(position.y)) if isinstance(position, Vector2) else (position[0], position[1])
 
         self.map.remove_prop(self, self.relative_position)
@@ -67,7 +64,7 @@ class Prop:
         self.position.y = round(self.position.y, 1)
 
         if self.position.y >= self.relative_position.y + 1:
-            self._change_position(self.relative_position + (0, 1))
+            self.change_position(self.relative_position + (0, 1))
 
     def __getstate__(self):
         state = self.__dict__.copy()

@@ -60,14 +60,14 @@ class Game:
 
             if show_stats:
 
-                fps = font.render(f"FPS: {round(self.clock.get_fps())}", True, pygame.Color(255, 255, 255))
+                fps = font.render(f"FPS: {round(self.clock.get_fps())}", True, (255, 255, 255))
                 pygame.display.get_surface().blit(fps, (2, 0))
 
                 position = font.render(f"Position: {self.menu.map.player.position}",
-                                True, pygame.Color(255, 255, 255))
+                                       True, (255, 255, 255))
                 pygame.display.get_surface().blit(position, (2, 32))
 
-                level = font.render(f"Drill level: {self.menu.map.player.level}", True, pygame.Color(255, 255, 255))
+                level = font.render(f"Drill level: {self.menu.map.player.level}", True, (255, 255, 255))
                 pygame.display.get_surface().blit(level, (2, 64))
 
             pygame.display.flip()

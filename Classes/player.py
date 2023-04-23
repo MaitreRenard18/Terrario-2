@@ -184,17 +184,12 @@ class Player:
         self.rect.topleft = self.position * 32
 
         # Téléporte le joueur s'il est sous la carte
-        if self.position.y > 1200:
+        if 1200 < self.position.y < 1500:
             text = font.render("Merci d'avoir joué!", True, "WHITE")
             screen.blit(text, text.get_rect(center=(screen.get_width() // 2,
-                                                                  screen.get_height() // 2 + 128)))
+                                                    screen.get_height() // 2 + 128)))
             screen.blit(logo_texture, logo_texture.get_rect(center=(screen.get_width() // 2,
-                                                                  screen.get_height() // 2 - 256)))
-
-        if self.position.y > 1600:
-            self.position.y = -128
-            self.relative_position.y = -128
-            return
+                                                                    screen.get_height() // 2 - 256)))
 
         # Vérifie si la tile en dessous du joueur est solide.
         if self.position == self.relative_position:
