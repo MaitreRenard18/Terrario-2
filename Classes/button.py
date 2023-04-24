@@ -5,7 +5,7 @@ from pygame import Rect, Surface
 from .constants import screen
 
 # Déclaration de la classe Button
-class Button():
+class Button:
     """
     Class qui représente un bouton cliquable
     """
