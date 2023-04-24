@@ -29,6 +29,11 @@ class Button:
         self.hovered: bool = False
 
     def render_text(self) -> None:
+        """
+        Affiche du texte au centre du bouton
+        Il y a également l'ombre du texte qui est affiché par dessous
+        """
+
         if self.text != "":
             police = pygame.font.Font('prstart.ttf', self.text_size)
             text = police.render(self.text,1,(255,255,255))
@@ -38,12 +43,22 @@ class Button:
             screen.blit(text, pos)
 
     def check_event(self, event) -> None:
+        """
+        Vérifie que le bouton soit cliqué
+        Appelle is_hovered et update
+        """
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.on_click(event)
         self.is_hovered()
         self.update()
 
     def on_click(self, event) -> None:
+        """
+        Si le bouton est cliqué, et que la souris est dessus
+        La fonction passé en paramètres est executée
+        """
+
         if self.rect.collidepoint(event.pos):
             if self.parameter is None:
                 self.func()
@@ -51,6 +66,10 @@ class Button:
                 self.func(self.parameter)
 
     def is_hovered(self) -> None:
+        """
+        Vérifie que la souris soit sur le bouton
+        """
+
         if self.rect.collidepoint(pygame.mouse.get_pos()):
             if not self.hovered:
                 self.hovered = True
@@ -58,6 +77,11 @@ class Button:
             self.hovered = False
 
     def update(self) -> None:
+        """
+        Affiche le bouton et le texte pas dessus
+        Anime le bouton si la souris est dessus
+        """
+
         if not self.hovered:
             screen.blit(self.image, self.rect)
         if self.hovered:
