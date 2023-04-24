@@ -30,7 +30,7 @@ class Map:
         self.props: Dict[int, Dict[int, List[Prop]]] = {}
 
         # Initialise les valeurs utilisées lors de la génération de la carte.
-        self.seed = randint(0, 2 ** 16) if world_seed is None else world_seed
+        self.seed: int = randint(0, 2 ** 16) if world_seed is None else world_seed
         opensimplex.seed(self.seed)
         seed(self.seed)
 
