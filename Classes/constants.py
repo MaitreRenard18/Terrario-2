@@ -1,17 +1,19 @@
 from typing import Dict, List, Union
 from pathlib import Path
+
 import pygame
+from pygame import Surface
 
 
 # Récupère le chemin d'accès des fichiers du jeu.
-MODULE_PATH = Path(__file__).parent.parent
+MODULE_PATH: Path = Path(__file__).parent.parent
 
 # Récupère la taille de l'écran.
-screen = pygame.display.set_mode()
+screen: Surface = pygame.display.set_mode()
 
 # Initialise la police d'écriture utilisée pour l'inventaire et l'interface de craft.
 pygame.font.init()
-font = pygame.font.Font("prstart.ttf", 27)
+font: pygame.font.Font = pygame.font.Font("prstart.ttf", 27)
 
 # Déclaration des biomes et des décors associés à chaque biome.
 biomes: Dict[Union[float, int], List[str]] = {
