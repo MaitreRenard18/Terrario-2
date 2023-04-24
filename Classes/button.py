@@ -1,19 +1,34 @@
+from typing import Any
 import pygame
+from pygame import Rect, Surface
 
 from .constants import screen
 
+# Déclaration de la classe Button
 class Button():
-    def __init__(self, rect, image, anim, text, text_size, func, parameter = None):
-        self.rect = rect
-        self.image = image
-        self.anim = anim
-        self.text = text
-        self.text_size = text_size
-        self.func = func
-        self.parameter = parameter
-        self.hovered = False
+    """
+    Class qui représente un bouton cliquable
+    """
+    
+    def __init__(self, rect: Rect, image: Surface, anim: Surface, text: str, text_size: int, func: callable, parameter: Any = None):
+        """
+        Initialise un bouton. 
+        Prends en paramètres un rectangle où le bouton sera affiché,
+        une image et une image d'animation, du texte, la taille du texte,
+        une fonction qui sera appelé lorsque l'utilisateur clique sur le bouton
+        et un paramètre optionnel qui sera celui de la fonction
+        """
 
-    def render_text(self):
+        self.rect: Rect = rect
+        self.image: Surface = image
+        self.anim: Surface = anim
+        self.text: str = text
+        self.text_size: int = text_size
+        self.func: callable = func
+        self.parameter: Any = parameter
+        self.hovered: bool = False
+
+    def render_text(self) -> None:
         if self.text != "":
             police = pygame.font.Font('prstart.ttf', self.text_size)
             text = police.render(self.text,1,(255,255,255))
@@ -22,27 +37,27 @@ class Button():
             screen.blit(text_shadow, (pos[0] + 5, pos[1] + 5))
             screen.blit(text, pos)
 
-    def check_event(self, event):
+    def check_event(self, event) -> None:
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.on_click(event)
         self.is_hovered()
         self.update()
 
-    def on_click(self, event):
+    def on_click(self, event) -> None:
         if self.rect.collidepoint(event.pos):
             if self.parameter is None:
                 self.func()
             else:
                 self.func(self.parameter)
 
-    def is_hovered(self):
+    def is_hovered(self) -> None:
         if self.rect.collidepoint(pygame.mouse.get_pos()):
             if not self.hovered:
                 self.hovered = True
         else:
             self.hovered = False
 
-    def update(self):
+    def update(self) -> None:
         if not self.hovered:
             screen.blit(self.image, self.rect)
         if self.hovered:
