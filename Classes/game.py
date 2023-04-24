@@ -1,6 +1,7 @@
 import sys
 
 import pygame
+from pygame import Surface, time
 
 from .menu import Menu
 from .map import Map
@@ -15,20 +16,20 @@ class Game:
         pygame.init()
         pygame.event.set_allowed([pygame.QUIT, pygame.KEYDOWN, pygame.KEYUP])
 
-        flags = pygame.FULLSCREEN | pygame.DOUBLEBUF
-        self.screen = pygame.display.set_mode(flags=flags)
-        self.clock = pygame.time.Clock()
+        flags: int = pygame.FULLSCREEN | pygame.DOUBLEBUF
+        self.screen: Surface = pygame.display.set_mode(flags=flags)
+        self.clock: time.Clock = time.Clock()
 
-        self.map = Map()
-        self.menu = Menu(self.map)
+        self.map: Map = Map()
+        self.menu: Menu = Menu(self.map)
 
         self.run()
 
-    def run(self):
+    def run(self) -> None:
         """Commence la boucle d'execution."""
 
-        show_stats = False
-        max_fps = 30
+        show_stats: bool = False
+        max_fps: int = 30
 
         while True:
             for event in pygame.event.get():
@@ -50,7 +51,7 @@ class Game:
             if self.menu.displayed:
                 self.menu.update(event)
             else:
-                self.map = self.menu.map
+                self.map: Map = self.menu.map
                 self.map.update()
             
                 if self.map.player.display_button:
@@ -60,14 +61,14 @@ class Game:
 
             if show_stats:
 
-                fps = font.render(f"FPS: {round(self.clock.get_fps())}", True, (255, 255, 255))
+                fps: Surface = font.render(f"FPS: {round(self.clock.get_fps())}", True, (255, 255, 255))
                 pygame.display.get_surface().blit(fps, (2, 0))
 
-                position = font.render(f"Position: {self.menu.map.player.position}",
+                position: Surface = font.render(f"Position: {self.menu.map.player.position}",
                                        True, (255, 255, 255))
                 pygame.display.get_surface().blit(position, (2, 32))
 
-                level = font.render(f"Drill level: {self.menu.map.player.level}", True, (255, 255, 255))
+                level: Surface = font.render(f"Drill level: {self.menu.map.player.level}", True, (255, 255, 255))
                 pygame.display.get_surface().blit(level, (2, 64))
 
             pygame.display.flip()
