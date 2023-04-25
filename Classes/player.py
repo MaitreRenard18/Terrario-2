@@ -36,7 +36,7 @@ class Player:
 
         # Initialise l'inventaire du joueur, un bouton et un booléen qui déterminent si il est affiché.
         self.inventory: Dict[str, int] = {}
-        self.upgrade_button: Button = Button(button_textures["up_button"].get_rect(center=(1080, 383)),
+        self.upgrade_button: Button = Button(button_textures["up_button"].get_rect(center = (screen.get_width() // 2 + 150, 383)),
                                              button_textures["up_button"],
                                              button_textures["button_hovered"], "Upgrade", 32, self.upgrade)
         self.display_button: bool = False
