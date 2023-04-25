@@ -24,7 +24,7 @@ class Menu:
         self.main: bool = True
 
         self.save_number: int = len(get_saves()) + 1
-        self.save_name: str = "World " + str(self.save_number)
+        self.save_name: str = "world_" + str(self.save_number)
         self.delete: bool = False
 
         self.background: Surface = choice(list(background_textures.values()))
@@ -83,7 +83,7 @@ class Menu:
                 if str(world) + "_button" not in self.saves_buttons:
                     self.saves_buttons[str(world) + "_button"] = Button(
                         world_textures["world_button"].get_rect(center = (screen.get_width() // 2, screen.get_height() // 2 + element * 150)),
-                        world_textures["world_button"], world_textures["world_button_hovered"], "    " + world, 32, self.launch_world, world)
+                        world_textures["world_button"], world_textures["world_button_hovered"], "    " + world.replace("_", " "), 32, self.launch_world, world)
                     self.saves_buttons[str(world) + "_delete_button"] = Button(
                         delete_textures["delete_button"].get_rect(center = (screen.get_width() // 2 + 300, screen.get_height() // 2 + element * 150)),
                         delete_textures["delete_button"], delete_textures["delete_button_hovered"], "", 0, self.delete_save, world)
