@@ -265,7 +265,12 @@ class Player:
         else:
             self.fall()
 
-    def __getstate__(self):
+    def __getstate__(self) -> dict:
+        """
+        Sauvegarde les attributs de la classe Player
+        Supprime les images et les boutons
+        """
+
         state = self.__dict__.copy()
         state["position"] = Vector2(round(self.position.x), round(self.position.y))
         del state["image"]
@@ -274,7 +279,12 @@ class Player:
         del state["display_button"]
         return state
 
-    def __setstate__(self, state):
+    def __setstate__(self, state) -> None:
+        """
+        Remets les attributs à leur état avant sauvegarde
+        Réinitialise les images et les boutons
+        """
+
         self.__dict__.update(state)
         self.image: Surface = player_textures[f"drill_{self.direction}"]
         self.tip_image: Surface = player_textures[f"drilltip_{self.direction}_{str(self.level)}"]
