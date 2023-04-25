@@ -86,7 +86,7 @@ def _get_prop(prop_name: str) -> Dict[int, Dict[int, Tile]]:
     prop = {}
     if not csvs.get(prop_name, False):
         if prop_name == "fire":
-            return {0: {1: AnimatedTile("Fire", 12)}}
+            return {0: {1: AnimatedTile("fire", 12)}}
         else:
             return {0: {1: Tile(prop_name, float("inf"), False)}}
 
