@@ -29,7 +29,7 @@ class Prop:
         self.position: Vector2 = Vector2(position)
         self.relative_position: Vector2 = Vector2(position)
 
-        self.speed: float = 0.2
+        self.speed: float = 0
 
     def update(self, position: Vector2) -> None:
         for x, row in self.tiles.items():
@@ -40,7 +40,7 @@ class Prop:
         if not tile_below.can_collide or isinstance(tile_below, Scaffolding):
             self.fall()
         else:
-            self.speed = 0.2
+            self.speed = 0
 
     def change_position(self, position: Union[Vector2, tuple]):
         x, y = (int(position.x), int(position.y)) if isinstance(position, Vector2) else (position[0], position[1])
@@ -54,9 +54,9 @@ class Prop:
 
     def fall(self) -> None:
         """
-        Fait tomber le joueur.
-        La vitesse du joueur augmente au fur et à mesure qu'il tombe.
-        La limite de vitesse du joueur est d'une tile.
+        Fait tomber le prop.
+        La vitesse du prop augmente au fur et à mesure qu'il tombe.
+        La limite de vitesse du prop est d'une tile.
         """
 
         self.speed += round(0.1, 1)
