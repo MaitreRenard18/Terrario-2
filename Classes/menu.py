@@ -14,9 +14,17 @@ from .textures import background_textures, thumbnails_textures, logo_texture, bu
 from .constants import screen, MODULE_PATH
 
 
+# Déclaration de la class Menu
 class Menu:
+    """
+    Classe permettant d'afficher le menu, avec un fond aléatoire
+    Ce menu peut créer des boutons qui permettent de charger des mondes
+    """
 
     def __init__(self, map):
+        """
+        
+        """
 
         self.map = map
 
