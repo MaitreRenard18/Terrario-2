@@ -12,6 +12,8 @@
 
 # Présentation du projet :
 Terrario 2 est la suite du mondialement connu [Terrario](https://github.com/MaitreRenard18/Terrario).
+  # Tutoriel :
+  a
 
 # Comment jouer ?
 Il vous suffit d'exécuter les commandes suivantes :
