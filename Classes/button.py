@@ -1,89 +1,107 @@
-from typing import Any
+from random import choice
+from time import sleep
+from typing import Dict
+
+import sys
+import os
+
 import pygame
-from pygame import Rect, Surface
+from pygame import Surface
 
-from .constants import screen
+from .button import Button
+from .saving import get_saves, save, load
+from .textures import background_textures, thumbnails_textures, logo_texture, button_textures, world_textures, delete_textures, x_mark_textures
+from .constants import screen, MODULE_PATH
 
-# Déclaration de la classe Button
-class Button:
-    """
-    Class qui représente un bouton cliquable
-    """
+
+class Menu:
+
+    def __init__(self, map):
+
+        self.map = map
+
+        self.displayed: bool = True
+        self.main: bool = True
+
+        self.save_number: int = len(get_saves()) + 1
+        self.save_name: str = "world_" + str(self.save_number)
+        self.delete: bool = False
+
+        self.background: Surface = choice(list(background_textures.values()))
+        self.logo: Surface = logo_texture
+
+        self.play_button: Button =  Button(button_textures["p_button"].get_rect(center = (screen.get_width() // 2, screen.get_height() // 2)),
+                                    button_textures["p_button"], button_textures["button_hovered"], "Play", 48, self.play)
+        
+        self.quit_button: Button = Button(x_mark_textures["x_mark"].get_rect(center = (screen.get_width() - 40, 40)),
+                                    x_mark_textures["x_mark"], x_mark_textures["x_mark_hovered"], "", 0, self.quit)
+        
+        self.world_buttons: Dict[str, Button] = {"create_world_button": Button(button_textures["p_button"].get_rect(center = (screen.get_width() // 2 - 200, screen.get_height() // 2 + 400)),
+                                            button_textures["p_button"], button_textures["button_hovered"], "New world", 32, self.create_new_world),
+                            "cancel_button": Button(button_textures["p_button"].get_rect(center = (screen.get_width() // 2 + 200, screen.get_height() // 2 + 400)),
+                                            button_textures["p_button"], button_textures["button_hovered"], "Cancel", 32, self.play),}
+        
+        self.saves_buttons: Dict[str, Button] = {}
     
-    def __init__(self, rect: Rect, image: Surface, anim: Surface, text: str, text_size: int, func: callable, parameter: Any = None):
-        """
-        Initialise un bouton. 
-        Prends en paramètres un rectangle où le bouton sera affiché,
-        une image et une image d'animation, du texte, la taille du texte,
-        une fonction qui sera appelé lorsque l'utilisateur clique sur le bouton
-        et un paramètre optionnel qui sera celui de la fonction
-        """
+    def play(self) -> None:
+        self.main = not self.main
+        sleep(0.1)
 
-        self.rect: Rect = rect
-        self.image: Surface = image
-        self.anim: Surface = anim
-        self.text: str = text
-        self.text_size: int = text_size
-        self.func: callable = func
-        self.parameter: Any = parameter
-        self.hovered: bool = False
+    def quit(self) -> None:
+        if not self.displayed:
+            save(self.save_name, self.map)
+        pygame.quit()
+        sys.exit()
 
-    def render_text(self) -> None:
-        """
-        Affiche du texte au centre du bouton
-        Il y a également l'ombre du texte qui est affiché par dessous
-        """
+    def launch_world(self, world: str) -> None:
+        self.displayed = False
+        self.save_name = world
+        self.map = load(self.save_name)
 
-        if self.text != "":
-            police = pygame.font.Font('prstart.ttf', self.text_size)
-            text = police.render(self.text,1,(255,255,255))
-            text_shadow = police.render(self.text,1,(50,50,50))
-            pos = (self.rect.center[0] - text.get_rect()[2] / 2, self.rect.center[1] - text.get_rect()[3] / 2)
-            screen.blit(text_shadow, (pos[0] + 5, pos[1] + 5))
-            screen.blit(text, pos)
+    def create_new_world(self) -> None:
+        if self.save_number > 3:
+            return
+        self.displayed = False
 
-    def check_event(self, event) -> None:
-        """
-        Vérifie que le bouton soit cliqué
-        Appelle is_hovered et update
-        """
+    def delete_save(self, world) -> None:
+        delete_save: str = MODULE_PATH / "saves" / world
+        del self.saves_buttons[world + "_button"]
+        del self.saves_buttons[world + "_delete_button"]
+        os.remove(delete_save)
+        self.delete = True
+        sleep(0.1)
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            self.on_click(event)
-        self.is_hovered()
-        self.update()
+    def update(self, event: pygame.event) -> None:
+        screen.blit(self.background, (0,0))
+        screen.blit(self.logo, ((screen.get_width() - self.logo.get_width()) // 2, 100))
 
-    def on_click(self, event) -> None:
-        """
-        Si le bouton est cliqué, et que la souris est dessus
-        La fonction passé en paramètres est executée
-        """
+        self.save_number = len(get_saves()) + 1
 
-        if self.rect.collidepoint(event.pos):
-            if self.parameter is None:
-                self.func()
-            else:
-                self.func(self.parameter)
+        if not self.main:
+            element: int = -1
+            for world in get_saves():
+                if str(world) + "_button" not in self.saves_buttons:
+                    self.saves_buttons[str(world) + "_button"] = Button(
+                        world_textures["world_button"].get_rect(center = (screen.get_width() // 2, screen.get_height() // 2 + element * 150)),
+                        world_textures["world_button"], world_textures["world_button_hovered"], "    " + world.replace("_", " "), 32, self.launch_world, world)
+                    self.saves_buttons[str(world) + "_delete_button"] = Button(
+                        delete_textures["delete_button"].get_rect(center = (screen.get_width() // 2 + 300, screen.get_height() // 2 + element * 150)),
+                        delete_textures["delete_button"], delete_textures["delete_button_hovered"], "", 0, self.delete_save, world)
+            
+                if len(thumbnails_textures) >= 1:
+                    screen.blit(thumbnails_textures[str(world).lower()], ((screen.get_width() - thumbnails_textures[str(world).lower()].get_width()) // 2 - 156, 
+                                                                               (screen.get_height() - thumbnails_textures[str(world).lower()].get_height()) // 2 + 146 * element))
+                    
+                    element += 1
 
-    def is_hovered(self) -> None:
-        """
-        Vérifie que la souris soit sur le bouton
-        """
+            for save in self.saves_buttons:
+                self.saves_buttons[save].check_event(event)
+                if self.delete:
+                    self.delete = False
+                    break
+                
+            for button in self.world_buttons:
+                self.world_buttons[button].check_event(event)
 
-        if self.rect.collidepoint(pygame.mouse.get_pos()):
-            if not self.hovered:
-                self.hovered = True
         else:
-            self.hovered = False
-
-    def update(self) -> None:
-        """
-        Affiche le bouton et le texte pas dessus
-        Anime le bouton si la souris est dessus
-        """
-
-        if not self.hovered:
-            screen.blit(self.image, self.rect)
-        if self.hovered:
-            screen.blit(self.anim, self.rect)
-        self.render_text()
+            self.play_button.check_event(event)
