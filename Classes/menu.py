@@ -64,7 +64,7 @@ class Menu:
         self.displayed = False
 
     def delete_save(self, world) -> None:
-        delete_save: str = MODULE_PATH / "Saves" / world
+        delete_save: str = MODULE_PATH / "saves" / world
         del self.saves_buttons[world + "_button"]
         del self.saves_buttons[world + "_delete_button"]
         os.remove(delete_save)
