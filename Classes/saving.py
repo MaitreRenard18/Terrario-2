@@ -6,8 +6,8 @@ import pygame.image
 
 from .constants import MODULE_PATH
 
-if "Saves" not in os.listdir(MODULE_PATH):
-    os.mkdir(MODULE_PATH / "Saves")
+if "saves" not in os.listdir(MODULE_PATH):
+    os.mkdir(MODULE_PATH / "saves")
 
 if "Thumbnails" not in os.listdir(MODULE_PATH / "Images"):
     os.mkdir(MODULE_PATH / "Images/Thumbnails")
