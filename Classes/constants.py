@@ -5,17 +5,17 @@ import pygame
 from pygame import Surface
 
 
-# Récupère le chemin d'accès des fichiers du jeu.
+# Récupère le chemin d'accès des fichiers du jeu
 MODULE_PATH: Path = Path(__file__).parent.parent
 
-# Récupère la taille de l'écran.
+# Récupère la taille de l'écran
 screen: Surface = pygame.display.set_mode()
 
-# Initialise la police d'écriture utilisée pour l'inventaire et l'interface de craft.
+# Initialise la police d'écriture utilisée pour l'inventaire et l'interface de craft
 pygame.font.init()
 font: pygame.font.Font = pygame.font.Font("prstart.ttf", 27)
 
-# Déclaration des biomes et des décors associés à chaque biome.
+# Déclaration des biomes et des décors associés à chaque biome
 biomes: Dict[Union[float, int], List[str]] = {
     816: ["hell"],
     616: ["haunted_cave"],
@@ -118,12 +118,11 @@ props: Dict[str, List[str]] = {
 
 props_density: Dict[str, int] = {
     "shroom_cave": 4,
-
     "haunted_cave": 6,
     "crystal_cave": 2
 }
 
-# Déclaration des ressources nécessaires pour augmenter le niveau du joueur.
+# Déclaration des ressources nécessaires pour augmenter le niveau du joueur
 requirements_upgrade: Dict[int, Dict[str, int]] = {
     1: {"rock": 5},
     2: {"iron": 10, "gold": 10, "coal": 10},
