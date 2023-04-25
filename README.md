@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="Images/UI/Logo.png" alt="Terrario 2 Logo" width="50%">
+  <img src="Images/ui/Logo.png" alt="Terrario 2 Logo" width="50%">
 </div>
 
 
