@@ -34,6 +34,6 @@ Et en ouvrant "Terrario.pyw".
 - Des améliorations pour le joueur.
 
 # Captures d’écran :
-![Forêt](Images/Screenshots/forest.png)
-![Desert](Images/Screenshots/desert.png)
-![Biome neige](Images/Screenshots/snow.png)
+![Forêt](Images/screenshots/forest.png)
+![Desert](Images/screenshots/desert.png)
+![Biome neige](Images/screenshots/snow.png)
