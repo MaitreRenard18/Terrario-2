@@ -204,7 +204,7 @@ class AnimatedTile(Tile):
         self.texture_name: str = texture_name
         self.speed = speed
 
-        self.frames = load_animated_textures(f"Tiles/{texture_name}.png", (32, 32))
+        self.frames = load_animated_textures(f"tiles/{texture_name}.png", (32, 32))
         super().__init__(self.frames[0], 0)
 
     def update(self, position: Vector2) -> None:
@@ -215,5 +215,5 @@ class AnimatedTile(Tile):
     def __setstate__(self, state):
         self.__dict__.update()
         self._display_surface = pygame.display.get_surface()
-        self.frames = load_animated_textures(f"Tiles/{self.texture_name}.png", (32, 32))
+        self.frames = load_animated_textures(f"tiles/{self.texture_name}.png", (32, 32))
         self.texture = self.frames[0]
