@@ -8,6 +8,12 @@ from .constants import MODULE_PATH
 
 
 def load_textures(path: str, size: Union[Vector2, tuple]):
+    """
+    Stocke dans un dictionnaire les surfaces correspondant aux textures 
+    se trouvant dans un dossier passé en paramètre
+    Si le chemin d'accès se termine par .png, seule la texture désignée sera retournée
+    """
+    
     _textures_path = MODULE_PATH / "images" / path
 
     if path.endswith(".png"):
@@ -27,6 +33,10 @@ def load_textures(path: str, size: Union[Vector2, tuple]):
 
 
 def load_animated_textures(path: str, size: Union[Vector2, tuple]):
+    """
+    Charge les textures animées se trouvant dans un chemin d'accès passé en paramètre
+    """
+    
     _textures_path = MODULE_PATH / "images" / path
 
     x, y = (size.x, size.y) if isinstance(size, Vector2) else (size[0], size[1])
