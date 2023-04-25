@@ -13,9 +13,9 @@
 # Présentation du projet :
 Terrario 2 est la suite du mondialement connu [Terrario](https://github.com/MaitreRenard18/Terrario).
 
-Le but du jeu est <b>d'améliorer sa foreuse au niveau maximum</b>, pour miner dans de <b>nouveaux environnements</b>.
-Pour ouvrir <b>l'interface d'améliorations</b>, il faudra appuyer sur la <b>touche "A"</b> de votre clavier.
-Pour améliorer votre foreuse, il faudra un <b>nombre de minerais requis</b>, affiché dans l'interface d'améliorations.
+Le but du jeu est <b>d'améliorer sa foreuse au niveau maximum</b>, pour miner dans de <b>nouveaux environnements</b>. <br>
+Pour ouvrir <b>l'interface d'améliorations</b>, il faudra appuyer sur la <b>touche "A"</b> de votre clavier. <br>
+Pour améliorer votre foreuse, il faudra un <b>nombre de minerais requis</b>, affiché dans l'interface d'améliorations. <br>
 Les minerais que vous avez minés sont affichés dans <b>l'inventaire</b> du joueur, qui s'affiche en appuyant sur la <b>touche "E"</b> du clavier.
 
 # Comment jouer ?
