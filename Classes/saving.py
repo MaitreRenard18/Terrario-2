@@ -9,8 +9,8 @@ from .constants import MODULE_PATH
 if "saves" not in os.listdir(MODULE_PATH):
     os.mkdir(MODULE_PATH / "saves")
 
-if "Thumbnails" not in os.listdir(MODULE_PATH / "Images"):
-    os.mkdir(MODULE_PATH / "Images/Thumbnails")
+if "thumbnails" not in os.listdir(MODULE_PATH / "images"):
+    os.mkdir(MODULE_PATH / "images/thumbnails")
  
 _saves_path: str = MODULE_PATH / "saves"
 _thumbnail_path: str = MODULE_PATH / "images" / "thumbnails"
