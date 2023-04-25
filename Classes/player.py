@@ -126,7 +126,7 @@ class Player:
         for keys, values in requirements_upgrade[self.level].items():
             if not keys in self.inventory or self.inventory[keys] < values:
                 text = font.render(("Vous n'avez pas assez de ressources"), True, "BLACK")
-                screen.blit(text, (500, 400))
+                screen.blit(text, (500, screen.get_height() // 2))
                 pygame.display.flip()
                 sleep(1.5)
                 return
@@ -165,7 +165,7 @@ class Player:
 
         craft_interface_position = (screen.get_width() - craft_interface_texture.get_width()) // 2
         screen.blit(craft_interface_texture, (craft_interface_position, 0))
-        screen.blit(drilltip_textures[f"drilltip_right_{str(self.level + 1)}"], (592, 113))
+        screen.blit(drilltip_textures[f"drilltip_right_{str(self.level + 1)}"], (craft_interface_position + 55, 113))
 
         element = 0
         for keys, values in requirements_upgrade[self.level].items():
