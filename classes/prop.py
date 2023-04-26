@@ -4,10 +4,10 @@ from typing import TYPE_CHECKING, Dict, List, Union
 
 from pygame import Vector2
 
-from Classes.tile import Scaffolding, Tile, AnimatedTile
+from .tile import Scaffolding, Tile, AnimatedTile
 
 if TYPE_CHECKING:
-    from Classes.map import Map
+    from .map import Map
 
 csvs: Dict[str, List[List[str]]] = {}
 _props_path = os.path.join("Props")
