@@ -38,6 +38,10 @@ Et en ouvrant "Terrario.pyw".
 - Un inventaire.
 - Des améliorations pour le joueur.
 
+# Textures :
+
+La plupart des textures utilisées pour faire les tuiles de la map proviennent d'un pack nommé [Bare Bones](https://minecraft.fr/pack-de-textures-bares-bones/)
+
 # Captures d’écran :
 ![Forêt](images/screenshots/forest.png)
 ![Desert](images/screenshots/desert.png)
