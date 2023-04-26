@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="Images/ui/logo.png" alt="Terrario 2 Logo" width="50%">
+  <img src="images/ui/logo.png" alt="Terrario 2 Logo" width="50%">
 </div>
 
 
@@ -39,6 +39,6 @@ Et en ouvrant "Terrario.pyw".
 - Des améliorations pour le joueur.
 
 # Captures d’écran :
-![Forêt](Images/screenshots/forest.png)
-![Desert](Images/screenshots/desert.png)
-![Biome neige](Images/screenshots/snow.png)
+![Forêt](images/screenshots/forest.png)
+![Desert](images/screenshots/desert.png)
+![Biome neige](images/screenshots/snow.png)
