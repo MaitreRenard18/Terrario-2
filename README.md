@@ -27,7 +27,7 @@ Il vous suffit d'exécuter les commandes suivantes :
 
 Ou alors, vous pouvez également installer Terrario manuellement, en installant le module python Pygame version 2.1.1 minimum et Opensimplex en exécutant la commande suivante :
 ```bash
-  $ pip install -r Requirements.txt
+  $ pip install -r requirements.txt
 ```
 Et en ouvrant "Terrario.pyw".
 
