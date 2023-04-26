@@ -44,10 +44,11 @@ class Menu:
         self.quit_button: Button = Button(x_mark_textures["x_mark"].get_rect(center = (screen.get_width() - 40, 40)),
                                     x_mark_textures["x_mark"], x_mark_textures["x_mark_hovered"], "", 0, self.quit)
         
-        self.world_buttons: Dict[str, Button] = {"create_world_button": Button(button_textures["p_button"].get_rect(center = (screen.get_width() // 2 - 200, screen.get_height() // 2 + 400)),
-                                            button_textures["p_button"], button_textures["button_hovered"], "New world", 32, self.create_new_world),
-                            "cancel_button": Button(button_textures["p_button"].get_rect(center = (screen.get_width() // 2 + 200, screen.get_height() // 2 + 400)),
-                                            button_textures["p_button"], button_textures["button_hovered"], "Cancel", 32, self.play),}
+        self.world_buttons: Dict[str, Button] = {
+            "create_world_button": Button(button_textures["p_button"].get_rect(center = (screen.get_width() // 2 - 200, screen.get_height() // 2 + screen.get_height() // 3)),
+                button_textures["p_button"], button_textures["button_hovered"], "New world", 32, self.create_new_world),
+            "cancel_button": Button(button_textures["p_button"].get_rect(center = (screen.get_width() // 2 + 200, screen.get_height() // 2 + screen.get_height() // 3)),
+                button_textures["p_button"], button_textures["button_hovered"], "Cancel", 32, self.play),}
         
         self.saves_buttons: Dict[str, Button] = {}
     
@@ -125,7 +126,7 @@ class Menu:
             
                 if len(thumbnails_textures) >= 1:
                     screen.blit(thumbnails_textures[str(world).lower()], ((screen.get_width() - thumbnails_textures[str(world).lower()].get_width()) // 2 - 156, 
-                                                                               (screen.get_height() - thumbnails_textures[str(world).lower()].get_height()) // 2 + 146 * element))
+                                                                        (screen.get_height() - thumbnails_textures[str(world).lower()].get_height()) // 2 + 148 * element))
                     
                     element += 1
 
