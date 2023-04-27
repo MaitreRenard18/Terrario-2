@@ -21,7 +21,15 @@ for file in os.listdir(_props_path):
 
 
 class Prop:
+    """
+    Classe qui représente un élément du décor (un arbre, un cactus, etc...).
+    """
+    
     def __init__(self, map: "Map", position: Vector2, prop_name: str) -> None:
+        """
+        Initialise un Prop, avec une carte, une position, et un nom (type de prop).
+        """
+        
         self.map = map
         self.prop_name: str = prop_name
         self.tiles: Dict[int, Dict[int, Tile]] = _get_prop(prop_name)
@@ -32,6 +40,10 @@ class Prop:
         self.speed: float = 0
 
     def update(self, position: Vector2) -> None:
+        """
+        Affiche le prop, et le fait tomber s'il n'y a pas de tuiles en dessous.
+        """
+        
         for x, row in self.tiles.items():
             for y, tile in row.items():
                 tile.update(position + Vector2(x, -y) * 32)
@@ -43,6 +55,10 @@ class Prop:
             self.speed = 0
 
     def change_position(self, position: Union[Vector2, tuple]):
+        """
+        Change la position du prop en modifiant son attribut position ainsi que son emplacement dans map._props.
+        """
+        
         x, y = (int(position.x), int(position.y)) if isinstance(position, Vector2) else (position[0], position[1])
 
         self.map.remove_prop(self, self.relative_position)
@@ -67,11 +83,19 @@ class Prop:
             self.change_position(self.relative_position + (0, 1))
 
     def __getstate__(self):
+        """
+        Renvoie un dictionnaire représentant l'état de l'objet pour la sérialisation.
+        """
+        
         state = self.__dict__.copy()
         del state["tiles"]
         return state
 
     def __setstate__(self, state):
+        """
+        Restaure l'état de l'objet à partir du dictionnaire "state".
+        """
+        
         self.__dict__.update(state)
         self.tiles = _get_prop(self.prop_name)
 
@@ -80,6 +104,10 @@ props: Dict[str, Dict[int, Dict[int, Tile]]] = {}
 
 
 def _get_prop(prop_name: str) -> Dict[int, Dict[int, Tile]]:
+    """
+    Retourne les tuiles du prop à partir du nom d'un fichier csv contenu dans le dossier Props.
+    """
+    
     if prop_name in props:
         return props[prop_name]
 
