@@ -2,7 +2,9 @@ from typing import List, TYPE_CHECKING
 import pickle
 import os
 
+
 import pygame.image
+from pygame import Surface
 
 from .constants import MODULE_PATH, screen
 if TYPE_CHECKING:
