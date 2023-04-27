@@ -185,7 +185,7 @@ class Player:
 
         # Téléporte le joueur s'il est sous la carte
         if 1200 < self.position.y < 1500:
-            text = font.render("Merci d'avoir joué!", True, "WHITE")
+            text = font.render("Thanks for playing!", True, "WHITE")
             screen.blit(text, text.get_rect(center=(screen.get_width() // 2,
                                                     screen.get_height() // 2 + 128)))
             screen.blit(logo_texture, logo_texture.get_rect(center=(screen.get_width() // 2,
