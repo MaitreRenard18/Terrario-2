@@ -124,8 +124,8 @@ class Player:
             return
 
         for keys, values in requirements_upgrade[self.level].items():
-            if not keys in self.inventory or self.inventory[keys] < values:
-                text = font.render(("Vous n'avez pas assez de ressources"), True, "BLACK")
+            if keys not in self.inventory or self.inventory[keys] < values:
+                text = font.render("Vous n'avez pas assez de ressources", True, "BLACK")
                 screen.blit(text, (500, screen.get_height() // 2))
                 pygame.display.flip()
                 sleep(1.5)

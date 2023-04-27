@@ -4,6 +4,7 @@ from pygame import Rect, Surface
 
 from .constants import screen
 
+
 # Déclaration de la classe Button
 class Button:
     """
@@ -31,13 +32,13 @@ class Button:
     def render_text(self) -> None:
         """
         Affiche du texte au centre du bouton
-        Il y a également l'ombre du texte qui est affiché par dessous
+        Il y a également l'ombre du texte qui est affiché par-dessous
         """
 
         if self.text != "":
             police = pygame.font.Font('prstart.ttf', self.text_size)
-            text = police.render(self.text,1,(255,255,255))
-            text_shadow = police.render(self.text,1,(50,50,50))
+            text = police.render(self.text, True, (255, 255, 255))
+            text_shadow = police.render(self.text, True, (50, 50, 50))
             pos = (self.rect.center[0] - text.get_rect()[2] / 2, self.rect.center[1] - text.get_rect()[3] / 2)
             screen.blit(text_shadow, (pos[0] + 5, pos[1] + 5))
             screen.blit(text, pos)
