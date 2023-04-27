@@ -288,7 +288,7 @@ class Player:
         self.__dict__.update(state)
         self.image: Surface = player_textures[f"drill_{self.direction}"]
         self.tip_image: Surface = player_textures[f"drilltip_{self.direction}_{str(self.level)}"]
-        self.upgrade_button: Button = Button(button_textures["up_button"].get_rect(center=(1080, 383)),
+        self.upgrade_button: Button = Button(button_textures["up_button"].get_rect(center=(screen.get_width() // 2 + 150, 383)),
                                              button_textures["up_button"],
                                              button_textures["button_hovered"], "Upgrade", 32, self.upgrade)
         self.display_button: bool = False
