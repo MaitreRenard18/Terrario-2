@@ -11,8 +11,7 @@
 </div>
 
 # Présentation du projet :
-Terrario 2 est la suite du mondialement connu [Terrario](https://github.com/MaitreRenard18/Terrario).
-Terrario 2 est un jeu de minage en 2D dans un monde infini créé de manière procedurale, avec différents biomes, des prairies, des montagnes et des grottes.
+Terrario 2 (suite du mondialement connu [Terrario](https://github.com/MaitreRenard18/Terrario)) est un jeu de minage en 2D dans un monde infini créé de manière procedurale, avec différents biomes, des prairies, des montagnes et des grottes.
 Vous incarnez une foreuse dont le but est d'aller le plus profondément possible en améliorant celle-ci en collectant divers minerais trouvable dans différentes grottes.
 
 Le but du jeu est <b>d'améliorer sa foreuse au niveau maximum</b>, pour miner dans de <b>nouveaux environnements</b>. <br>
