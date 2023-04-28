@@ -30,7 +30,7 @@ Ou alors, vous pouvez également installer Terrario manuellement, en installant 
 ```bash
   $ pip install -r requirements.txt
 ```
-Et en ouvrant "Terrario.pyw".
+Et en ouvrant "terrario.pyw".
 
 # Fonctionnalités :
 - Un monde infini généré de manière procédurale.
