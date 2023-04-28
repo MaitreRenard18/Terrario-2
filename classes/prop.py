@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from .map import Map
 
 csvs: Dict[str, List[List[str]]] = {}
-_props_path = os.path.join("Props")
+_props_path = os.path.join("props")
 for file in os.listdir(_props_path):
     if file.endswith(".csv"):
         file_name = file.replace(".csv", "").lower()
